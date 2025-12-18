@@ -1,0 +1,253 @@
+{
+	"info": {
+		"_postman_id": "45a6c5a5-48d4-4304-9ace-023ac29a3cbf",
+		"name": "DentiLib",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36949219"
+	},
+	"item": [
+		{
+			"name": "createAdmin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const statusCode = pm.response.code;\r",
+							" \r",
+							" \r",
+							"const response = pm.response.json();\r",
+							"pm.test(\"the response must be JSON\", function () {\r",
+							"    pm.response.to.be.json\r",
+							"})\r",
+							"\r",
+							"\r",
+							"if (statusCode === 409) {\r",
+							"    pm.test(\"Check if error  Message is correct\", function () {\r",
+							"        pm.expect(response.message).to.eql(\"Email déjà utilisé\");\r",
+							"    })\r",
+							"}\r",
+							"if (statusCode === 201) {\r",
+							"    pm.test(\"Check if body have properties message and user\", function () {\r",
+							"        pm.expect(response).to.have.property(\"message\");\r",
+							"        pm.expect(response).to.have.property(\"user\");\r",
+							"    })\r",
+							"}\r",
+							"\r",
+							"if (statusCode === 201) {\r",
+							"    pm.test(\"L'admin a été créé avec toutes les propriétés nécessaires\", function () {\r",
+							"        pm.expect(response.user).to.have.property(\"firstName\");\r",
+							"        pm.expect(response.user).to.have.property(\"lastName\");\r",
+							"        pm.expect(response.user).to.have.property(\"email\");\r",
+							"        pm.expect(response.user).to.have.property(\"role\");\r",
+							"    });\r",
+							"}\r",
+							"\r",
+							"if (statusCode === 500) {\r",
+							"    pm.test(\"500 - Erreur serveur\", function () {\r",
+							"        pm.expect(statusCode).to.eql(500);\r",
+							"    });\r",
+							"}\r",
+							"\r",
+							"if (statusCode === 400) {\r",
+							"\r",
+							"    if (response.message === \"L'email est requis\") {\r",
+							"        pm.test(\"Erreur - Créer un admin avec champ email vide   \", function () {\r",
+							"            pm.expect(response.message).to.eql(\"L'email est requis\");\r",
+							"        });\r",
+							"    }else if (response.message === \"Le mot de passe est requis\") {\r",
+							"        pm.test(\"Erreur - Créer un admin avec un champ mot de passe vide\", function () {\r",
+							"            pm.expect(response.message).to.eql(\"Le mot de passe est requis\");\r",
+							"        });\r",
+							"    } else if (response.message === \"Le mot de passe doit contenir plus de 3 caractères\") {\r",
+							"        pm.test(\"Erreur - Créer un admin avec un mot de passe trop court\", function () {\r",
+							"            pm.expect(response.message).to.eql(\"Le mot de passe doit contenir plus de 3 caractères\");\r",
+							"        });\r",
+							"    } else {\r",
+							"        pm.test(\"Requête invalide\", function () {\r",
+							"            pm.expect(response).to.have.property(\"message\");\r",
+							"        })\r",
+							"    }\r",
+							"}\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstName\": \"{{fistName}}\",\r\n  \"lastName\": \"{{lastName}}\",\r\n  \"email\": \"{{emailCreation}}\",\r\n  \"password\": \"{{passwordCreation}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE-URL}}/auth/user/registerAdmin",
+					"host": [
+						"{{BASE-URL}}"
+					],
+					"path": [
+						"auth",
+						"user",
+						"registerAdmin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"tokenAdmin\", pm.response.json().token);\r",
+							"\r",
+							"const statusCode = pm.response.code;\r",
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response must be JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"if (statusCode === 200) {\r",
+							"    pm.test(\"Login réussi avec token\", function () {\r",
+							"        pm.expect(response).to.have.property(\"token\");\r",
+							"        pm.expect(response.token).to.be.a(\"string\");\r",
+							"        pm.expect(response.message).to.include(\"connecté\");\r",
+							"    });\r",
+							"}\r",
+							"\r",
+							"if (statusCode === 400) {\r",
+							"    if (response.message === \"L'email est requis\") {\r",
+							"        pm.test(\"Erreur - Champ email vide\", function () {\r",
+							"            pm.expect(response.message).to.eql(\"L'email est requis\");\r",
+							"        });\r",
+							"    } else if (response.message === \"Email invalide\") {\r",
+							"        pm.test(\"Erreur - Email fourni invalide\", function () {\r",
+							"            pm.expect(response.message).to.eql(\"Email invalide\");\r",
+							"        });\r",
+							"    } else if (response.message === \"Le mot de passe est requis\") {\r",
+							"        pm.test(\"Erreur - Champ mot de passe vide\", function () {\r",
+							"            pm.expect(response.message).to.eql(\"Le mot de passe est requis\");\r",
+							"        });\r",
+							"    } else {\r",
+							"        pm.test(\"Erreur 400 - Requête invalide\", function () {\r",
+							"            pm.expect(response).to.have.property(\"message\");\r",
+							"        });\r",
+							"    }\r",
+							"}\r",
+							"\r",
+							"if (statusCode === 404) {\r",
+							"    pm.test(\"Erreur - l'utilisateur n'a pas été retrouvé\", function () {\r",
+							"        pm.expect(response.message).to.eql(\"L'utilisateur n'existe pas\");\r",
+							"    });\r",
+							"}\r",
+							"\r",
+							"if (statusCode === 401) {\r",
+							"    pm.test(\"Erreur - Mot de passe fourni incorrect\", function () {\r",
+							"        pm.expect(response.message).to.eql(\"Mot de passe incorrect\");\r",
+							"    });\r",
+							"}\r",
+							"\r",
+							"if (statusCode === 500) {\r",
+							"    pm.test(\"500 - Erreur serveur\", function () {\r",
+							"        pm.expect(statusCode).to.eql(500);\r",
+							"        pm.expect(response).to.have.property(\"message\");\r",
+							"    });\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"{{emailLogin}}\",\r\n  \"password\": \"{{passwordLogin}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE-URL}}/auth/user/login",
+					"host": [
+						"{{BASE-URL}}"
+					],
+					"path": [
+						"auth",
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteMyAccount",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{tokenAdmin}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BASE-URL}}/auth/user/delete",
+					"host": [
+						"{{BASE-URL}}"
+					],
+					"path": [
+						"auth",
+						"user",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
