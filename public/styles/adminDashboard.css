@@ -1,0 +1,249 @@
+/* ======================
+   RESET
+====================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background-color: #f4f9fd;
+  color: #2c3e50;
+}
+
+/* ======================
+   CONTAINER
+====================== */
+.container {
+  max-width: 1200px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.08);
+}
+
+/* ======================
+   HEADER
+====================== */
+.container h1 {
+  margin-bottom: 2rem;
+  font-weight: 600;
+  color: #0d6efd;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.container h1::before {
+  content: "🦷";
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  color: #0d6efd;
+}
+
+#logoutBtn {
+  background: linear-gradient(135deg, #dc3545, #ff6b6b);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: 0.3s;
+}
+
+#logoutBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(220,53,69,0.4);
+}
+
+/* ======================
+   TOP ACTIONS
+====================== */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#addUserBtn {
+  background: linear-gradient(135deg, #0d6efd, #4fc3f7);
+  color: white;
+  padding: 0.7rem 1.5rem;
+  border-radius: 30px;
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#addUserBtn:hover {
+  box-shadow: 0 10px 25px rgba(13,110,253,0.4);
+  transform: translateY(-2px);
+}
+
+#searchInput {
+  margin: 1.5rem 0;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #dbe9f5;
+  background: #f9fcff;
+}
+
+#manageActesBtn {
+  background: linear-gradient(135deg, #6f42c1, #a77bfa);
+  color: white;
+  padding: 0.7rem 1.5rem;
+  border-radius: 30px;
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#manageActesBtn:hover {
+  box-shadow: 0 10px 25px rgba(111, 66, 193, 0.4);
+  transform: translateY(-2px);
+}
+
+/* ======================
+   TABLE
+====================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 15px;
+}
+
+thead {
+  background: #0d6efd;
+  color: white;
+}
+
+thead th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 500;
+}
+
+tbody tr {
+  background-color: white;
+  transition: background 0.2s;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f5faff;
+}
+
+tbody tr:hover {
+  background-color: #e9f3ff;
+}
+
+tbody td {
+  padding: 0.9rem 1rem;
+  font-size: 0.9rem;
+}
+
+/* ======================
+   ROLE FILTER SELECT
+====================== */
+.search-container {
+  display: flex;
+  gap: 0.5rem; 
+  margin: 1.5rem 0;
+  align-items: center;
+}
+
+#roleFilter {
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #dbe9f5;
+  background: #f9fcff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  flex: 0 0 180px; 
+}
+
+#roleFilter:focus {
+  outline: none;
+  border-color: #0d6efd;
+  box-shadow: 0 0 5px rgba(13, 110, 253, 0.3);
+}
+
+#searchInput {
+  flex: 1; 
+}
+
+/* ======================
+   MODAL
+====================== */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 110, 253, 0.35);
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background: white;
+  max-width: 450px;
+  margin: 10% auto;
+  padding: 2rem;
+  border-radius: 20px;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+}
+
+.modal-content h2 {
+  color: #0d6efd;
+  margin-bottom: 1.5rem;
+}
+
+.modal-content input,
+.modal-content select {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 12px;
+  border: 1px solid #dbe9f5;
+  margin-bottom: 1rem;
+}
+
+.modal-content button {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #0d6efd, #4fc3f7);
+  border: none;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Close */
+.close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.close:hover {
+  color: #0d6efd;
+}

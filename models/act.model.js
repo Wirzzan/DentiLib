@@ -8,7 +8,7 @@ const acteSchema = new mongoose.Schema(
       trim: true,
     },
     description: {
-      type: Text,
+      type: String,
       trim: true,
     }
   },

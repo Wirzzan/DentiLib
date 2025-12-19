@@ -15,8 +15,14 @@ exports.registerAdmin = async (req, res) => {
         return res.status(400).json({ message: "Le mot de passe est requis" });
     }
     if (password.length < 6) {
-        return res.status(400).json({ message: "Le mot de passe doit contenir plus de 3 caractères" });
+        return res.status(400).json({ message: "Le mot de passe doit contenir plus de 6 caractères" });
     }
+
+     const regex = /^\S+@\S+\.\S+$/;
+ 
+     if(!email.match(regex)){
+      return res.status(400).send({message: "Email invalide"})
+     }
 
     const existing = await User.findOne({ email });
 
@@ -45,15 +51,12 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!email) {
-      return res.status(400).json({ message: "L'email est requis" });
+    if (!email || ! password) {
+      return res.status(400).json({ message: "Tous les champs sont requis" });
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ message: "Email invalide" });
-    }
-    if (!password) {
-      return res.status(400).json({ message: "Le mot de passe est requis" });
     }
 
     const user = await User.findOne({ email });
@@ -82,22 +85,21 @@ exports.deleteUser = async (req, res) => {
  
         if (connectedUser.role !== "ADMIN") {
             return res.status(403).json({
-                message: "Access denied. Admin only."
+                message: "Accès refusé. Admin only."
             });
         }
         const user = await User.findById(userIdToDelete);
  
         if (!user) {
             return res.status(404).json({
-                message: "Admin not found."
+                message: "Utilisateur non trouvé"
             });
         }
- 
  
         await User.findByIdAndDelete(userIdToDelete);
  
         return res.status(200).json({
-            message: "User deleted successfully."
+            message: "Utilisateur supprimé avec succès"
         });
  
     } catch (error) {
