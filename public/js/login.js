@@ -19,6 +19,7 @@ if (loginForm) {
     }
 
     if (!email.match(regex)) {
+      res.status(409).json({ error: "Email est invalide" });
       message.textContent = "Email format invalide";
       message.style.color = "red"
       return;

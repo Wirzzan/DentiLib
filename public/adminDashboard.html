@@ -2,29 +2,73 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Dashboard Admin</title>
-  <link rel="stylesheet" href="/styles/admin.css" />
+  <title>Admin Dashboard - Dentilib</title>
+  <link rel="stylesheet" href="/styles/adminDashboard.css" />
 </head>
+
 <body>
+  <div class="container">
 
-  <h1>Dashboard Admin</h1>
+    <div class="header">
+      <h1>Liste des utilisateurs</h1>
+      <button id="logoutBtn">Déconnexion</button>
+    </div>
 
-  <h2>Liste des utilisateurs</h2>
+    <div class="actions">
+      <button id="addUserBtn">Ajouter un utilisateur</button>
+      <button id="manageActesBtn">Paramétrer les actes</button>
+    </div>
 
-  <table border="1">
-    <thead>
-      <tr>
-        <th>Prénom</th>
-        <th>Nom</th>
-        <th>Email</th>
-        <th>Rôle</th>
-        <th>Détails</th>
-      </tr>
-    </thead>
-    <tbody id="tableUsers">
-    </tbody>
-  </table>
+    <div class="search-container">
+      <select id="roleFilter">
+        <option value="">-- Tous les rôles --</option>
+        <option value="DENTISTE">Dentiste</option>
+        <option value="PROTHESISTE">Prothésiste</option>
+      </select>
 
-  <script src="/public/js/admin.js"></script>
+      <input type="text" id="searchInput" placeholder="Rechercher par nom, prénom ou email"/>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Email</th>
+          <th>Rôle</th>
+          <th>Associé</th>
+        </tr>
+      </thead>
+      <tbody id="userTableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Modal -->
+  <div id="userModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Ajouter un utilisateur</h2>
+
+      <form id="addUserForm">
+        <input type="text" name="firstName" placeholder="Prénom" required />
+        <input type="text" name="lastName" placeholder="Nom" required />
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="password" name="password" placeholder="Mot de passe" required />
+
+        <select name="role" required>
+          <option value="DENTISTE">Dentiste</option>
+          <option value="PROTHESISTE">Prothésiste</option>
+        </select>
+
+        <select name="dentisteId" id="dentisteSelect" style="display: none;">
+          <option value="">-- Sélectionner un dentiste --</option>
+        </select>
+
+        <button type="submit">Créer</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
 </body>
 </html>

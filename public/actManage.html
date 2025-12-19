@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liste des actes</title>
+  <link rel="stylesheet" href="./styles/actManage.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Liste des actes</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nom de l'acte</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="actesTableBody">
+        <!-- Ligne template, à remplir dynamiquement -->
+        <tr>
+          <td class="acte-name">Nom de l'acte</td>
+          <td>
+            <div class="action-icons">
+              <span class="edit-acte" title="Modifier">✏️</span>
+              <span class="delete-acte" title="Supprimer">🗑️</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="table-footer">
+      <button class="btn btn-add" id="addActeBtn">Ajouter un acte</button>
+      <button class="btn btn-save" id="saveActesBtn">Sauvegarder</button>
+    </div>
+  </div>
+
+  <!-- Si besoin d’icônes Feather plus tard -->
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+  <script>
+    feather.replace();
+  </script>
+</body>
+</html>
