@@ -3,6 +3,7 @@ const express = require ("express");
 const dbConnection = require("./config/dbConfig");
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes")
+const actRoutes = require("./routes/actRoutes")
 
 
 const app = express();
@@ -18,6 +19,8 @@ const path = require("path");
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/api", authRoutes);
 app.use("/admin", adminRoutes);
+app.use("/act", actRoutes);
+
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "/public/login.html"));

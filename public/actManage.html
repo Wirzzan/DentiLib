@@ -14,33 +14,46 @@
       <thead>
         <tr>
           <th>Nom de l'acte</th>
+          <th>Description</th>
           <th>Actions</th>
         </tr>
       </thead>
-      <tbody id="actesTableBody">
-        <!-- Ligne template, à remplir dynamiquement -->
-        <tr>
-          <td class="acte-name">Nom de l'acte</td>
-          <td>
-            <div class="action-icons">
-              <span class="edit-acte" title="Modifier">✏️</span>
-              <span class="delete-acte" title="Supprimer">🗑️</span>
-            </div>
-          </td>
-        </tr>
+      <tbody id="actsTable">
       </tbody>
     </table>
 
     <div class="table-footer">
-      <button class="btn btn-add" id="addActeBtn">Ajouter un acte</button>
-      <button class="btn btn-save" id="saveActesBtn">Sauvegarder</button>
+      <button class="btn btn-add" id="addActBtn">Ajouter un act</button>
+      <button class="btn btn-return" id="returnBtn">Retour</button>
     </div>
   </div>
 
-  <!-- Si besoin d’icônes Feather plus tard -->
-  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-  <script>
-    feather.replace();
-  </script>
+  <!-- Modal Création-->
+  <div id="actModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Ajouter un acte</h2>
+      <form id="addActForm">
+        <input type="text" name="name" placeholder="Nom de l'acte" required />
+        <input type="text" name="description" placeholder="Description" required />
+        <button type="submit">Créer</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Modification -->
+<div id="actModalEdit" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Modifier un acte</h2>
+    <form id="editActForm">
+      <input type="text" name="name" placeholder="Nom de l'acte" required />
+      <input type="text" name="description" placeholder="Description" required />
+      <button type="submit">Modifier</button>
+    </form>
+  </div>
+</div>
+
+  <script src="./js/act.js"></script>
 </body>
 </html>

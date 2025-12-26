@@ -4,12 +4,30 @@ const searchInput = document.getElementById("searchInput");
 const userTableBody = document.getElementById("userTableBody");
 const addUserBtn = document.getElementById("addUserBtn");
 const userModal = document.getElementById("userModal");
-const closeModal = document.querySelector(".close");
+const closeModal = document.querySelectorAll(".close");
 const addUserForm = document.getElementById("addUserForm");
 const dentisteSelect = document.getElementById("dentisteSelect");
 const roleFilter = document.getElementById("roleFilter");
 
+const editUserModal = document.getElementById("editUserModal");
+const editUserForm = document.getElementById("editUserForm");
+const editDentisteSelect = document.getElementById("editDentisteSelect");
 
+
+// =======VERIF ROLE========
+
+const token = localStorage.getItem("token");
+const role = localStorage.getItem("role");
+
+if (!token || role !== "ADMIN") {
+  window.location.href = "/";
+}else {
+  document.body.style.display = "block";
+}
+
+
+//**initi valeurs */
+let editingUserId = null;
 let users = [];
 
 /* =======================
@@ -37,7 +55,12 @@ function displayUsers(list) {
         <td>${user.firstName}</td>
         <td>${user.email}</td>
         <td>${user.role}</td>
+        <td>${user.siret}</td>
         <td>${associated}</td>
+        <td class="actions-cell">
+          <button class="btn-edit" data-id="${user._id}" title="Modifier"> ✏️ </button>
+          <button class="btn-delete" data-id="${user._id}" title="Supprimer"> ✖ </button>
+        </td>
       </tr>
       `
     );
@@ -88,7 +111,7 @@ async function fetchUsers() {
 ======================= */
 async function fetchDentistes() {
   try {
-    const res = await fetch(`${API_URL}/dentistes`);
+    const res = await fetch(`${API_URL}/dentistes/notAssociated`);
     const data = await res.json();
 
     dentisteSelect.innerHTML =
@@ -113,16 +136,33 @@ addUserBtn.addEventListener("click", () => {
   userModal.style.display = "block";
 });
 
-closeModal.addEventListener("click", () => {
-  userModal.style.display = "none";
+const closeModals = document.querySelectorAll(".close");
+
+closeModals.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const modal = btn.closest(".modal");
+    modal.style.display = "none";
+
+    const form = modal.querySelector("form");
+    if (form) form.reset();
+
+    editingUserId = null;
+  });
 });
 
+// Clic à l’extérieur de toutes les modales pour fermer
 window.addEventListener("click", e => {
-  if (e.target === userModal) {
-    userModal.style.display = "none";
-  }
+  document.querySelectorAll(".modal").forEach(modal => {
+    if (e.target === modal) {
+      modal.style.display = "none";
+      const form = modal.querySelector("form");
+      if (form) form.reset();
+      const dentisteSelectInModal = modal.querySelector("select");
+      if (dentisteSelectInModal) dentisteSelectInModal.style.display = "none";
+      editingUserId = null;
+    }
+  });
 });
-
 
 /* ================================
    MODAL - Show SELECT dentiste Id
@@ -157,6 +197,7 @@ addUserForm.addEventListener("submit", async e => {
     email: addUserForm.email.value,
     password: addUserForm.password.value,
     role: addUserForm.role.value,
+    siret: addUserForm.siret.value,
     dentisteId: addUserForm.role.value === "PROTHESISTE" ? dentisteSelect.value : null,
     listeActes: []
   };
@@ -175,14 +216,17 @@ addUserForm.addEventListener("submit", async e => {
     });
 
     const data = await res.json();
-
     if (!res.ok) {
       alert(data.message);
       return;
     }
 
     alert("Utilisateur créé");
+
     addUserForm.reset();
+    dentisteSelect.style.display = "none";
+    dentisteSelect.value = "";
+    addUserForm.role.dispatchEvent(new Event("change"));
     userModal.style.display = "none";
     fetchUsers();
   } catch (err) {
@@ -190,6 +234,128 @@ addUserForm.addEventListener("submit", async e => {
     alert("Erreur serveur");
   }
 });
+
+/* =======================
+   UPDATE USER
+======================= */
+document.addEventListener("click", async (e) => {
+  if (!e.target.classList.contains("btn-edit")) return;
+
+  editingUserId = e.target.dataset.id;
+  const user = users.find(u => u._id === editingUserId);
+  if (!user) return;
+
+  editUserForm.firstName.value = user.firstName;
+  editUserForm.lastName.value = user.lastName;
+  editUserForm.email.value = user.email;
+  editUserForm.password.value = "";
+  editUserForm.siret.value = user.siret || "";
+
+  if (user.role === "PROTHESISTE") {
+    editDentisteSelect.style.display = "block";
+
+    // 1 - Afficher le dentiste associé 
+    editDentisteSelect.innerHTML = "";
+    if (user.associatedUser) {
+      const dentiste = user.associatedUser; 
+      editDentisteSelect.insertAdjacentHTML(
+        "beforeend",
+        `<option value="${dentiste._id}" selected>${dentiste.firstName} ${dentiste.lastName}</option>`
+      );
+    }
+
+    // 2. Ajouter les dentistes not associated
+    const res = await fetch(`${API_URL}/dentistes/notAssociated`);
+    const data = await res.json();
+    data.dentistes.forEach(d => {
+      // éviter de doubler si c’est le dentiste déjà associé
+      if (!user.associatedUser || d._id !== user.associatedUser._id) {
+        editDentisteSelect.insertAdjacentHTML(
+          "beforeend",
+          `<option value="${d._id}">${d.firstName} ${d.lastName}</option>`
+        );
+      }
+    });
+
+  } else {
+    editDentisteSelect.style.display = "none";
+  }
+
+  editUserModal.style.display = "block";
+});
+
+
+
+editUserForm.addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const payload = {
+    firstName: editUserForm.firstName.value,
+    lastName: editUserForm.lastName.value,
+    email: editUserForm.email.value,
+    siret: editUserForm.siret.value,
+    dentisteId: editDentisteSelect.style.display === "block"
+      ? editDentisteSelect.value
+      : null,
+    password: editUserForm.password.value || null
+  };
+
+  try {
+    const res = await fetch(`${API_URL}/updateAccount/${editingUserId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      alert(data.message);
+      return;
+    }
+
+    alert("Utilisateur modifié");
+    editUserModal.style.display = "none";
+    editUserForm.reset();
+    editingUserId = null;
+    fetchUsers();
+
+  } catch (err) {
+    console.error(err);
+    alert("Erreur modification");
+  }
+});
+
+
+/* =======================
+   DELETE USER
+======================= */
+document.addEventListener("click", async (e) => {
+  if (!e.target.classList.contains("btn-delete")) return;
+
+  const userId = e.target.dataset.id;
+
+  if (!confirm("Voulez-vous vraiment supprimer cet utilisateur ?")) return;
+
+  try {
+    const res = await fetch(`${API_URL}/deleteAccount/${userId}`, {
+      method: "POST"
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message);
+      return;
+    }
+
+    alert("Utilisateur supprimé");
+    fetchUsers();
+  } catch (err) {
+    console.error(err);
+    alert("Erreur suppression utilisateur");
+  }
+});
+
 
 /* =======================
    SEARCH
