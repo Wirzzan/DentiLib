@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Admin Dashboard - Dentilib</title>
   <link rel="stylesheet" href="/styles/adminDashboard.css" />
+  <style>body {display: none;}</style>
 </head>
 
 <body>
@@ -36,14 +37,16 @@
           <th>Prénom</th>
           <th>Email</th>
           <th>Rôle</th>
+          <th>Siret</th>
           <th>Associé</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody id="userTableBody"></tbody>
     </table>
   </div>
 
-  <!-- Modal -->
+  <!-- Modal Création-->
   <div id="userModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
@@ -54,6 +57,7 @@
         <input type="text" name="lastName" placeholder="Nom" required />
         <input type="email" name="email" placeholder="Email" required />
         <input type="password" name="password" placeholder="Mot de passe" required />
+        <input type="text" name="siret" placeholder="SIRET" required />
 
         <select name="role" required>
           <option value="DENTISTE">Dentiste</option>
@@ -68,6 +72,29 @@
       </form>
     </div>
   </div>
+
+  <!-- Modal Modification -->
+<div id="editUserModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Modifier un utilisateur</h2>
+
+    <form id="editUserForm">
+      <input type="text" name="firstName" required />
+      <input type="text" name="lastName" required />
+      <input type="email" name="email" required />
+      <input type="password" name="password" placeholder="Nouveau mot de passe (laisser vide si inchangé)" />
+      <input type="text" name="siret" />
+
+      <select name="dentisteId" id="editDentisteSelect" style="display:none">
+        <option value="">-- Sélectionner un dentiste --</option>
+      </select>
+
+      <button type="submit">Modifier</button>
+    </form>
+  </div>
+</div>
+
 
   <script src="/js/admin.js"></script>
 </body>

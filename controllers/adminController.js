@@ -1,7 +1,10 @@
 const User = require('../models/user.model.js');
-const Acte = require('../models/act.model.js')
+const bcrypt = require("bcrypt");
+const { sendMail } = require("../utils/mailer");
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
+
+
 
 exports.registerUser = async (req, res) => {
    try {
@@ -63,6 +66,23 @@ const createAccount = async (req, res) => {
  
     if (role === 'DENTISTE') {
       await user.save()
+
+      await sendMail(
+        email,
+        "Bienvenue sur Dentilib",
+        `
+        <h2>Bonjour ${firstName} ${lastName}</h2>
+        <p>Votre compte Dentilib a été créé avec succès.</p>
+        <p>Pour la protection de votre compte, pensez à sécuriser les identifiants</p>
+        <p><strong>Email :</strong> ${email}</p>
+        <p><strong>Mot de passe :</strong> ${password}</p>
+        <p><strong>Rôle :</strong> ${role}</p>
+        <p>Vous pouvez maintenant vous connecter.</p>
+        <br>
+        <p>L'équipe Dentilib 🦷</p>
+        `
+      );
+
       return res.status(201).json({ message: 'Le dentiste a été créé', user})
     }
  
@@ -82,6 +102,24 @@ const createAccount = async (req, res) => {
       await user.save()
       await dentiste.save()
 
+      await sendMail(
+        email,
+        "Votre compte Dentilib est prêt",
+        `
+        <h2>Bonjour ${firstName}</h2>
+        <p>Votre compte prothésiste a été créé.</p>
+        <p>Vous êtes associé au dentiste :</p>
+        <p><strong>${dentiste.firstName} ${dentiste.lastName}</strong></p>
+        <br>
+        <p>Pour la protection de votre compte, pensez à sécuriser les identifiants</p>
+        <p><strong>Email :</strong> ${email}</p>
+        <p><strong>Mot de passe :</strong> ${password}</p>
+        <p><strong>Rôle :</strong> ${role}</p>
+        <p>Vous pouvez maintenant vous connecter.</p>
+        <p>L'équipe Dentilib 🦷</p>
+        `
+      );
+
       return res.status(201).json({
         message: 'Prothesiste created and linked to dentiste',
         prothesiste: user,
@@ -96,6 +134,71 @@ const createAccount = async (req, res) => {
     res.status(500).json({ message: 'Server error' })
   }
 } 
+
+const updateAccount = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { firstName, lastName, email, password, siret, dentisteId } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "L'utilisateur n'a pas été trouvé" });
+    }
+
+    // Vérifier email unique si modifié
+    if (email && email !== user.email) {
+      const existing = await User.findOne({ email });
+      if (existing) {
+        return res.status(409).json({ message: "Cet email existe déjà" });
+      }
+      user.email = email;
+    }
+
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.siret = siret;
+
+    if (password && password.length >= 8) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
+
+    // Modifier association du PROTHESISTE
+    if (user.role === "PROTHESISTE") {
+      if (!dentisteId) {
+        return res.status(400).json({ message: "dentisteId required" });
+      }
+
+      // Si retrait de l'id associé, libérer l'autre user de l'association
+      if (user.associatedUser) {
+        await User.findByIdAndUpdate(user.associatedUser, {
+          associatedUser: null
+        });
+      }
+
+      const newDentiste = await User.findById(dentisteId);
+      if (!newDentiste || newDentiste.role !== "DENTISTE") {
+        return res.status(404).json({ message: "Le dentiste n'a pas été trouvé" });
+      }
+
+      user.associatedUser = newDentiste._id;
+      newDentiste.associatedUser = user._id;
+
+      await newDentiste.save();
+    }
+
+    await user.save();
+
+    return res.status(200).json({
+      message: "Utilisateur a été mis à jour",
+      user
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 const deleteAccount = async (req, res) => {
   try {
@@ -165,6 +268,18 @@ const getAllDentistes = async (req, res) => {
   }
 };
 
+const getDentistesNotAssociated = async (req, res) => {
+  try {
+    const dentistes = await User.find({ role: "DENTISTE", associatedUser: null })
+      .select("firstName lastName email");
+
+    return res.status(200).json({ dentistes });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
 const getAllUsersWithoutAdmin = async (req, res) => {
   try {
     const users = await User.find({ role: { $ne: "ADMIN" } })
@@ -177,49 +292,5 @@ const getAllUsersWithoutAdmin = async (req, res) => {
   }
 };
 
-const getAllActes = async (req, res) => {
-  try {
-    const actes = await Acte.find();
-    return res.status(200).json({ actes });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error" });
-  }
-};
 
-const createActe = async (req, res) => {
-  try {
-    const { name, description } = req.body;
-
-    if (!name) {
-      return res.status(400).json({
-        message: "Acte name is required"
-      });
-    }
-
-    const existingActe = await Acte.findOne({ name });
-    if (existingActe) {
-      return res.status(409).json({
-        message: "Acte already exists"
-      });
-    }
-
-    const acte = await Acte.create({
-      name,
-      description
-    });
-
-    return res.status(201).json({
-      message: "Acte created successfully",
-      acte
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error" });
-  }
-};
-
-
-
-
-module.exports = { createAccount, getAllUsers, deleteAccount, getUserById, getAllDentistes, getAllUsersWithoutAdmin, getAllActes, createActe }
+module.exports = { createAccount, getAllUsers, deleteAccount, getUserById, getAllDentistes, getDentistesNotAssociated, getAllUsersWithoutAdmin, updateAccount }

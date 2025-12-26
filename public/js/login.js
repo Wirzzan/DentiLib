@@ -45,6 +45,7 @@ if (loginForm) {
       } else {
 
         localStorage.setItem("token", rponseData.token)
+        localStorage.setItem("role", rponseData.role);
         
         switch (rponseData.role) {
           case "ADMIN":
