@@ -69,6 +69,11 @@ const acteSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+
+    idProthesiste: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   { timestamps: true }
 );

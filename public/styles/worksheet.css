@@ -1,0 +1,717 @@
+/* ======================
+   RESET
+====================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background-color: #f4f9fd;
+  color: #2c3e50;
+}
+
+/* ======================
+   CONTAINER
+====================== */
+.container {
+  max-width: 1200px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.08);
+}
+
+.save-section {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+
+/* ======================
+   TITRE
+====================== */
+h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #0d6efd;
+  font-weight: 600;
+}
+
+/* ======================
+   HEADER
+====================== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  color: #0d6efd;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header h1::before {
+  content: "🦷";
+}
+
+#logoutBtn {
+  background: linear-gradient(135deg, #dc3545, #ff6b6b);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: 0.3s;
+}
+
+#logoutBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(220,53,69,0.4);
+}
+
+/* ======================
+   INFOS PATIENT / HEADER FICHE
+====================== */
+.patient-info {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #dbe9f5;
+  padding: 1rem 2rem;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+  position: relative;
+  gap: 2rem;
+}
+
+.patient-info div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.patient-info label {
+  font-weight: 500;
+  color: #0d6efd;
+}
+
+.patient-info span {
+  font-weight: 400;
+}
+
+#editPatientBtn {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+  padding: 0.5rem 1rem;
+  border-radius: 30px;
+  border: none;
+  background: linear-gradient(135deg, #0d6efd, #4fc3f7);
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#editPatientBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(13,110,253,0.4);
+}
+
+/* ======================
+   TABLE ACTES
+====================== */
+.acts-section table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  min-height: 120px; /* lignes visibles même vides */
+}
+
+.acts-section th, .acts-section td {
+  border: 1px solid #dbe9f5;
+  padding: 0.8rem;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.acts-section th {
+  background: #0d6efd;
+  color: white;
+}
+
+.acts-section tbody tr:nth-child(even) {
+  background-color: #f5faff;
+}
+
+.acts-section tbody tr:hover {
+  background-color: #e9f3ff;
+}
+
+.acts-section {
+  text-align: center;
+  color: #999;
+  cursor: pointer;
+}
+
+.add-act-row td {
+  text-align: center;
+  cursor: pointer;
+  padding: 0.5rem; /* réduit la hauteur */
+  font-weight: 500;
+  color: #0d6efd;
+  background-color: #f5faff;
+}
+
+.add-act-row td:hover {
+  background-color: #e9f3ff;
+}
+
+/* ======================
+   LARGEUR COLONNES TABLE ACTES
+====================== */
+.acts-section table th:nth-child(1),
+.acts-section table td:nth-child(1) {
+  width: 30%; /* Acte : moins large */
+}
+
+.acts-section table th:nth-child(2),
+.acts-section table td:nth-child(2) {
+  width: 50%; /* Description : plus large */
+}
+
+.acts-section table th:nth-child(3),
+.acts-section table td:nth-child(3) {
+  width: 10%; /* Prix */
+}
+
+.acts-section table th:nth-child(4),
+.acts-section table td:nth-child(4) {
+  width: 10%; /* Actions */
+}
+
+/* ======================
+   TABLE ACTIONS
+====================== */
+.actions-cell {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn-edit {
+  background: #f0f0f0;
+  border: none;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.btn-edit:hover {
+  background: #ddd;
+}
+
+.btn-delete {
+  background: #d9534f;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.btn-delete:hover {
+  background: #c9302c;
+}
+
+/* ======================
+   BOUTONS
+====================== */
+.save-section #saveWorksheetBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 13rem;
+  overflow: hidden;
+  height: 3rem;
+  background-size: 300% 300%;
+  cursor: pointer;
+  backdrop-filter: blur(1rem);
+  border-radius: 5rem;
+  transition: 0.5s;
+  animation: gradient_301 5s ease infinite;
+  border: double 4px transparent;
+  background-image: linear-gradient(#212121, #212121),
+    linear-gradient(
+      137.48deg,
+      #ffdb3b 10%,
+      #fe53bb 45%,
+      #8f51ea 67%,
+      #0044ff 87%
+    );
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+}
+
+.save-section #saveWorksheetBtn #container-stars {
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transition: 0.5s;
+  backdrop-filter: blur(1rem);
+  border-radius: 5rem;
+}
+
+.save-section #saveWorksheetBtn strong {
+  z-index: 2;
+  font-family: "Avalors Personal Use", sans-serif;
+  font-size: 12px;
+  letter-spacing: 5px;
+  color: #ffffff;
+  text-shadow: 0 0 4px white;
+}
+
+.save-section #saveWorksheetBtn #glow {
+  position: absolute;
+  display: flex;
+  width: 12rem;
+}
+
+.save-section #saveWorksheetBtn .circle {
+  width: 100%;
+  height: 30px;
+  filter: blur(2rem);
+  animation: pulse_3011 4s infinite;
+  z-index: -1;
+}
+
+.save-section #saveWorksheetBtn .circle:nth-of-type(1) {
+  background: rgba(254, 83, 186, 0.636);
+}
+
+.save-section #saveWorksheetBtn .circle:nth-of-type(2) {
+  background: rgba(142, 81, 234, 0.704);
+}
+
+.save-section #saveWorksheetBtn:hover #container-stars {
+  z-index: 1;
+  background-color: #212121;
+}
+
+.save-section #saveWorksheetBtn:hover {
+  transform: scale(1.1);
+}
+
+.save-section #saveWorksheetBtn:active {
+  border: double 4px #fe53bb;
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  animation: none;
+}
+
+.save-section #saveWorksheetBtn:active .circle {
+  background: #fe53bb;
+}
+
+.save-section #saveWorksheetBtn #stars {
+  position: relative;
+  background: transparent;
+  width: 200rem;
+  height: 200rem;
+}
+
+.save-section #saveWorksheetBtn #stars::after {
+  content: "";
+  position: absolute;
+  top: -10rem;
+  left: -100rem;
+  width: 100%;
+  height: 100%;
+  animation: animStarRotate 90s linear infinite;
+  background-image: radial-gradient(#ffffff 1px, transparent 1%);
+  background-size: 50px 50px;
+}
+
+.save-section #saveWorksheetBtn #stars::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 170%;
+  height: 500%;
+  animation: animStar 60s linear infinite;
+  background-image: radial-gradient(#ffffff 1px, transparent 1%);
+  background-size: 50px 50%;
+  opacity: 0.5;
+}
+
+@keyframes animStar {
+  from { transform: translateY(0); }
+  to { transform: translateY(-135rem); }
+}
+
+@keyframes animStarRotate {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0); }
+}
+
+@keyframes gradient_301 {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes pulse_3011 {
+  0% {
+    transform: scale(0.75);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+  }
+  100% {
+    transform: scale(0.75);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+/* Bouton flottant */
+.save-section #saveWorksheetBtn.floating-save {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+
+.saveBtn[disabled] {
+  background: #333;
+  opacity: 0.8 !important;
+  cursor: not-allowed !important;
+}
+.saveBtn[disabled]:hover {
+  box-shadow: none;
+}
+
+.saveBtn[disabled] #stars,
+.saveBtn[disabled] #stars::before,
+.saveBtn[disabled] #stars::after,
+.saveBtn[disabled] #container-stars,
+.saveBtn[disabled] .circle,
+.saveBtn[disabled] #saveWorksheetBtn:active {
+  opacity: 0.7 !important;
+  border: 1px black !important;
+  background: rgb(54, 54, 54) !important;
+  background-image: none !important;
+}
+
+.floating-save {
+  position: fixed;
+  bottom: 20px;
+  right: 2vw;
+  padding: 1.5rem 2rem;
+  z-index: 1000;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  animation: glow 1.5s infinite alternate;
+  transition: all 0.3s ease;
+}
+.floating-save:hover {
+  transform: scale(1.05);
+}
+@keyframes glow {
+  0% { box-shadow: 0 0 5px #000000; }
+  50% { box-shadow: 0 0 15px #629ff0; }
+  100% { box-shadow: 0 0 5px #2a2b2a; }
+}
+
+
+
+/* ======================
+   REMARQUE
+====================== */
+.remark-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.remark-section label {
+  font-weight: 500;
+  color: #0d6efd;
+}
+
+.remark-section span, .remark-section textarea {
+  background: #f9fcff;
+  border: 1px solid #dbe9f5;
+  border-radius: 12px;
+  padding: 0.8rem;
+  min-height: 60px;
+}
+
+.remark-section textarea {
+  resize: vertical;
+  width: 100%;
+}
+
+/* ======================
+   MODAL (si nécessaire)
+====================== */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 110, 253, 0.35);
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background: white;
+  max-width: 450px;
+  margin: 10% auto;
+  padding: 2rem;
+  border-radius: 20px;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+}
+
+.modal-content h2 {
+  color: #0d6efd;
+  margin-bottom: 1.5rem;
+}
+
+.modal-content input,
+.modal-content select {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 12px;
+  border: 1px solid #dbe9f5;
+  margin-bottom: 1rem;
+}
+
+.modal-content button {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #0d6efd, #4fc3f7);
+  border: none;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Close */
+.close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.close:hover {
+  color: #0d6efd;
+}
+
+/* ======================
+   SELECT TYPE RECHERCHE
+====================== */
+#searchType {
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #dbe9f5;
+  background: #f9fcff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+
+/* ======================
+   SELECT ACTE
+====================== */
+.act-select {
+  width: 100%;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #dbe9f5;
+  background: #f9fcff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.act-select:hover {
+  border-color: #0d6efd;
+}
+
+/* ======================
+   BOUTON SUPPRIMER ACTE
+====================== */
+.btn-delete-act {
+  background: #dc3545; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: 0.2s;
+}
+
+.btn-delete-act:hover {
+  background: #c9302c; 
+}
+
+/* ======================
+   SECTION PROTHESISTE
+====================== */
+.pro-section {
+  margin-top: 30px;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f8f9fa;
+}
+
+.pro-section h2 {
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.pro-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px 24px;
+}
+
+.pro-grid label {
+  display: block;
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.pro-grid span {
+  font-weight: 500;
+}
+
+/* STATUTS */
+.status {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  display: inline-block;
+}
+
+.status.attente {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.status.encours {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status.termine {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status.attente-paiement {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status.paye {
+  background: #d4edda;
+  color: #155724;
+}
+
+/* Bouton facture désactivé */
+#factureBtn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  background: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.patient-input {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #dbe9f5;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+/* ======================
+   SECTION BOUTONS FICHE
+====================== */
+/* ======================
+   BOUTONS SIMPLE FICHE
+====================== */
+.button-section {
+  display: flex;
+  justify-content: flex-start; /* tout à gauche */
+  gap: 1rem; /* espace entre boutons */
+  margin-top: 1rem;
+}
+
+.button-section button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.5rem;
+  border-radius: 2rem; /* arrondi similaire à sauvegarder */
+  border: none;
+  font-weight: bold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #fff;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  background-image: linear-gradient(135deg, #4a90e2, #357ab8); /* bleu léger */
+}
+
+.button-section button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+}
+
+.button-section button:disabled {
+  background-color: #777;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Bouton Envoyer fiche */
+.button-section .send-btn {
+  background-image: linear-gradient(135deg, #27ae60, #1e8449); /* vert */
+}
+
+/* Bouton Retour */
+.button-section .back-btn {
+  background-image: linear-gradient(135deg, #e67e22, #d35400); /* orange */
+}
+

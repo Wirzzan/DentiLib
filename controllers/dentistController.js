@@ -1,11 +1,12 @@
 const WorkSheet = require('../models/workSheet.model');
+const User = require("../models/user.model");
 
 const createWorkSheet = async (req, res) => {
   try {
-    const { nomPatient, prenomPatient, emailPatient, numSecuPatient, acts, remarque } = req.body;
+    const { nomPatient, prenomPatient, emailPatient, numSecuPatient, remarque } = req.body;
 
-    if (!nomPatient || !prenomPatient || !emailPatient || !acts || acts.length === 0) {
-      return res.status(400).json({ message: "Informations patient et actes obligatoires" });
+    if (!nomPatient || !prenomPatient || !emailPatient) {
+      return res.status(400).json({ message: "Nom, prénom et email du patient sont obligatoires" });
     }
 
     // Générer un numéro de fiche unique simple
@@ -18,9 +19,10 @@ const createWorkSheet = async (req, res) => {
       prenomPatient,
       emailPatient,
       numSecuPatient,
-      acts,
+      acts: [],
       remarque,
       idUser: req.user.id // dentiste connecté
+      //associatedUser.id
     });
 
     return res.status(201).json({ message: "Fiche travaux créée", workSheet });
@@ -37,6 +39,25 @@ const getAllWorkSheets = async (req, res) => {
       .sort({ createdAt: -1 });
 
     return res.status(200).json({ workSheets });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+const getWorkSheetById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const workSheet = await WorkSheet.findById(id);
+    if (!workSheet) return res.status(404).json({ message: "Fiche introuvable" });
+
+    // Vérification : le dentiste peut voir seulement ses fiches
+    if (workSheet.idUser.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Accès refusé" });
+    }
+
+    return res.status(200).json({ workSheet });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Erreur serveur" });
@@ -88,5 +109,45 @@ const deleteWorkSheet = async (req, res) => {
   }
 };
 
-module.exports = { createWorkSheet, getAllWorkSheets, updateWorkSheet, deleteWorkSheet };
+const sendWorkSheet = async (req, res) => {
+  try {
+    const worksheetId = req.params.id;
+
+    // Récupérer la fiche
+    const worksheet = await WorkSheet.findById(worksheetId);
+    if (!worksheet) return res.status(404).json({ message: "❌ Envoi impossible : Fiche introuvable" });
+
+    // Sécurité : vérifier que c’est bien le dentiste créateur
+    if (worksheet.idUser.toString() !== req.user.id) {
+      return res.status(403).json({ message: "❌ Envoi impossible : Accès refusé" });
+    }
+
+    // Recharger le dentiste depuis la DB
+    const dentiste = await User.findById(req.user.id);
+    if (!dentiste || !dentiste.associatedUser) {
+      return res.status(400).json({ message: "❌ Envoi impossible : Pas de prothésiste associé" });
+    }
+
+    // Empêcher double envoi
+    if (worksheet.idProthesiste) {
+      return res.status(400).json({ message: "❌ Envoi impossible : Fiche déjà envoyée" });
+    }
+
+    worksheet.idProthesiste = dentiste.associatedUser;
+    worksheet.status = "EN_ATTENTE";
+
+    await worksheet.save();
+
+    res.json({
+      message: "Fiche envoyée au prothésiste",
+      worksheet
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Erreur serveur lors de l'envoi de la fiche" });
+  }
+};
+
+module.exports = { createWorkSheet, getAllWorkSheets, getWorkSheetById, updateWorkSheet, deleteWorkSheet, sendWorkSheet };
 

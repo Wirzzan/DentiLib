@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dentiste Accueil- Dentilib</title>
+  <link rel="stylesheet" href="/styles/home.css" />
+  <!--<style>body {display: none;}</style> -->
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="header">
+      <h1>Mes fiches travaux</h1> 
+      <button id="logoutBtn">Déconnexion</button>
+    </div>
+
+    <div class="actions">
+      <button class="createBtn" id="addWorkBtn">Nouvelle fiche</button> 
+    </div>
+
+    <div class="search-container">
+      <select class="searchFilter" id="searchType"> 
+        <option value="patient">Patient</option>  
+        <option value="numFiche">N° Fiche</option> 
+        <option value="date">Date</option> 
+      </select>
+
+      <input type="text" id="searchInput" placeholder="Rechercher par patient ou N° fiche"/>
+
+      <div id="dateRange" style="display:none">
+        <input type="date" id="dateFrom" />
+        <input type="date" id="dateTo" />
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>N° Fiche</th>
+          <th>Patient</th> 
+          <th>Email</th> 
+          <th>Status</th> 
+          <th>Actions</th> 
+        </tr>
+      </thead>
+      <tbody id="worksheetTable"></tbody>
+    </table>
+  </div>
+
+  <!-- MODAL CRÉATION/EDIT FICHE -->
+  <div id="workModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Infos patients</h2>
+    <form id="workForm">
+      <input type="text" name="nomPatient" placeholder="Nom du patient" required />
+      <input type="text" name="prenomPatient" placeholder="Prénom du patient" required />
+      <input type="email" name="emailPatient" placeholder="Email du patient" required />
+      <input type="number" name="numSecuPatient" placeholder="Numéro de sécurité sociale" />
+
+      <textarea name="remarque" placeholder="Remarques" rows="3"></textarea>
+
+      <button type="submit">Créer la fiche</button>
+    </form>
+  </div>
+</div>
+
+  <script src="/js/dentist.js"></script> 
+</body>
+</html>

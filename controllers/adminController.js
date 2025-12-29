@@ -48,11 +48,13 @@ const createAccount = async (req, res) => {
       dentisteId  
     } = req.body
  
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const user = new User({
       firstName,
       lastName,
       email,
-      password,
+      password: hashedPassword,
       role,
       siret,
       listeActes,

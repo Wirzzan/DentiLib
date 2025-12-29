@@ -7,3 +7,5 @@ ENVOI D'un EMAIL lors de la création :
 - fonctionnalité à intégrer au createUser (Admin)
 
 A FAire :
+Commencer par l'interface configurer actes des prothésistes 
+- Màj de fiche travaux côté dentiste pour apeler les actes du prothesistes
