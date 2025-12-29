@@ -1,4 +1,6 @@
 const API_URL = "http://localhost:3000/admin/user"; //endpoint pour récupérer les users
+const token = localStorage.getItem("token");
+const role = localStorage.getItem("role");
 
 const searchInput = document.getElementById("searchInput");
 const userTableBody = document.getElementById("userTableBody");
@@ -15,10 +17,6 @@ const editDentisteSelect = document.getElementById("editDentisteSelect");
 
 
 // =======VERIF ROLE========
-
-const token = localStorage.getItem("token");
-const role = localStorage.getItem("role");
-
 if (!token || role !== "ADMIN") {
   window.location.href = "/";
 }else {
@@ -29,6 +27,21 @@ if (!token || role !== "ADMIN") {
 //**initi valeurs */
 let editingUserId = null;
 let users = [];
+
+/* =======================
+   FETCH Securisé
+======================= */
+function authFetch(url, options = {}) {
+  return fetch(url, {
+    ...options,
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json",
+      ...(options.headers || {})
+    }
+  });
+}
+
 
 /* =======================
    AFFICHAGE DES USERS
@@ -94,7 +107,19 @@ roleFilter.addEventListener("change", () => {
 ======================= */
 async function fetchUsers() {
   try {
-    const res = await fetch(`${API_URL}/allUsers/noAdmin`);
+    const res = await authFetch(`${API_URL}/allUsers/noAdmin`);
+
+    if (!res.ok) {
+    if (res.status === 401 || res.status === 403) {
+      alert("Session expirée, veuillez vous reconnecter.");
+      localStorage.clear();
+      window.location.href = "/";
+      return;
+    }
+
+    throw new Error("Erreur serveur");
+    }
+
     const data = await res.json();
     users = data.users;
     displayUsers(users);
@@ -111,7 +136,7 @@ async function fetchUsers() {
 ======================= */
 async function fetchDentistes() {
   try {
-    const res = await fetch(`${API_URL}/dentistes/notAssociated`);
+    const res = await authFetch(`${API_URL}/dentistes/notAssociated`);
     const data = await res.json();
 
     dentisteSelect.innerHTML =
@@ -209,7 +234,7 @@ addUserForm.addEventListener("submit", async e => {
   }
 
   try {
-    const res = await fetch(`${API_URL}/createAccount`, {
+    const res = await authFetch(`${API_URL}/createAccount`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData)
@@ -265,7 +290,7 @@ document.addEventListener("click", async (e) => {
     }
 
     // 2. Ajouter les dentistes not associated
-    const res = await fetch(`${API_URL}/dentistes/notAssociated`);
+    const res = await authFetch(`${API_URL}/dentistes/notAssociated`);
     const data = await res.json();
     data.dentistes.forEach(d => {
       // éviter de doubler si c’est le dentiste déjà associé
@@ -301,7 +326,7 @@ editUserForm.addEventListener("submit", async e => {
   };
 
   try {
-    const res = await fetch(`${API_URL}/updateAccount/${editingUserId}`, {
+    const res = await authFetch(`${API_URL}/updateAccount/${editingUserId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
@@ -337,7 +362,7 @@ document.addEventListener("click", async (e) => {
   if (!confirm("Voulez-vous vraiment supprimer cet utilisateur ?")) return;
 
   try {
-    const res = await fetch(`${API_URL}/deleteAccount/${userId}`, {
+    const res = await authFetch(`${API_URL}/deleteAccount/${userId}`, {
       method: "POST"
     });
 

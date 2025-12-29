@@ -14,7 +14,7 @@ router.get("/user/dentistes", adminController.getAllDentistes);
 router.get("/user/dentistes/notAssociated", adminController.getDentistesNotAssociated); 
 router.post("/user/createAccount", adminController.createAccount);
 router.put("/user/updateAccount/:userId", adminController.updateAccount);
-router.post("/user/deleteAccount/:userId", adminController.deleteAccount);
+router.delete("/user/deleteAccount/:userId", adminController.deleteAccount);
 router.get("/user/:userId", adminController.getUserById);
 
 

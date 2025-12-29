@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fiche travaux - Dentilib</title>
+    <link rel="stylesheet" href="./styles/worksheet.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- HEADER -->
+      <div class="header">
+        <h1>Fiche travaux</h1>
+        <button id="logoutBtn">Déconnexion</button>
+      </div>
+
+      <!-- INFOS PATIENT -->
+      <div class="patient-info">
+        <div class="patient-left">
+          <p><strong>Nom :</strong> <span id="nomPatient"></span></p>
+          <p><strong>Prénom :</strong> <span id="prenomPatient"></span></p>
+          <p><strong>Email :</strong> <span id="emailPatient"></span></p>
+          <p>
+            <strong>N° Sécurité sociale :</strong>
+            <span id="numSecuPatient"></span>
+          </p>
+          <button id="editPatientBtn" class="createBtn" type="button"> ✏️ </button>
+        </div>
+
+        <div class="patient-right">
+          <p><strong>Date :</strong> <span id="createdAt"></span></p>
+          <p><strong>N° Fiche :</strong> <span id="numFiche"></span></p>
+        </div>
+      </div>
+
+      <!-- TABLE ACTES -->
+      <div class="acts-section">
+        <table>
+          <thead>
+            <tr>
+              <th>Acte</th>
+              <th>Description</th>
+              <th>Prix</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="actsTableBody">
+            <tr class="add-act-row">
+              <td id="addActWorksheet" colspan="4">
+                Cliquez ici pour ajouter un acte
+              </td>
+            </tr>
+            <tr id="totalActesRow">
+              <td colspan="4" style="text-align: right;"><strong>Total : <span id="totalActes">0</span> €</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- REMARQUE -->
+      <div class="remark-section">
+        <label>Remarque :</label>
+        <textarea id="remarque" placeholder="Saisir une remarque..."></textarea>
+      </div>
+
+      <!-- SECTION PROTHÉSISTE -->
+      <div class="pro-section">
+        <h2>Suivi prothésiste</h2>
+
+        <div class="pro-grid">
+          <div> <label>Statut des travaux</label> <span id="pro-status" class="status">—</span> </div>
+          <div> <label>Date de livraison</label> <span id="pro-date-livraison">—</span> </div>
+          <div> <label>Date de paiement</label> <span id="pro-date-paiement">—</span></div>
+          <div> <label>Facture</label> <button id="factureBtn" disabled>📄 Générer la facture</button> </div>
+        </div>
+      </div>
+
+      <div class="button-section">
+        <button id="backBtn" class="back-btn">← Retour</button>
+        <button id="envoyerFicheBtn" class="send-btn">📤 Envoyer fiche</button>
+      </div>
+
+      <div class="save-section">
+        <button id="saveWorksheetBtn" class="saveBtn" disabled><strong>💾Sauvegarder</strong>
+          <div id="container-stars">
+            <div id="stars"></div>
+          </div>
+          <div id="glow">
+            <div class="circle"></div>
+            <div class="circle"></div>
+          </div>
+        </button>
+
+      </div>
+    </div>
+    <script src="./js/worksheet.js"></script>
+  </body>
+</html>

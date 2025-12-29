@@ -78,7 +78,7 @@ body {
   margin-bottom: 1.5rem;
 }
 
-#addUserBtn {
+.createBtn {
   background: linear-gradient(135deg, #0d6efd, #4fc3f7);
   color: white;
   padding: 0.7rem 1.5rem;
@@ -89,7 +89,7 @@ body {
   transition: 0.3s;
 }
 
-#addUserBtn:hover {
+.createBtn:hover {
   box-shadow: 0 10px 25px rgba(13,110,253,0.4);
   transform: translateY(-2px);
 }
@@ -205,7 +205,7 @@ tbody td {
   align-items: center;
 }
 
-#roleFilter {
+.searchFilter {
   padding: 0.8rem 1rem;
   border-radius: 12px;
   border: 1px solid #dbe9f5;
@@ -215,7 +215,7 @@ tbody td {
   flex: 0 0 180px; 
 }
 
-#roleFilter:focus {
+.searchFilter:focus {
   outline: none;
   border-color: #0d6efd;
   box-shadow: 0 0 5px rgba(13, 110, 253, 0.3);
@@ -224,6 +224,29 @@ tbody td {
 #searchInput {
   flex: 1; 
 }
+
+
+#dateRange {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1.4rem 0; 
+  align-items: center;
+}
+
+#dateFrom, #dateTo {
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #dbe9f5;
+  background: #f9fcff;
+  font-size: 0.9rem;
+}
+
+#dateFrom:focus, #dateTo:focus {
+  outline: none;
+  border-color: #0d6efd;
+  box-shadow: 0 0 5px rgba(13, 110, 253, 0.3);
+}
+
 
 /* ======================
    MODAL
@@ -252,7 +275,8 @@ tbody td {
 }
 
 .modal-content input,
-.modal-content select {
+.modal-content select,
+.modal-content textarea {
   width: 100%;
   padding: 0.8rem;
   border-radius: 12px;

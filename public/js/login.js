@@ -52,7 +52,7 @@ if (loginForm) {
             window.location.href = "/adminDashboard.html"
             break;
           case "DENTISTE":
-            window.location.href = "/dentiste.html"
+            window.location.href = "/dentistHome.html"
             break;
           case "PROTHESISTE":
             window.location.href = "/prothesiste.html"
