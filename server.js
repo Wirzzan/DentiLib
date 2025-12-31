@@ -5,7 +5,7 @@ const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes")
 const actRoutes = require("./routes/actRoutes")
 const dentistRoutes = require('./routes/dentistRoutes');
-
+const prothesistRoutes = require("./routes/prothesistRoutes");
 
 const app = express();
 const port = 3000;
@@ -18,10 +18,12 @@ const path = require("path");
 app.use(express.static(path.join(__dirname, "public")));
 
 
-app.use('/dentiste', dentistRoutes);
+
 app.use("/api", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/act", actRoutes);
+app.use('/dentiste', dentistRoutes);
+app.use("/prothesiste", prothesistRoutes);
 
 
 app.get("/", (req, res) => {

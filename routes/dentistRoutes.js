@@ -11,6 +11,7 @@ const dentistOnly = (req, res, next) => {
 };
 
 router.get('/worksheets', authMiddleware, dentistOnly, dentistController.getAllWorkSheets);
+router.get('/worksheets/proto-acts', authMiddleware, dentistOnly, dentistController.getProthesisteActs);
 router.get('/worksheets/:id', authMiddleware, dentistOnly, dentistController.getWorkSheetById);
 router.post('/worksheets/create', authMiddleware, dentistOnly, dentistController.createWorkSheet);
 router.put('/worksheets/update/:id', authMiddleware, dentistOnly, dentistController.updateWorkSheet);

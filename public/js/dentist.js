@@ -221,6 +221,7 @@ function resetForm() {
 //Statut définis
 function formatStatus(status) {
   const map = {
+    BROUILLON: "Brouillon",
     EN_ATTENTE: "En attente",
     EN_COURS: "En cours",
     TERMINE: "Terminé",

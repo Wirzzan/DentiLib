@@ -6,6 +6,18 @@ ENVOI D'un EMAIL lors de la création :
 - Nodemailer
 - fonctionnalité à intégrer au createUser (Admin)
 
+Test :
+- postman
+- newman
+
 A FAire :
-Commencer par l'interface configurer actes des prothésistes 
-- Màj de fiche travaux côté dentiste pour apeler les actes du prothesistes
++ Bouton vers configurer actes proto XXXXX
++ Css section proto XXXX
++ bouton "retour" doit aussi recharger la page XXXXXXX
++ Si statut différent de brouillon - cacher bouton envoyer fiche XXXXX
++ corriger le staatuSpan XXXX
++ Générer PDF quand statut "terminé" XXXXX
+
+
++ Gestion d'erreur lors de la création user chez l'admin 
++ Les messages d'erreur doivent etre HTMLisé (en-dessous du bouton créer)

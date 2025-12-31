@@ -55,7 +55,7 @@ if (loginForm) {
             window.location.href = "/dentistHome.html"
             break;
           case "PROTHESISTE":
-            window.location.href = "/prothesiste.html"
+            window.location.href = "/prothesistHome.html"
             break;  
         
           default: console.log("rôle inconnu");

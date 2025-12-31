@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Accueil Prothésiste</title>
+  <link rel="stylesheet" href="./styles/home.css" />
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="header">
+      <h1>Accueil Prothésiste</h1>
+      <button id="logoutBtn">Déconnexion</button>
+    </div>
+
+    <button id="manageActesBtn">Gérer mes actes</button>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Rechercher par patient ou numéro de fiche" />
+    </div>
+
+    <table id="worksheetTable">
+      <thead>
+        <tr>
+          <th>Numéro fiche</th>
+          <th>Patient</th>
+          <th>Email</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="worksheetTable"></tbody>
+    </table>
+
+  </div>
+
+  <script src="./js/prothesist.js"></script>
+</body>
+</html>
