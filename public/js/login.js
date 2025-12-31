@@ -3,31 +3,34 @@ const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 const message = document.getElementById("messageLogin");
 
-
-if (loginForm) {
+if (form) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const email = emailInput.value.trim();
     const password = passwordInput.value.trim();
-    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+    // Fonction utilitaire pour afficher les messages d'erreur
+    const showMessage = (text) => {
+      message.textContent = text;
+      message.style.color = "red";
+      message.style.marginBottom = "10px";
+    };
+
+    // Vérifications côté client
     if (!email || !password) {
-        message.textContent = "Tous les champs sont obligatoires";
-        message.style.color = "red";
-        return;
-    }
-
-    if (!email.match(regex)) {
-      res.status(409).json({ error: "Email est invalide" });
-      message.textContent = "Email format invalide";
-      message.style.color = "red"
+      showMessage("Tous les champs sont obligatoires");
       return;
     }
 
-    if (password.length <6 ) {
-      message.textContent = "Le mot de passe doit dépasser 6 caractères";
-      message.style.color = "red"
+    if (!email.match(emailRegex)) {
+      showMessage("Format email invalide");
+      return;
+    }
+
+    if (password.length < 6) {
+      showMessage("Le mot de passe doit contenir au moins 6 caractères");
       return;
     }
 
@@ -35,38 +38,38 @@ if (loginForm) {
       const res = await fetch("/api/user/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       });
 
-      const rponseData = await res.json();
+      const responseData = await res.json();
 
       if (!res.ok) {
-        message.textContent = rponseData.message;
+        // Affiche le message d'erreur venant du serveur
+        showMessage(responseData.message || "Erreur lors de la connexion");
       } else {
+        // Connexion réussie
+        localStorage.setItem("token", responseData.token);
+        localStorage.setItem("role", responseData.role);
 
-        localStorage.setItem("token", rponseData.token)
-        localStorage.setItem("role", rponseData.role);
-        
-        switch (rponseData.role) {
+        // Redirection selon le rôle
+        switch (responseData.role) {
           case "ADMIN":
-            window.location.href = "/adminDashboard.html"
+            window.location.href = "/adminDashboard.html";
             break;
           case "DENTISTE":
-            window.location.href = "/dentistHome.html"
+            window.location.href = "/dentistHome.html";
             break;
           case "PROTHESISTE":
-            window.location.href = "/prothesistHome.html"
-            break;  
-        
-          default: console.log("rôle inconnu");
+            window.location.href = "/prothesistHome.html";
+            break;
+          default:
+            showMessage("Rôle inconnu, contactez l'administrateur");
             break;
         }
       }
-
     } catch (err) {
-      messageLogin.textContent = "Veuillez entrer un identifiant et mot de passe correct";
+      showMessage("Erreur serveur. Veuillez réessayer plus tard.");
       console.error(err);
     }
-  })
+  });
 }
-

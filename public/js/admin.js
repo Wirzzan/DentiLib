@@ -175,6 +175,12 @@ closeModals.forEach(btn => {
   });
 });
 
+function showFormMessage(elementId, text, color = "red") {
+  const msg = document.getElementById(elementId);
+  msg.textContent = text;
+  msg.style.color = color;
+}
+
 // Clic à l’extérieur de toutes les modales pour fermer
 window.addEventListener("click", e => {
   document.querySelectorAll(".modal").forEach(modal => {
@@ -211,8 +217,14 @@ addUserForm.addEventListener("submit", async e => {
 
   const role = addUserForm.role.value;
   const dentisteId = dentisteSelect.value;
-  if ( role === "PROTHESISTE" && !dentisteId) {
-    alert("Veuillez sélectionner un dentiste");
+
+  if (role === "PROTHESISTE" && !dentisteId) {
+    showFormMessage("addUserMessage", "Veuillez sélectionner un dentiste");
+    return;
+  }
+
+  if (addUserForm.password.value.length < 8) {
+    showFormMessage("addUserMessage", "Le mot de passe doit contenir au moins 8 caractères");
     return;
   }
 
@@ -223,15 +235,9 @@ addUserForm.addEventListener("submit", async e => {
     password: addUserForm.password.value,
     role: addUserForm.role.value,
     siret: addUserForm.siret.value,
-    dentisteId: addUserForm.role.value === "PROTHESISTE" ? dentisteSelect.value : null,
+    dentisteId: role === "PROTHESISTE" ? dentisteId : null,
     listeActes: []
   };
-
-  const passwordLength = addUserForm.password.value.length;
-  if ( passwordLength < 8) {
-    alert("Le mot de passe doit contenir au moins 8 caractères");
-    return;
-  }
 
   try {
     const res = await authFetch(`${API_URL}/createAccount`, {
@@ -241,24 +247,26 @@ addUserForm.addEventListener("submit", async e => {
     });
 
     const data = await res.json();
+
     if (!res.ok) {
-      alert(data.message);
+      showFormMessage("addUserMessage", data.message || "Erreur serveur");
       return;
     }
 
-    alert("Utilisateur créé");
+    showFormMessage("addUserMessage", "Utilisateur créé avec succès", "green");
 
     addUserForm.reset();
     dentisteSelect.style.display = "none";
     dentisteSelect.value = "";
     addUserForm.role.dispatchEvent(new Event("change"));
-    userModal.style.display = "none";
     fetchUsers();
+
   } catch (err) {
     console.error(err);
-    alert("Erreur serveur");
+    showFormMessage("addUserMessage", "Erreur serveur");
   }
 });
+
 
 /* =======================
    UPDATE USER
@@ -319,9 +327,7 @@ editUserForm.addEventListener("submit", async e => {
     lastName: editUserForm.lastName.value,
     email: editUserForm.email.value,
     siret: editUserForm.siret.value,
-    dentisteId: editDentisteSelect.style.display === "block"
-      ? editDentisteSelect.value
-      : null,
+    dentisteId: editDentisteSelect.style.display === "block" ? editDentisteSelect.value : null,
     password: editUserForm.password.value || null
   };
 
@@ -333,23 +339,34 @@ editUserForm.addEventListener("submit", async e => {
     });
 
     const data = await res.json();
+
     if (!res.ok) {
-      alert(data.message);
+      showFormMessage("editUserMessage", data.message || "Erreur modification");
       return;
     }
 
-    alert("Utilisateur modifié");
-    editUserModal.style.display = "none";
+    showFormMessage("editUserMessage", "Utilisateur modifié avec succès", "green");
     editUserForm.reset();
+    editUserModal.style.display = "none";
     editingUserId = null;
     fetchUsers();
 
   } catch (err) {
     console.error(err);
-    alert("Erreur modification");
+    showFormMessage("editUserMessage", "Erreur modification");
   }
 });
 
+
+function showUserMessage(text, color = "red", duration = 5000) {
+  const msg = document.getElementById("userMessage");
+  msg.textContent = text;
+  msg.style.color = color;
+
+  setTimeout(() => {
+    msg.textContent = "";
+  }, duration);
+}
 
 /* =======================
    DELETE USER
@@ -358,26 +375,27 @@ document.addEventListener("click", async (e) => {
   if (!e.target.classList.contains("btn-delete")) return;
 
   const userId = e.target.dataset.id;
-
-  if (!confirm("Voulez-vous vraiment supprimer cet utilisateur ?")) return;
+  const confirmDelete = confirm("Voulez-vous vraiment supprimer cet utilisateur ?");
+  if (!confirmDelete) return;
 
   try {
     const res = await authFetch(`${API_URL}/deleteAccount/${userId}`, {
-      method: "POST"
+      method: "DELETE"
     });
 
     const data = await res.json();
 
     if (!res.ok) {
-      alert(data.message);
+      showUserMessage(data.message || "Erreur suppression");
       return;
     }
 
-    alert("Utilisateur supprimé");
+    showUserMessage("Utilisateur supprimé avec succès", "green");
     fetchUsers();
+
   } catch (err) {
     console.error(err);
-    alert("Erreur suppression utilisateur");
+    showUserMessage("Erreur serveur lors de la suppression");
   }
 });
 
