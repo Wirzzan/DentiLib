@@ -83,6 +83,14 @@ h1 {
 /* ======================
    INFOS PATIENT / HEADER FICHE
 ====================== */
+.patient-input {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #dbe9f5;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
 .patient-info {
   display: flex;
   justify-content: space-between;
@@ -161,7 +169,7 @@ h1 {
 
 .acts-section {
   text-align: center;
-  color: #999;
+  color: #060607;
   cursor: pointer;
 }
 
@@ -238,157 +246,161 @@ h1 {
 }
 
 /* ======================
-   BOUTONS
+   SELECT ACTE
 ====================== */
-.save-section #saveWorksheetBtn {
+#selectAct {
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #dbe9f5;
+  background-color: #f9fcff;
+  font-size: 0.95rem;
+  color: #2c3e50;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#selectAct:hover {
+  border-color: #0d6efd;
+  box-shadow: 0 0 5px rgba(13, 110, 253, 0.3);
+}
+
+/* ======================
+   BOUTON AJOUTER ACTE
+====================== */
+#addActBtn {
+  margin-left: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  color: white;
+  background-image: linear-gradient(135deg, #0d6efd, #4fc3f7);
+  transition: 0.3s;
+}
+
+#addActBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+}
+
+/* ======================
+   WRAPPER SECTION RECHERCHE
+====================== */
+.search-act-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ======================
+   BOUTON SAUVEGARDER AVEC ÉTOILES
+====================== */
+#saveWorksheetBtn {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 13rem;
-  overflow: hidden;
   height: 3rem;
-  background-size: 300% 300%;
-  cursor: pointer;
-  backdrop-filter: blur(1rem);
-  border-radius: 5rem;
-  transition: 0.5s;
-  animation: gradient_301 5s ease infinite;
   border: double 4px transparent;
-  background-image: linear-gradient(#212121, #212121),
-    linear-gradient(
-      137.48deg,
-      #ffdb3b 10%,
-      #fe53bb 45%,
-      #8f51ea 67%,
-      #0044ff 87%
-    );
+  border-radius: 5rem;
+  background-image: linear-gradient(#0d6efd, #212121),
+                    linear-gradient(137deg, #7ecefc 10%, #fffeff 45%, #0d6efd 67%,  #060607 87%);
   background-origin: border-box;
   background-clip: content-box, border-box;
-}
-
-.save-section #saveWorksheetBtn #container-stars {
-  position: absolute;
-  z-index: -1;
-  width: 100%;
-  height: 100%;
+  cursor: pointer;
   overflow: hidden;
-  transition: 0.5s;
-  backdrop-filter: blur(1rem);
-  border-radius: 5rem;
+  transition: transform 0.5s;
+  animation: gradientAnim 5s ease infinite;
 }
 
-.save-section #saveWorksheetBtn strong {
-  z-index: 2;
-  font-family: "Avalors Personal Use", sans-serif;
-  font-size: 12px;
-  letter-spacing: 5px;
-  color: #ffffff;
-  text-shadow: 0 0 4px white;
-}
-
-.save-section #saveWorksheetBtn #glow {
-  position: absolute;
-  display: flex;
-  width: 12rem;
-}
-
-.save-section #saveWorksheetBtn .circle {
-  width: 100%;
-  height: 30px;
-  filter: blur(2rem);
-  animation: pulse_3011 4s infinite;
-  z-index: -1;
-}
-
-.save-section #saveWorksheetBtn .circle:nth-of-type(1) {
-  background: rgba(254, 83, 186, 0.636);
-}
-
-.save-section #saveWorksheetBtn .circle:nth-of-type(2) {
-  background: rgba(142, 81, 234, 0.704);
-}
-
-.save-section #saveWorksheetBtn:hover #container-stars {
-  z-index: 1;
-  background-color: #212121;
-}
-
-.save-section #saveWorksheetBtn:hover {
+#saveWorksheetBtn:hover {
   transform: scale(1.1);
 }
 
-.save-section #saveWorksheetBtn:active {
-  border: double 4px #fe53bb;
-  background-origin: border-box;
-  background-clip: content-box, border-box;
+#saveWorksheetBtn:active {
   animation: none;
+  border-color: #fe53bb;
 }
 
-.save-section #saveWorksheetBtn:active .circle {
-  background: #fe53bb;
+#saveWorksheetBtn strong {
+  z-index: 2;
+  color: #fff;
+  font-family: "Avalors Personal Use", sans-serif;
+  letter-spacing: 5px;
+  font-size: 12px;
+  text-shadow: 0 0 4px white;
 }
 
-.save-section #saveWorksheetBtn #stars {
-  position: relative;
-  background: transparent;
+#saveWorksheetBtn .circle {
+  position: absolute;
+  width: 100%;
+  height: 30px;
+  filter: blur(2rem);
+  animation: pulseAnim 4s infinite;
+  z-index: -1;
+}
+
+#saveWorksheetBtn .circle:nth-of-type(1) { background: rgba(254,83,186,0.64); }
+#saveWorksheetBtn .circle:nth-of-type(2) { background: rgba(142,81,234,0.7); }
+
+#saveWorksheetBtn #stars {
+  position: absolute;
   width: 200rem;
   height: 200rem;
+  background: transparent;
 }
 
-.save-section #saveWorksheetBtn #stars::after {
+#saveWorksheetBtn #stars::after,
+#saveWorksheetBtn #stars::before {
   content: "";
   position: absolute;
+  background-image: radial-gradient(#fff 1px, transparent 1%);
+  background-size: 50px 50px;
+}
+
+#saveWorksheetBtn #stars::after {
   top: -10rem;
   left: -100rem;
   width: 100%;
   height: 100%;
-  animation: animStarRotate 90s linear infinite;
-  background-image: radial-gradient(#ffffff 1px, transparent 1%);
-  background-size: 50px 50px;
+  animation: rotateStars 90s linear infinite;
 }
 
-.save-section #saveWorksheetBtn #stars::before {
-  content: "";
-  position: absolute;
+#saveWorksheetBtn #stars::before {
   top: 0;
   left: -50%;
   width: 170%;
   height: 500%;
-  animation: animStar 60s linear infinite;
-  background-image: radial-gradient(#ffffff 1px, transparent 1%);
-  background-size: 50px 50%;
+  animation: moveStars 60s linear infinite;
   opacity: 0.5;
 }
 
-@keyframes animStar {
-  from { transform: translateY(0); }
-  to { transform: translateY(-135rem); }
-}
-
-@keyframes animStarRotate {
-  from { transform: rotate(360deg); }
-  to { transform: rotate(0); }
-}
-
-@keyframes gradient_301 {
+/* ======================
+   ANIMATIONS
+====================== */
+@keyframes gradientAnim {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-@keyframes pulse_3011 {
-  0% {
-    transform: scale(0.75);
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
-  }
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
-  }
-  100% {
-    transform: scale(0.75);
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-  }
+@keyframes pulseAnim {
+  0%, 100% { transform: scale(0.75); box-shadow: 0 0 0 rgba(0,0,0,0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0,0,0,0); }
+}
+
+@keyframes moveStars {
+  from { transform: translateY(0); }
+  to { transform: translateY(-135rem); }
+}
+
+@keyframes rotateStars {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0); }
 }
 
 /* Bouton flottant */
@@ -397,28 +409,6 @@ h1 {
   bottom: 20px;
   right: 20px;
   z-index: 1000;
-}
-
-
-.saveBtn[disabled] {
-  background: #333;
-  opacity: 0.8 !important;
-  cursor: not-allowed !important;
-}
-.saveBtn[disabled]:hover {
-  box-shadow: none;
-}
-
-.saveBtn[disabled] #stars,
-.saveBtn[disabled] #stars::before,
-.saveBtn[disabled] #stars::after,
-.saveBtn[disabled] #container-stars,
-.saveBtn[disabled] .circle,
-.saveBtn[disabled] #saveWorksheetBtn:active {
-  opacity: 0.7 !important;
-  border: 1px black !important;
-  background: rgb(54, 54, 54) !important;
-  background-image: none !important;
 }
 
 .floating-save {
@@ -597,73 +587,67 @@ h1 {
   font-size: 18px;
 }
 
-.pro-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px 24px;
+.pro-section > div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+  gap: 12px;
 }
 
-.pro-grid label {
-  display: block;
-  font-size: 13px;
-  color: #666;
-  margin-bottom: 4px;
+/* Labels */
+.pro-section label {
+  width: 160px;
+  font-size: 14px;
+  color: #555;
 }
 
-.pro-grid span {
-  font-weight: 500;
+/* Inputs & select */
+.pro-section input,
+.pro-section select {
+  width: 260px;
+  max-width: 260px;
+  padding: 6px 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #fff;
 }
 
-/* STATUTS */
-.status {
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 13px;
-  display: inline-block;
-}
-
-.status.attente {
-  background: #e0e0e0;
-  color: #333;
-}
-
-.status.encours {
-  background: #fff3cd;
-  color: #856404;
-}
-
-.status.termine {
-  background: #d4edda;
-  color: #155724;
-}
-
-.status.attente-paiement {
-  background: #f8d7da;
-  color: #721c24;
-}
-
-.status.paye {
-  background: #d4edda;
-  color: #155724;
-}
-
-/* Bouton facture désactivé */
-#factureBtn {
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: none;
-  background: #ccc;
+/* Champs désactivés */
+.pro-section input:disabled,
+.pro-section select:disabled {
+  background-color: #e9ecef;
   color: #666;
   cursor: not-allowed;
 }
 
-.patient-input {
-  padding: 0.5rem;
-  border-radius: 8px;
-  border: 1px solid #dbe9f5;
-  font-size: 0.9rem;
-  width: 100%;
+/* Zone boutons */
+.pro-section div:last-child {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
 }
+
+/* Boutons */
+#editProSectionBtn,
+#saveProSectionBtn {
+  padding: 6px 14px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+#editProSectionBtn:hover {
+  background-color: #e2e2e2;
+}
+
+#saveProSectionBtn {
+  background-color: #e6e6e6;
+  font-weight: 500;
+}
+
 
 /* ======================
    SECTION BOUTONS FICHE
@@ -691,7 +675,7 @@ h1 {
   color: #fff;
   transition: all 0.3s ease;
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  background-image: linear-gradient(135deg, #4a90e2, #357ab8); /* bleu léger */
+  background-image: linear-gradient(135deg, #4a90e2, #357ab8); 
 }
 
 .button-section button:hover {
@@ -699,19 +683,18 @@ h1 {
   box-shadow: 0 6px 15px rgba(0,0,0,0.25);
 }
 
-.button-section button:disabled {
-  background-color: #777;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
 /* Bouton Envoyer fiche */
 .button-section .send-btn {
-  background-image: linear-gradient(135deg, #27ae60, #1e8449); /* vert */
+  background-image: linear-gradient(135deg, #27ae60, #1e8449); 
+}
+
+/* Bouton facture */
+.facture-btn:hover {
+  background: #6d6f72;
 }
 
 /* Bouton Retour */
 .button-section .back-btn {
-  background-image: linear-gradient(135deg, #e67e22, #d35400); /* orange */
+  background-image: linear-gradient(135deg, #e67e22, #d35400);
 }
 

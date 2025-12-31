@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mes actes - Prothésiste</title>
+  <link rel="stylesheet" href="./styles/prothesistActs.css">
+</head>
+<body>
+  <header>
+    <h1>Mes actes</h1>
+    <button id="backBtn">← Retour</button>
+  </header>
+
+  <main>
+    <table id="actsTable">
+      <thead>
+        <tr>
+          <th>Acte</th>
+          <th>Description</th>
+          <th>Prix (€)</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="actsBody">
+        <!-- Les lignes seront injectées ici -->
+        <tr class="add-act-row">
+          <td id="addActToProto" colspan="4">Cliquez ici pour ajouter un acte</td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+
+  <script src="./js/prothesistActs.js"></script>
+</body>
+</html>

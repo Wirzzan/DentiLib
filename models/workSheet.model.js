@@ -14,25 +14,27 @@ const acteSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: [
+        "BROUILLON",
         "EN_ATTENTE",
         "EN_COURS",
         "TERMINE",
         "EN_ATTENTE_PAIEMENT",
         "PAYE",
       ],
-      default: "EN_ATTENTE",
+      default: "BROUILLON",
       required: true,
     },
     
     acts: [
       {
-        name: {
-          type: String,
-          trim: true,
+        acteId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Act", // référence à l’acte admin
+          required: true
         },
-        price: {
-          type: Number
-        }
+        name: { type: String, trim: true },
+        description: { type: String, trim: true },
+        price: { type: Number, required: true }
       }
     ],
 
@@ -73,6 +75,15 @@ const acteSchema = new mongoose.Schema(
     idProthesiste: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+    },
+
+    proDateLivraison: {
+      type: Date,
+      default: null
+    },
+    proDatePaiement: {
+      type: Date,
+      default: null
     },
   },
   { timestamps: true }

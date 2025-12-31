@@ -21,8 +21,8 @@ const createWorkSheet = async (req, res) => {
       numSecuPatient,
       acts: [],
       remarque,
-      idUser: req.user.id // dentiste connecté
-      //associatedUser.id
+      idUser: req.user.id, 
+      status: "BROUILLON"
     });
 
     return res.status(201).json({ message: "Fiche travaux créée", workSheet });
@@ -109,6 +109,42 @@ const deleteWorkSheet = async (req, res) => {
   }
 };
 
+
+const getProthesisteActs = async (req, res) => {
+  try {
+    const dentiste = await User.findById(req.user.id);
+    if (!dentiste || dentiste.role !== "DENTISTE") {
+      return res.status(403).json({ message: "Accès refusé" });
+    }
+
+    if (!dentiste.associatedUser) {
+      return res.json({ acts: [] });
+    }
+
+    const prothesiste = await User.findById(dentiste.associatedUser)
+      .populate("listActs.acte");
+
+    if (!prothesiste) {
+      return res.json({ acts: [] });
+    }
+
+    const acts = prothesiste.listActs.map(a => ({
+      acteId: a.acte?._id,
+      name: a.acte?.name || "",
+      description: a.acte?.description || "",
+      price: a.price
+    }));
+    return res.json({ acts });
+
+  } catch (error) {
+    console.error("❌ Erreur getProthesisteActs :", error);
+    return res.status(500).json({
+      message: "Erreur serveur lors de la récupération des actes du prothésiste"
+    });
+  }
+};
+
+
 const sendWorkSheet = async (req, res) => {
   try {
     const worksheetId = req.params.id;
@@ -149,5 +185,5 @@ const sendWorkSheet = async (req, res) => {
   }
 };
 
-module.exports = { createWorkSheet, getAllWorkSheets, getWorkSheetById, updateWorkSheet, deleteWorkSheet, sendWorkSheet };
+module.exports = { createWorkSheet, getAllWorkSheets, getWorkSheetById, getProthesisteActs, updateWorkSheet, deleteWorkSheet, sendWorkSheet };
 
