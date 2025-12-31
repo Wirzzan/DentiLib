@@ -30,6 +30,7 @@
       <input type="text" id="searchInput" placeholder="Rechercher par nom, prénom ou email"/>
     </div>
 
+    <div id="userMessage" style="color:red; margin-bottom:10px;"></div>
     <table>
       <thead>
         <tr>
@@ -53,6 +54,7 @@
       <h2>Ajouter un utilisateur</h2>
 
       <form id="addUserForm">
+        <p id="addUserMessage" style="color:red;margin-bottom:10px;"></p>
         <input type="text" name="firstName" placeholder="Prénom" required />
         <input type="text" name="lastName" placeholder="Nom" required />
         <input type="email" name="email" placeholder="Email" required />
@@ -80,6 +82,7 @@
     <h2>Modifier un utilisateur</h2>
 
     <form id="editUserForm">
+      <p id="editUserMessage" style="color:red;margin-bottom:10px;"></p>
       <input type="text" name="firstName" required />
       <input type="text" name="lastName" required />
       <input type="email" name="email" required />
