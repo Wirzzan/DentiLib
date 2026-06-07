@@ -41,7 +41,7 @@ describe("Admin Flow: Users & Acts", () => {
 
   before(() => {
     // Login admin
-    cy.visit("/login.html");
+    cy.visit("http://localhost:3000/");
     cy.get("#email").type(adminEmail);
     cy.get("#password").type(adminPassword);
     cy.get("#submitButton").click();
@@ -58,6 +58,7 @@ describe("Admin Flow: Users & Acts", () => {
     cy.get("#addUserForm select[name='role']").select(dentisteA.role);
     cy.get("#addUserForm button[type='submit']").click();
     cy.get("#addUserMessage").should("contain.text", "Utilisateur créé avec succès");
+    cy.get("#closeModal").click();
   });
 
   it("Créer un prothésiste lié au dentiste A", () => {
@@ -71,6 +72,7 @@ describe("Admin Flow: Users & Acts", () => {
     cy.get("#dentisteSelect").should("be.visible").select(dentisteA.firstName + " " + dentisteA.lastName);
     cy.get("#addUserForm button[type='submit']").click();
     cy.get("#addUserMessage").should("contain.text", "Utilisateur créé avec succès");
+    cy.get("#closeModal").click();
   });
 
   it("Créer et modifier un dentiste B", () => {
@@ -84,12 +86,17 @@ describe("Admin Flow: Users & Acts", () => {
     cy.get("#addUserForm select[name='role']").select(dentisteB.role);
     cy.get("#addUserForm button[type='submit']").click();
     cy.get("#addUserMessage").should("contain.text", "Utilisateur créé avec succès");
+    cy.get("#closeModal").click();
 
+    // Mettre une vérification pour voir si l'user créé a bien été créé
+
+    
     // Modification
     cy.contains(dentisteB.email).parent("tr").find(".btn-edit").click();
     cy.get("#editUserForm input[name='firstName']").clear().type("AliceMod");
     cy.get("#editUserForm button[type='submit']").click();
     cy.get("#editUserMessage").should("contain.text", "Utilisateur modifié avec succès");
+    cy.get("#closeModal").click();
   });
 
   it("Supprimer le dentiste B", () => {

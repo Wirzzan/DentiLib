@@ -19,5 +19,8 @@ A FAire :
 + Générer PDF quand statut "terminé" XXXXX
 
 
-+ Gestion d'erreur lors de la création user chez l'admin 
++ Gestion d'erreur lors de la création user chez l'admin XXXXXX
 + Les messages d'erreur doivent etre HTMLisé (en-dessous du bouton créer)
+
++ Vider bdd
++ 
