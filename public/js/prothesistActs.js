@@ -56,7 +56,7 @@ function addActToTable(acteId = "", name = "", description = "", price = "") {
     <td>
       <select class="act-select">
         <option value="">-- Sélectionner un acte --</option>
-        ${acts.map(a => `<option value="${a._id}" data-desc="${a.description}" ${a._id === acteId ? "selected" : ""}>${a.name}</option>`).join('')}
+        ${acts.map(a => `<option value="${a._id}" data-desc="${a.description}" ${String(a._id) === String(acteId) ? "selected" : ""}>${a.name}</option>`).join('')}
       </select>
     </td>
     <td class="act-description">${description}</td>

@@ -113,19 +113,21 @@ addActForm.addEventListener("submit", async (e) => {
    MODIFICATION
 ======================= */
 document.addEventListener("click", (e) => {
-  if (e.target.classList.contains("btn-edit")) {
-    editingActId = e.target.dataset.id;
-    const act = acts.find(a => a._id === editingActId);
+  const editBtn = e.target.closest(".btn-edit");
+  if (editBtn) {
+    editingActId = editBtn.dataset.id;
+    const act = acts.find((a) => String(a._id) === editingActId);
     if (!act) return;
 
     editActForm.name.value = act.name;
     editActForm.description.value = act.description;
     editModal.style.display = "block";
+    return;
   }
 
-  if (e.target.classList.contains("btn-delete")) {
-    const actId = e.target.dataset.id;
-    deleteAct(actId);
+  const deleteBtn = e.target.closest(".btn-delete");
+  if (deleteBtn) {
+    deleteAct(deleteBtn.dataset.id);
   }
 });
 

@@ -272,10 +272,11 @@ addUserForm.addEventListener("submit", async e => {
    UPDATE USER
 ======================= */
 document.addEventListener("click", async (e) => {
-  if (!e.target.classList.contains("btn-edit")) return;
+  const editBtn = e.target.closest(".btn-edit");
+  if (!editBtn) return;
 
-  editingUserId = e.target.dataset.id;
-  const user = users.find(u => u._id === editingUserId);
+  editingUserId = editBtn.dataset.id;
+  const user = users.find((u) => String(u._id) === editingUserId);
   if (!user) return;
 
   editUserForm.firstName.value = user.firstName;
@@ -302,7 +303,7 @@ document.addEventListener("click", async (e) => {
     const data = await res.json();
     data.dentistes.forEach(d => {
       // éviter de doubler si c’est le dentiste déjà associé
-      if (!user.associatedUser || d._id !== user.associatedUser._id) {
+      if (!user.associatedUser || String(d._id) !== String(user.associatedUser._id)) {
         editDentisteSelect.insertAdjacentHTML(
           "beforeend",
           `<option value="${d._id}">${d.firstName} ${d.lastName}</option>`
@@ -372,9 +373,10 @@ function showUserMessage(text, color = "red", duration = 5000) {
    DELETE USER
 ======================= */
 document.addEventListener("click", async (e) => {
-  if (!e.target.classList.contains("btn-delete")) return;
+  const deleteBtn = e.target.closest(".btn-delete");
+  if (!deleteBtn) return;
 
-  const userId = e.target.dataset.id;
+  const userId = deleteBtn.dataset.id;
   const confirmDelete = confirm("Voulez-vous vraiment supprimer cet utilisateur ?");
   if (!confirmDelete) return;
 

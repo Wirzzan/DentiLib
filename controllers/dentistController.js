@@ -197,7 +197,7 @@ const getProthesisteActs = async (req, res) => {
       const plain = row.get({ plain: true });
       const acte = plain.acte;
       return {
-        acteId: acte?.id || plain.acteId,
+        acteId: String(acte?.id || plain.acteId),
         name: acte?.name || "",
         description: acte?.description || "",
         price: plain.price != null ? parseFloat(plain.price) : 0,
