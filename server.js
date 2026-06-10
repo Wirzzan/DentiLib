@@ -1,6 +1,5 @@
 require('dotenv').config();
 const express = require ("express");
-const dbConnection = require("./config/dbConfig");
 const { connectSequelize } = require("./config/sequelize");
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes")
@@ -13,7 +12,6 @@ const port = 3000;
 
 
 app.use(express.json());
-dbConnection();
 connectSequelize();
 
 const path = require("path");
