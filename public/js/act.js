@@ -20,43 +20,25 @@ function displayActs(list) {
 
   if (list.length === 0) {
     actsTable.innerHTML =
-      "<tr><td colspan='3'>Aucun acte trouvé</td></tr>"
+      "<tr><td colspan='2'>Aucun acte trouvé</td></tr>"
     return
   }
 
   list.forEach(act => {
-    const tr = document.createElement("tr")
-    tr.innerHTML = `
-      <td>${act.name}</td>
-      <td>${act.description}</td>
-      <td class="actions-cell"></td>
-    `
-
-    const actionsCell = tr.querySelector(".actions-cell")
-
-    const editBtn = document.createElement("button")
-    editBtn.type = "button"
-    editBtn.className = "btn-edit"
-    editBtn.textContent = "Modifier"
-    editBtn.onclick = () => openEditActModal(act)
-
-    const deleteBtn = document.createElement("button")
-    deleteBtn.type = "button"
-    deleteBtn.className = "btn-delete"
-    deleteBtn.textContent = "X"
-    deleteBtn.onclick = () => deleteAct(act._id)
-
-    actionsCell.append(editBtn, deleteBtn)
-    actsTable.appendChild(tr)
+    actsTable.insertAdjacentHTML(
+      "beforeend",
+      `
+      <tr data-id="${act._id}">
+        <td>${act.name}</td>
+        <td>${act.description}</td>
+        <td>
+          <button class="btn-edit" data-id="${act._id}">Modifier</button>
+          <button class="btn-delete" data-id="${act._id}">X</button>
+        </td>
+      </tr>
+      `
+    )
   })
-}
-
-function openEditActModal(act) {
-  editingActId = act._id
-  // querySelector car editActForm.name ne fonctionne pas (name = attribut du form)
-  editActForm.querySelector('[name="name"]').value = act.name
-  editActForm.querySelector('[name="description"]').value = act.description
-  editModal.style.display = "block"
 }
 
 /* =======================
@@ -72,7 +54,7 @@ async function fetchActs() {
 
   } catch (error) {
     console.error("Erreur lors du chargement des actes", error)
-    actsTable.innerHTML = "<tr><td colspan='3'>Erreur de chargement</td></tr>"
+    actsTable.innerHTML = "<tr><td colspan='2'>Erreur de chargement</td></tr>"
   }
 }
 
@@ -130,14 +112,32 @@ addActForm.addEventListener("submit", async (e) => {
 /* =======================
    MODIFICATION
 ======================= */
+document.addEventListener("click", (e) => {
+  const editBtn = e.target.closest(".btn-edit");
+  if (editBtn) {
+    editingActId = editBtn.dataset.id;
+    const act = acts.find((a) => String(a._id) === editingActId);
+    if (!act) return;
+
+    editActForm.name.value = act.name;
+    editActForm.description.value = act.description;
+    editModal.style.display = "block";
+    return;
+  }
+
+  const deleteBtn = e.target.closest(".btn-delete");
+  if (deleteBtn) {
+    deleteAct(deleteBtn.dataset.id);
+  }
+});
+
 editActForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   if (!editingActId) return;
 
-  const formData = new FormData(editActForm);
   const updatedAct = {
-    name: formData.get("name"),
-    description: formData.get("description")
+    name: editActForm.name.value,
+    description: editActForm.description.value
   };
 
   try {
