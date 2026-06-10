@@ -1,3 +1,6 @@
+// Adapte les données MySQL (id numérique) au format attendu par le front (_id texte).
+// Utilisé dans les contrôleurs avant res.json().
+
 const toId = (id) => (id != null ? String(id) : id);
 
 const formatActe = (acte) => {
@@ -20,6 +23,7 @@ const formatUser = (user) => {
   return formatted;
 };
 
+// Format catalogue prothésiste (ex listActs MongoDB)
 const formatListAct = (row) => {
   const plain = row.get ? row.get({ plain: true }) : row;
   const acte = plain.acte || plain.Acte;
@@ -31,6 +35,7 @@ const formatListAct = (row) => {
   };
 };
 
+// Format fiche de travaux (ex WorkSheet MongoDB)
 const formatWorkSheet = (fiche) => {
   if (!fiche) return null;
   const plain = fiche.get ? fiche.get({ plain: true }) : fiche;

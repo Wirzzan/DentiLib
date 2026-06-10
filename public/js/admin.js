@@ -51,32 +51,42 @@ function displayUsers(list) {
 
   if (list.length === 0) {
     userTableBody.innerHTML =
-      "<tr><td colspan='5'>Aucun utilisateur trouvé</td></tr>"; //colspan = nombre de colonne que prend la cellule
+      "<tr><td colspan='7'>Aucun utilisateur trouvé</td></tr>";
     return;
   }
 
-  list.forEach(user => {
+  list.forEach((user) => {
     const associated = user.associatedUser
       ? `${user.associatedUser.firstName} ${user.associatedUser.lastName}`
       : "-";
 
-    userTableBody.insertAdjacentHTML(
-      "beforeend",
-      `
-      <tr>
-        <td>${user.lastName}</td>
-        <td>${user.firstName}</td>
-        <td>${user.email}</td>
-        <td>${user.role}</td>
-        <td>${user.siret}</td>
-        <td>${associated}</td>
-        <td class="actions-cell">
-          <button class="btn-edit" data-id="${user._id}" title="Modifier"> ✏️ </button>
-          <button class="btn-delete" data-id="${user._id}" title="Supprimer"> ✖ </button>
-        </td>
-      </tr>
-      `
-    );
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${user.lastName}</td>
+      <td>${user.firstName}</td>
+      <td>${user.email}</td>
+      <td>${user.role}</td>
+      <td>${user.siret || ""}</td>
+      <td>${associated}</td>
+      <td class="actions-cell"></td>
+    `;
+
+    const actionsCell = tr.querySelector(".actions-cell");
+
+    const editBtn = document.createElement("button");
+    editBtn.type = "button";
+    editBtn.className = "btn-edit";
+    editBtn.textContent = "Modifier";
+    editBtn.onclick = () => openEditUserModal(user);
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.type = "button";
+    deleteBtn.className = "btn-delete";
+    deleteBtn.textContent = "Supprimer";
+    deleteBtn.onclick = () => deleteUser(user._id);
+
+    actionsCell.append(editBtn, deleteBtn);
+    userTableBody.appendChild(tr);
   });
 }
 
@@ -271,72 +281,62 @@ addUserForm.addEventListener("submit", async e => {
 /* =======================
    UPDATE USER
 ======================= */
-document.addEventListener("click", async (e) => {
-  const editBtn = e.target.closest(".btn-edit");
-  if (!editBtn) return;
+async function openEditUserModal(user) {
+  editingUserId = user._id;
 
-  editingUserId = editBtn.dataset.id;
-  const user = users.find((u) => String(u._id) === editingUserId);
-  if (!user) return;
-
-  editUserForm.firstName.value = user.firstName;
-  editUserForm.lastName.value = user.lastName;
-  editUserForm.email.value = user.email;
-  editUserForm.password.value = "";
-  editUserForm.siret.value = user.siret || "";
+  editUserForm.querySelector('[name="firstName"]').value = user.firstName;
+  editUserForm.querySelector('[name="lastName"]').value = user.lastName;
+  editUserForm.querySelector('[name="email"]').value = user.email;
+  editUserForm.querySelector('[name="password"]').value = "";
+  editUserForm.querySelector('[name="siret"]').value = user.siret || "";
 
   if (user.role === "PROTHESISTE") {
     editDentisteSelect.style.display = "block";
-
-    // 1 - Afficher le dentiste associé 
     editDentisteSelect.innerHTML = "";
+
     if (user.associatedUser) {
-      const dentiste = user.associatedUser; 
+      const dentiste = user.associatedUser;
       editDentisteSelect.insertAdjacentHTML(
         "beforeend",
         `<option value="${dentiste._id}" selected>${dentiste.firstName} ${dentiste.lastName}</option>`
       );
     }
 
-    // 2. Ajouter les dentistes not associated
     const res = await authFetch(`${API_URL}/dentistes/notAssociated`);
     const data = await res.json();
-    data.dentistes.forEach(d => {
-      // éviter de doubler si c’est le dentiste déjà associé
-      if (!user.associatedUser || String(d._id) !== String(user.associatedUser._id)) {
+    data.dentistes.forEach((d) => {
+      if (!user.associatedUser || d._id != user.associatedUser._id) {
         editDentisteSelect.insertAdjacentHTML(
           "beforeend",
           `<option value="${d._id}">${d.firstName} ${d.lastName}</option>`
         );
       }
     });
-
   } else {
     editDentisteSelect.style.display = "none";
   }
 
   editUserModal.style.display = "block";
-});
+}
 
-
-
-editUserForm.addEventListener("submit", async e => {
+editUserForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  const formData = new FormData(editUserForm);
   const payload = {
-    firstName: editUserForm.firstName.value,
-    lastName: editUserForm.lastName.value,
-    email: editUserForm.email.value,
-    siret: editUserForm.siret.value,
+    firstName: formData.get("firstName"),
+    lastName: formData.get("lastName"),
+    email: formData.get("email"),
+    siret: formData.get("siret"),
     dentisteId: editDentisteSelect.style.display === "block" ? editDentisteSelect.value : null,
-    password: editUserForm.password.value || null
+    password: formData.get("password") || null,
   };
 
   try {
     const res = await authFetch(`${API_URL}/updateAccount/${editingUserId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     });
 
     const data = await res.json();
@@ -351,7 +351,6 @@ editUserForm.addEventListener("submit", async e => {
     editUserModal.style.display = "none";
     editingUserId = null;
     fetchUsers();
-
   } catch (err) {
     console.error(err);
     showFormMessage("editUserMessage", "Erreur modification");
@@ -372,17 +371,13 @@ function showUserMessage(text, color = "red", duration = 5000) {
 /* =======================
    DELETE USER
 ======================= */
-document.addEventListener("click", async (e) => {
-  const deleteBtn = e.target.closest(".btn-delete");
-  if (!deleteBtn) return;
-
-  const userId = deleteBtn.dataset.id;
+async function deleteUser(userId) {
   const confirmDelete = confirm("Voulez-vous vraiment supprimer cet utilisateur ?");
   if (!confirmDelete) return;
 
   try {
     const res = await authFetch(`${API_URL}/deleteAccount/${userId}`, {
-      method: "DELETE"
+      method: "DELETE",
     });
 
     const data = await res.json();
@@ -394,12 +389,11 @@ document.addEventListener("click", async (e) => {
 
     showUserMessage("Utilisateur supprimé avec succès", "green");
     fetchUsers();
-
   } catch (err) {
     console.error(err);
     showUserMessage("Erreur serveur lors de la suppression");
   }
-});
+}
 
 
 /* =======================
