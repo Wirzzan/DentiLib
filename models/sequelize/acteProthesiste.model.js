@@ -28,7 +28,8 @@ module.exports = (sequelize) => {
       indexes: [
         {
           unique: true,
-          fields: ["utilisateurId", "acteId"],
+          name: "actes_prothesiste_utilisateur_acte_unique",
+          fields: ["utilisateur_id", "acte_id"],
         },
       ],
     }
