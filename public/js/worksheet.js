@@ -41,7 +41,6 @@ function applyProthesisteView() {
   document.querySelector(".search-act-section").style.display = "none";
   saveWorksheetBtn.closest(".save-section").style.display = "none";
   envoyerFicheBtn.style.display = "none";
-  factureBtn.style.display = "none";
   remarqueTextarea.readOnly = true;
 
   const actionsHeader = document.querySelector(".acts-section thead th:last-child");
@@ -97,6 +96,7 @@ saveProSectionBtn?.addEventListener("click", async () => {
     saveProSectionBtn.disabled = true;
 
     alert("✅ Section prothésiste mise à jour");
+    fetchWorksheet();
 
   } catch (err) {
     console.error(err);
@@ -189,24 +189,16 @@ async function fetchWorksheet() {
     proStatusInput.value = ws.status;
 
     if (!isProthesiste) {
-      // ------------- Bouton Envoyer Fiche --------------
       if (ws.status !== "BROUILLON") {
         envoyerFicheBtn.style.display = "none";
       } else {
         envoyerFicheBtn.style.display = "inline-block";
         envoyerFicheBtn.disabled = false;
       }
-      //------------- Bouton Facture   --------------------
-      if (
-        ws.status === "TERMINE" ||
-        ws.status === "EN_ATTENTE_PAIEMENT" ||
-        ws.status === "PAYE"
-      ) {
-        factureBtn.style.display = "inline-block";
-      } else {
-        factureBtn.style.display = "none";
-      }
     }
+
+    const canShowFacture = ["TERMINE", "EN_ATTENTE_PAIEMENT", "PAYE"].includes(ws.status);
+    factureBtn.style.display = canShowFacture ? "inline-block" : "none";
 
     proDateLivraisonInput.value = ws.proDateLivraison
       ? new Date(ws.proDateLivraison).toISOString().split("T")[0]
