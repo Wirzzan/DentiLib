@@ -4,6 +4,7 @@ const token = localStorage.getItem("token");
 const role = localStorage.getItem("role");
 if (!token) window.location.href = "/";
 
+const isProthesiste = role === "PROTHESISTE";
 let actes = [];
 
 
@@ -35,9 +36,26 @@ const backBtn = document.getElementById("backBtn");
 
 
 //================== Pour Proto ========================
-if (role === "PROTHESISTE") {
+function applyProthesisteView() {
+  editPatientBtn.style.display = "none";
+  document.querySelector(".search-act-section").style.display = "none";
+  saveWorksheetBtn.closest(".save-section").style.display = "none";
+  envoyerFicheBtn.style.display = "none";
+  factureBtn.style.display = "none";
+  remarqueTextarea.readOnly = true;
+
+  const actionsHeader = document.querySelector(".acts-section thead th:last-child");
+  if (actionsHeader) actionsHeader.style.display = "none";
+
+  const totalRow = document.getElementById("totalActesRow");
+  if (totalRow) totalRow.querySelector("td").colSpan = 3;
+
   editProSectionBtn.style.display = "inline-block";
   saveProSectionBtn.style.display = "inline-block";
+}
+
+if (isProthesiste) {
+  applyProthesisteView();
 } else {
   editProSectionBtn.style.display = "none";
   saveProSectionBtn.style.display = "none";
@@ -169,22 +187,26 @@ async function fetchWorksheet() {
     };
 
     proStatusInput.value = ws.status;
-    // ------------- Bouton Envoyer Fiche --------------
-    if (ws.status !== "BROUILLON") {
-      envoyerFicheBtn.style.display = "none";
-    } else {
-      envoyerFicheBtn.style.display = "inline-block";
-      envoyerFicheBtn.disabled = false;
-    }//------------- Bouton Facture   --------------------
-    if (
-      ws.status === "TERMINE" ||
-      ws.status === "EN_ATTENTE_PAIEMENT" ||
-      ws.status === "PAYE"
-    ) {
-      factureBtn.style.display = "inline-block";
-    } else {
-      factureBtn.style.display = "none";
-    }//-------------------------------------------------
+
+    if (!isProthesiste) {
+      // ------------- Bouton Envoyer Fiche --------------
+      if (ws.status !== "BROUILLON") {
+        envoyerFicheBtn.style.display = "none";
+      } else {
+        envoyerFicheBtn.style.display = "inline-block";
+        envoyerFicheBtn.disabled = false;
+      }
+      //------------- Bouton Facture   --------------------
+      if (
+        ws.status === "TERMINE" ||
+        ws.status === "EN_ATTENTE_PAIEMENT" ||
+        ws.status === "PAYE"
+      ) {
+        factureBtn.style.display = "inline-block";
+      } else {
+        factureBtn.style.display = "none";
+      }
+    }
 
     proDateLivraisonInput.value = ws.proDateLivraison
       ? new Date(ws.proDateLivraison).toISOString().split("T")[0]
@@ -243,17 +265,20 @@ function addActToTable(act) {
   priceTd.textContent = `${act.price} €`;
 
 
-  const actionTd = document.createElement("td");
-  const delBtn = document.createElement("button");
-  delBtn.textContent = "✖";
-  delBtn.className = "btn btn-delete-act";
-  delBtn.addEventListener("click", () => {
-    tr.remove();
-    updateTotalActes();
-  });
-  actionTd.appendChild(delBtn);
+  tr.append(nameTd, descTd, priceTd);
 
-  tr.append(nameTd, descTd, priceTd, actionTd);
+  if (!isProthesiste) {
+    const actionTd = document.createElement("td");
+    const delBtn = document.createElement("button");
+    delBtn.textContent = "✖";
+    delBtn.className = "btn btn-delete-act";
+    delBtn.addEventListener("click", () => {
+      tr.remove();
+      updateTotalActes();
+    });
+    actionTd.appendChild(delBtn);
+    tr.appendChild(actionTd);
+  }
 
   actsTableBody.insertBefore(tr, document.getElementById("totalActesRow"));
   updateTotalActes();
@@ -492,9 +517,9 @@ document.getElementById("logoutBtn").onclick = () => {
 };
 
 // ================== INIT ==================
-if (role === "DENTISTE") {
-  fetchActes().then(fetchWorksheet);
-} else {
+if (isProthesiste) {
   fetchWorksheet();
+} else {
+  fetchActes().then(fetchWorksheet);
 }
 
