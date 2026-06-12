@@ -494,7 +494,7 @@ factureBtn.addEventListener("click", () => {
   doc.setTextColor("#000");
   doc.text("Acte", margin + 5, y + 15);
   doc.text("Description", margin + colWidths[0] + 5, y + 15);
-  doc.text("Prix (€)", margin + colWidths[0] + colWidths[1] + 5, y + 15);
+  doc.text("Prix HT (€)", margin + colWidths[0] + colWidths[1] + 5, y + 15);
   y += rowHeight;
 
   data.acts.forEach((a) => {
@@ -506,11 +506,20 @@ factureBtn.addEventListener("click", () => {
     y += rowHeight;
   });
 
-  const total = data.acts.reduce((sum, a) => sum + a.price, 0);
+  const totalHT = data.acts.reduce((sum, a) => sum + a.price, 0);
+  const tva = totalHT * 0.2;
+  const totalTTC = totalHT + tva;
   y += 10;
   doc.setFontSize(14);
   doc.setFont("helvetica", "bold");
-  doc.text(`Total : ${total.toFixed(2)} €`, margin + colWidths[0] + colWidths[1], y);
+  doc.text(`Total HT : ${totalHT.toFixed(2)} €`, margin + colWidths[0] + colWidths[1], y);
+  y += 18;
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "normal");
+  doc.text(`TVA (20 %) : ${tva.toFixed(2)} €`, margin + colWidths[0] + colWidths[1], y);
+  y += 18;
+  doc.setFont("helvetica", "bold");
+  doc.text(`Total TTC : ${totalTTC.toFixed(2)} €`, margin + colWidths[0] + colWidths[1], y);
 
   const pdfBlob = doc.output("blob");
   const pdfUrl = URL.createObjectURL(pdfBlob);

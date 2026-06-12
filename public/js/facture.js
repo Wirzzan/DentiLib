@@ -29,11 +29,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     doc.text("Actes :", 20, y);
     workSheet.acts.forEach((a) => {
       y += 10;
-      doc.text(`- ${a.name} (${a.description}) : ${a.price} €`, 20, y);
+      doc.text(`- ${a.name} (${a.description}) : ${Number(a.price).toFixed(2)} € HT`, 20, y);
     });
 
+    const totalHT = workSheet.acts.reduce((sum, a) => sum + Number(a.price), 0);
+    const tva = totalHT * 0.2;
+    const totalTTC = totalHT + tva;
+
     y += 20;
-    doc.text(`Total : ${workSheet.acts.reduce((sum, a) => sum + a.price, 0)} €`, 20, y);
+    doc.text(`Total HT : ${totalHT.toFixed(2)} €`, 20, y);
+    y += 10;
+    doc.text(`TVA (20 %) : ${tva.toFixed(2)} €`, 20, y);
+    y += 10;
+    doc.text(`Total TTC : ${totalTTC.toFixed(2)} €`, 20, y);
 
     const pdfBlob = doc.output("blob");
     const pdfUrl = URL.createObjectURL(pdfBlob);
