@@ -7,6 +7,7 @@ const modal = document.getElementById("workModal");
 const form = document.getElementById("workForm");
 const addWorkBtn = document.getElementById("addWorkBtn");
 const closeModalBtns = document.querySelectorAll(".modal .close");
+const workFormMessage = document.getElementById("workFormMessage");
 
 const searchType = document.getElementById("searchType");
 const searchInput = document.getElementById("searchInput");
@@ -66,8 +67,47 @@ function displayWorksheets(list) {
 }
 
 //form création fiche
+function showWorkFormMessage(text, color = "red") {
+  if (workFormMessage) {
+    workFormMessage.textContent = text;
+    workFormMessage.style.color = color;
+  }
+}
+
+function validateWorkForm() {
+  clearFormValidation(form);
+
+  const requiredFields = [form.nomPatient, form.prenomPatient, form.emailPatient];
+  let hasEmpty = false;
+
+  requiredFields.forEach((field) => {
+    if (isEmpty(field.value)) {
+      markInvalid(field);
+      hasEmpty = true;
+    }
+  });
+
+  if (hasEmpty) {
+    showWorkFormMessage("Veuillez compléter les champs obligatoires");
+    return false;
+  }
+
+  if (!isValidEmail(form.emailPatient.value)) {
+    markInvalid(form.emailPatient);
+    showWorkFormMessage("Format email invalide");
+    return false;
+  }
+
+  showWorkFormMessage("");
+  return true;
+}
+
+bindClearOnInput(form);
+
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  if (!validateWorkForm()) return;
 
   const payload = {
     nomPatient: form.nomPatient.value,
@@ -200,7 +240,10 @@ addWorkBtn.addEventListener("click", () => {
 
 closeModalBtns.forEach((btn) => {
   btn.addEventListener("click", () => {
-    btn.closest(".modal").style.display = "none";
+    const modalEl = btn.closest(".modal");
+    modalEl.style.display = "none";
+    clearFormValidation(form);
+    showWorkFormMessage("");
   });
 });
 
@@ -214,6 +257,8 @@ window.addEventListener("click", (e) => {
 function resetForm() {
   modal.style.display = "none";
   form.reset();
+  clearFormValidation(form);
+  showWorkFormMessage("");
   editingId = null;
 }
 

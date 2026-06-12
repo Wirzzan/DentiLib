@@ -167,7 +167,10 @@ closeModals.forEach(btn => {
     modal.style.display = "none";
 
     const form = modal.querySelector("form");
-    if (form) form.reset();
+    if (form) {
+      form.reset();
+      clearFormValidation(form);
+    }
 
     editingUserId = null;
   });
@@ -179,13 +182,65 @@ function showFormMessage(elementId, text, color = "red") {
   msg.style.color = color;
 }
 
+function validateAddUserForm() {
+  clearFormValidation(addUserForm);
+
+  const requiredFields = [
+    addUserForm.firstName,
+    addUserForm.lastName,
+    addUserForm.email,
+    addUserForm.password,
+    addUserForm.siret,
+  ];
+
+  let hasEmpty = false;
+  requiredFields.forEach((field) => {
+    if (isEmpty(field.value)) {
+      markInvalid(field);
+      hasEmpty = true;
+    }
+  });
+
+  if (hasEmpty) {
+    showFormMessage("addUserMessage", "Veuillez compléter les champs obligatoires");
+    return false;
+  }
+
+  if (!isValidEmail(addUserForm.email.value)) {
+    markInvalid(addUserForm.email);
+    showFormMessage("addUserMessage", "Format email invalide");
+    return false;
+  }
+
+  if (addUserForm.password.value.length < 8) {
+    markInvalid(addUserForm.password);
+    showFormMessage("addUserMessage", "Le mot de passe doit contenir au moins 8 caractères");
+    return false;
+  }
+
+  const role = addUserForm.role.value;
+  if (role === "PROTHESISTE" && !dentisteSelect.value) {
+    markInvalid(dentisteSelect);
+    showFormMessage("addUserMessage", "Veuillez sélectionner un dentiste");
+    return false;
+  }
+
+  showFormMessage("addUserMessage", "");
+  return true;
+}
+
+bindClearOnInput(addUserForm);
+
 // Clic à l’extérieur de toutes les modales pour fermer
 window.addEventListener("click", e => {
   document.querySelectorAll(".modal").forEach(modal => {
     if (e.target === modal) {
       modal.style.display = "none";
       const form = modal.querySelector("form");
-      if (form) form.reset();
+      if (form) {
+        form.reset();
+        clearFormValidation(form);
+      }
       const dentisteSelectInModal = modal.querySelector("select");
       if (dentisteSelectInModal) dentisteSelectInModal.style.display = "none";
       editingUserId = null;
@@ -213,18 +268,10 @@ addUserForm.role.addEventListener("change", e => {
 addUserForm.addEventListener("submit", async e => {
   e.preventDefault();
 
+  if (!validateAddUserForm()) return;
+
   const role = addUserForm.role.value;
   const dentisteId = dentisteSelect.value;
-
-  if (role === "PROTHESISTE" && !dentisteId) {
-    showFormMessage("addUserMessage", "Veuillez sélectionner un dentiste");
-    return;
-  }
-
-  if (addUserForm.password.value.length < 8) {
-    showFormMessage("addUserMessage", "Le mot de passe doit contenir au moins 8 caractères");
-    return;
-  }
 
   const formData = {
     firstName: addUserForm.firstName.value,
@@ -254,6 +301,7 @@ addUserForm.addEventListener("submit", async e => {
     showFormMessage("addUserMessage", "Utilisateur créé avec succès", "green");
 
     addUserForm.reset();
+    clearFormValidation(addUserForm);
     dentisteSelect.style.display = "none";
     dentisteSelect.value = "";
     addUserForm.role.dispatchEvent(new Event("change"));

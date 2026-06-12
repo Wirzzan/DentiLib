@@ -55,10 +55,11 @@
   <div class="modal-content">
     <span class="close">&times;</span>
     <h2>Infos patients</h2>
-    <form id="workForm">
-      <input type="text" name="nomPatient" placeholder="Nom du patient" required />
-      <input type="text" name="prenomPatient" placeholder="Prénom du patient" required />
-      <input type="email" name="emailPatient" placeholder="Email du patient" required />
+    <form id="workForm" novalidate>
+      <p id="workFormMessage" style="color:red;margin-bottom:10px;"></p>
+      <input type="text" name="nomPatient" placeholder="Nom du patient" />
+      <input type="text" name="prenomPatient" placeholder="Prénom du patient" />
+      <input type="email" name="emailPatient" placeholder="Email du patient" />
       <input type="number" name="numSecuPatient" placeholder="Numéro de sécurité sociale" />
 
       <textarea name="remarque" placeholder="Remarques" rows="3"></textarea>
@@ -69,6 +70,7 @@
 </div>
 
   <script src="/js/ui.js"></script>
+  <script src="/js/formValidation.js"></script>
   <script src="/js/dentist.js"></script>
 </body>
 </html>

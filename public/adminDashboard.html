@@ -55,15 +55,15 @@
       <span class="close">&times;</span>
       <h2>Ajouter un utilisateur</h2>
 
-      <form id="addUserForm">
+      <form id="addUserForm" novalidate>
         <p id="addUserMessage" style="color:red;margin-bottom:10px;"></p>
-        <input type="text" name="firstName" placeholder="Prénom" required />
-        <input type="text" name="lastName" placeholder="Nom" required />
-        <input type="email" name="email" placeholder="Email" required />
-        <input type="password" name="password" placeholder="Mot de passe" required />
-        <input type="text" name="siret" placeholder="SIRET" required />
+        <input type="text" name="firstName" placeholder="Prénom" />
+        <input type="text" name="lastName" placeholder="Nom" />
+        <input type="email" name="email" placeholder="Email" />
+        <input type="password" name="password" placeholder="Mot de passe" />
+        <input type="text" name="siret" placeholder="SIRET" />
 
-        <select name="role" required>
+        <select name="role">
           <option value="DENTISTE">Dentiste</option>
           <option value="PROTHESISTE">Prothésiste</option>
         </select>
@@ -102,6 +102,7 @@
 
 
   <script src="/js/ui.js"></script>
+  <script src="/js/formValidation.js"></script>
   <script src="/js/admin.js"></script>
 </body>
 </html>
