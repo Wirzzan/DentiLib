@@ -22,6 +22,10 @@ const FICHE_FIELDS = [
   "proDatePaiement",
 ];
 
+const MSG_NO_PROTHESISTE = "Aucun prothésiste associé à ce dentiste";
+const MSG_SEND_NO_PROTHESISTE =
+  "Impossible d'envoyer cette fiche : aucun prothésiste n'est associé à votre compte.";
+
 const syncFicheActs = async (ficheId, acts, transaction) => {
   await ActeFiche.destroy({ where: { ficheId }, transaction });
 
@@ -128,6 +132,13 @@ const updateWorkSheet = async (req, res) => {
       return res.status(403).json({ message: "Accès refusé" });
     }
 
+    if (acts !== undefined && acts.length > 0) {
+      const dentiste = await Utilisateur.findByPk(userId(req.user.id));
+      if (!dentiste?.associatedUserId) {
+        return res.status(400).json({ message: MSG_NO_PROTHESISTE });
+      }
+    }
+
     await sequelize.transaction(async (t) => {
       FICHE_FIELDS.forEach((field) => {
         if (updates[field] !== undefined) {
@@ -185,7 +196,7 @@ const getProthesisteActs = async (req, res) => {
     }
 
     if (!dentiste.associatedUserId) {
-      return res.json({ acts: [] });
+      return res.json({ acts: [], hasProthesiste: false });
     }
 
     const rows = await ActeProthesiste.findAll({
@@ -204,7 +215,7 @@ const getProthesisteActs = async (req, res) => {
       };
     });
 
-    return res.json({ acts });
+    return res.json({ acts, hasProthesiste: true });
   } catch (error) {
     console.error("❌ Erreur getProthesisteActs :", error);
     return res.status(500).json({
@@ -228,7 +239,7 @@ const sendWorkSheet = async (req, res) => {
 
     const dentiste = await Utilisateur.findByPk(userId(req.user.id));
     if (!dentiste || !dentiste.associatedUserId) {
-      return res.status(400).json({ message: "❌ Envoi impossible : Pas de prothésiste associé" });
+      return res.status(400).json({ message: MSG_SEND_NO_PROTHESISTE });
     }
 
     if (worksheet.prothesisteId) {

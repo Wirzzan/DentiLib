@@ -324,12 +324,129 @@ Plusieurs règles ont été suivies pour garder un code lisible et maintenable :
 
 ## 4.4 Architecture logicielle multicouche et sécurité — CP6
 
-- **Schéma d'architecture multicouche** : couche présentation / couche métier / couche données
-- Rôle de chaque couche
-- Technologies par couche (Express, Mongoose…)
-- Stratégie de sécurité (JWT, CORS, hachage…)
+Pour structurer DentiLib, j'ai organisé l'application en **plusieurs couches** plutôt que de tout mettre dans un seul gros fichier. Au début j'avais un peu du mal à bien visualiser comment tout s'articulait, mais en avançant dans le projet ça m'a beaucoup aidé à m'y retrouver quand il fallait corriger un bug ou ajouter une fonctionnalité. L'idée générale, c'est que chaque couche a un rôle précis et qu'elles communiquent dans un sens logique : l'interface parle au serveur, le serveur parle à la base, et pas l'inverse.
 
-[À RÉDIGER — produire le schéma multicouche ; reprendre la description d'architecture existante.]
+### Schéma d'architecture multicouche
+
+Le schéma ci-dessous résume l'organisation retenue. C'est inspiré d'une architecture **client-serveur** en **3 couches**, avec en plus une couche transversale pour la sécurité (middlewares JWT, rôles et CORS).
+
+```plantuml
+@startuml Architecture_DentiLib
+skinparam componentStyle rectangle
+
+package "Couche présentation" {
+  [Pages HTML\n(login, dashboard, fiches...)] as HTML
+  [CSS / styles] as CSS
+  [JavaScript client\n(admin.js, dentist.js, worksheet.js...)] as JS
+}
+
+package "Couche métier (serveur Node.js)" {
+  [Routes Express\n/auth, /admin, /dentiste, /prothesiste] as Routes
+  [Contrôleurs\nlogique métier] as Controllers
+  [Middlewares\nCORS, JWT, rôles] as Middlewares
+  [Utilitaires\nmailer, helpers] as Utils
+}
+
+package "Couche données" {
+  [Sequelize ORM] as ORM
+  database "MySQL\n(XAMPP)" as BDD
+}
+
+HTML --> JS : affichage\n+ événements
+JS --> Routes : requêtes HTTP\n(JSON + token JWT)
+Routes --> Middlewares : vérification\navant accès
+Middlewares --> Controllers : si autorisé
+Controllers --> ORM : requêtes\n(CRUD)
+ORM --> BDD : SQL
+Controllers --> Utils : envoi email\n(formatage réponses)
+Controllers --> JS : réponse JSON
+
+@enduml
+```
+
+*Figure — Architecture multicouche de DentiLib.*
+
+### Rôle de chaque couche
+
+**Couche présentation**
+
+C'est tout ce qui tourne dans le navigateur. Les pages HTML affichent les écrans (connexion, tableau des utilisateurs, fiches de travaux, etc.), le CSS gère le visuel, et le JavaScript envoie les requêtes au serveur quand l'utilisateur clique sur un bouton ou remplit un formulaire. Cette couche ne stocke pas les données métier : elle se contente de les afficher et de les envoyer. Le token JWT est gardé dans le `localStorage` après la connexion, ce qui permet au front de s'authentifier sur chaque appel API.
+
+**Couche métier**
+
+Elle correspond au serveur **Node.js / Express**. Les **routes** (`routes/`) définissent les points d'entrée de l'API (`POST /api/login`, `GET /dentiste/worksheets`, etc.). Les **contrôleurs** (`controllers/`) contiennent la logique métier : création d'un utilisateur, envoi d'une fiche au prothésiste, mise à jour du statut, etc. J'ai essayé de ne pas mettre de logique SQL directement dans les routes, même si parfois au début j'avais tendance à tout mélanger.
+
+Les **middlewares** (`middlewares/`) sont une couche transversale : ils s'exécutent *avant* le contrôleur pour vérifier que la requête est autorisée. C'est là que passent le **CORS** (origines autorisées), l'authentification JWT et le contrôle du rôle (ADMIN, DENTISTE, PROTHESISTE).
+
+**Couche données**
+
+Elle assure la persistance. **Sequelize** fait le lien entre les objets JavaScript et les tables MySQL. Les modèles (`models/sequelize/`) décrivent la structure des tables (`utilisateurs`, `actes`, `fiches_travaux`, etc.). Le projet a été migré de MongoDB/Mongoose vers MySQL/Sequelize pour mieux gérer les relations entre entités (dentiste ↔ prothésiste, actes d'une fiche, etc.).
+
+### Technologies par couche
+
+| Couche | Technologies | Rôle |
+|---|---|---|
+| Présentation | HTML5, CSS3, JavaScript (vanilla) | Interface utilisateur, appels API via `fetch` |
+| Métier | Node.js, Express.js | API REST, routage, logique applicative |
+| Sécurité transverse | cors, jsonwebtoken, bcrypt, middlewares maison | Origines autorisées, authentification, hachage, contrôle d'accès |
+| Données | Sequelize, MySQL (XAMPP) | ORM, persistance relationnelle |
+| Services annexes | Nodemailer, jsPDF | Email de bienvenue ; facture PDF côté client |
+
+Le serveur sert aussi les fichiers statiques du dossier `public/` via `express.static`, ce qui évite d'avoir un serveur front séparé en développement : tout passe par le port 3000.
+
+### Stratégie de sécurité
+
+La sécurité a été pensée **côté serveur en priorité**, parce que le front peut toujours être contourné (un utilisateur pourrait appeler l'API directement avec Postman par exemple). Voici les mesures mises en place :
+
+**CORS (Cross-Origin Resource Sharing)**
+
+Le middleware **cors** est configuré dans `server.js` pour n'autoriser que les origines définies dans le fichier `.env` (`CORS_ORIGIN`). En développement, front et API tournent sur `http://localhost:3000`, donc une seule origine suffit. Si le front était un jour hébergé sur un autre domaine ou port, il suffirait de modifier cette variable (ou d'en lister plusieurs) sans toucher au reste du code. Ça évite qu'un site malveillant appelle l'API depuis le navigateur d'un utilisateur connecté.
+
+**Authentification par JWT**
+
+Lors de la connexion (`POST /api/login`), le serveur vérifie l'email et le mot de passe, puis génère un **jeton JWT** signé avec une clé secrète (`JWT_SECRET` dans le `.env`). Ce jeton contient l'identifiant et le **rôle** de l'utilisateur. Il est valable **2 heures**. Ensuite, chaque requête protégée doit envoyer ce token dans l'en-tête `Authorization: Bearer <token>`. Le middleware `authMiddleware` le vérifie avant de laisser passer la requête.
+
+**Hachage des mots de passe (bcrypt)**
+
+Les mots de passe ne sont **jamais stockés en clair** en base. À la création d'un compte, le mot de passe est haché avec **bcrypt** (10 rounds) avant d'être enregistré. À la connexion, `bcrypt.compare()` vérifie le mot de passe saisi sans avoir besoin de le déchiffrer.
+
+**Contrôle d'accès par rôle**
+
+Un second middleware, `roleMiddleware`, vérifie que l'utilisateur connecté a le bon rôle pour accéder à une route (`/admin/*`, `/dentiste/*`, `/prothesiste/*`). En plus, dans certains contrôleurs, un contrôle de **propriété** empêche un dentiste d'accéder aux fiches d'un autre dentiste, ou un prothésiste aux fiches qui ne lui ont pas été envoyées.
+
+**Variables sensibles (.env)**
+
+Les informations sensibles (mot de passe BDD, clé JWT, identifiants SMTP, origine CORS) sont dans un fichier `.env` non versionné. Un fichier `.env.example` documente les variables nécessaires.
+
+**Évolutions prévues (non implémentées dans cette version)**
+
+- **HTTPS** en production (certificat TLS) pour chiffrer les échanges
+- **OAuth2** (connexion Google/Microsoft) : non retenu ici, l'authentification maison suffit pour le périmètre du projet
+- Rate limiting, protection CSRF : à envisager pour un déploiement réel
+
+Extrait de configuration CORS dans `server.js` :
+
+```js
+const cors = require("cors");
+
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+    credentials: true,
+  })
+);
+```
+
+### Organisation du code (MVC simplifié)
+
+Le projet suit une organisation proche du **MVC** :
+
+- **Modèles** → `models/sequelize/` (structure des données)
+- **Vues** → `public/` (HTML + CSS + JS côté client)
+- **Contrôleurs** → `controllers/` (traitement des requêtes)
+
+Les routes font le lien entre l'URL et le bon contrôleur. Cette séparation n'est pas parfaite partout (le JavaScript client contient parfois un peu de logique, comme le calcul du total des actes ou la génération PDF), mais globalement ça reste lisible pour la taille du projet.
+
 
 ---
 
@@ -447,6 +564,8 @@ La base de données de DentiLib est présentée à travers son modèle conceptue
 ## 8.4 Analyse des résultats
 
 [À COMPLÉTER — nombre de tests, taux de réussite, anomalies détectées puis corrigées.]
+
+**Exemple d'anomalie identifiée par les scénarios de test :** lors des tests du parcours dentiste, j'ai constaté qu'un dentiste sans prothésiste associé pouvait encore ajouter des actes à une fiche via l'API, alors que le catalogue d'actes dépend du prothésiste. Les scénarios de test ont permis de mettre en évidence cet écart entre le comportement attendu et le comportement réel. La correction retenue consiste à autoriser la création et la sauvegarde d'un brouillon (informations patient, remarque), tout en bloquant l'ajout d'actes et l'envoi au prothésiste — côté interface et côté serveur.
 
 ---
 

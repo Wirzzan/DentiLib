@@ -32,7 +32,7 @@ CREATE TABLE utilisateurs (
     FOREIGN KEY (associated_user_id) REFERENCES utilisateurs(id)
     ON DELETE SET NULL
     ON UPDATE CASCADE
-) ENGINE=InnoDB;
+);
 
 -- =============================================
 -- Table actes (catalogue admin)
@@ -41,7 +41,7 @@ CREATE TABLE actes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   description TEXT NULL
-) ENGINE=InnoDB;
+);
 
 -- =============================================
 -- Table actes_prothesiste (tarifs par prothésiste)
@@ -60,7 +60,7 @@ CREATE TABLE actes_prothesiste (
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT uq_ap_utilisateur_acte UNIQUE (utilisateur_id, acte_id)
-) ENGINE=InnoDB;
+);
 
 -- =============================================
 -- Table fiches_travaux
@@ -96,7 +96,7 @@ CREATE TABLE fiches_travaux (
     FOREIGN KEY (prothesiste_id) REFERENCES utilisateurs(id)
     ON DELETE SET NULL
     ON UPDATE CASCADE
-) ENGINE=InnoDB;
+);
 
 -- =============================================
 -- Table actes_fiche (lignes d'actes sur une fiche)
@@ -116,4 +116,4 @@ CREATE TABLE actes_fiche (
     FOREIGN KEY (acte_id) REFERENCES actes(id)
     ON DELETE RESTRICT
     ON UPDATE CASCADE
-) ENGINE=InnoDB;
+);

@@ -6,6 +6,7 @@ if (!token) window.location.href = "/";
 
 const isProthesiste = role === "PROTHESISTE";
 let actes = [];
+let hasProthesiste = true;
 
 
 
@@ -18,6 +19,7 @@ const numFicheSpan = document.getElementById("numFiche");
 const editPatientBtn = document.getElementById("editPatientBtn");
 
 const searchAct = document.getElementById("selectAct");
+const noProthesisteMsg = document.getElementById("noProthesisteMsg");
 const addActBtn = document.getElementById("addActBtn");
 const actsTableBody = document.getElementById("actsTableBody");
 const remarqueTextarea = document.getElementById("remarque");
@@ -34,6 +36,17 @@ const factureBtn = document.getElementById("factureBtn");
 const backBtn = document.getElementById("backBtn");
 
 
+
+function applyNoProthesisteRestrictions() {
+  if (isProthesiste || hasProthesiste) return;
+
+  if (noProthesisteMsg) noProthesisteMsg.style.display = "block";
+  searchAct.disabled = true;
+  addActBtn.disabled = true;
+  envoyerFicheBtn.disabled = true;
+  envoyerFicheBtn.title =
+    "Impossible d'envoyer cette fiche : aucun prothésiste n'est associé à votre compte.";
+}
 
 //================== Pour Proto ========================
 function applyProthesisteView() {
@@ -115,10 +128,11 @@ async function fetchActes() {
 
     const data = await res.json();
     actes = data.acts || [];
+    hasProthesiste = data.hasProthesiste !== false;
 
-    console.log("✅ Actes prothésiste :", actes);
+    applyNoProthesisteRestrictions();
 
-    selectAct.innerHTML = `<option value="">-- Sélectionner un acte --</option>`;
+    searchAct.innerHTML = `<option value="">-- Sélectionner un acte --</option>`;
 
     actes.forEach(act => {
       const opt = document.createElement("option");
@@ -126,7 +140,7 @@ async function fetchActes() {
       opt.textContent = `${act.name}`;
       opt.dataset.description = act.description;
       opt.dataset.price = act.price;
-      selectAct.appendChild(opt);
+      searchAct.appendChild(opt);
     });
 
   } catch (err) {
@@ -193,8 +207,12 @@ async function fetchWorksheet() {
         envoyerFicheBtn.style.display = "none";
       } else {
         envoyerFicheBtn.style.display = "inline-block";
-        envoyerFicheBtn.disabled = false;
+        envoyerFicheBtn.disabled = !hasProthesiste;
+        envoyerFicheBtn.title = hasProthesiste
+          ? ""
+          : "Impossible d'envoyer cette fiche : aucun prothésiste n'est associé à votre compte.";
       }
+      applyNoProthesisteRestrictions();
     }
 
     const canShowFacture = ["TERMINE", "EN_ATTENTE_PAIEMENT", "PAYE"].includes(ws.status);
@@ -278,7 +296,9 @@ function addActToTable(act) {
 
 // ================== BOUTON AJOUTER ==================
 addActBtn.addEventListener("click", () => {
-  const selectedOpt = selectAct.selectedOptions[0];
+  if (!hasProthesiste) return;
+
+  const selectedOpt = searchAct.selectedOptions[0];
   if (!selectedOpt || !selectedOpt.value) {
     alert("Veuillez sélectionner un acte");
     return;
@@ -292,7 +312,7 @@ addActBtn.addEventListener("click", () => {
   };
 
   addActToTable(acte);
-  selectAct.value = "";
+  searchAct.value = "";
 });
 
 
@@ -373,6 +393,11 @@ saveWorksheetBtn.addEventListener("click", async () => {
 
 //============= ENVOYER FICHE ================
 envoyerFicheBtn.addEventListener("click", async () => {
+  if (!hasProthesiste) {
+    alert("Impossible d'envoyer cette fiche : aucun prothésiste n'est associé à votre compte.");
+    return;
+  }
+
   if (!confirm("Voulez-vous vraiment envoyer cette fiche au prothésiste associé ?")) return;
 
   try {

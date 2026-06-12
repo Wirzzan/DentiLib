@@ -1,5 +1,6 @@
 require('dotenv').config();
-const express = require ("express");
+const express = require("express");
+const cors = require("cors");
 const { connectSequelize } = require("./config/sequelize");
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes")
@@ -12,6 +13,14 @@ const port = 3000;
 
 
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+    credentials: true,
+  })
+);
+
 connectSequelize();
 
 const path = require("path");
