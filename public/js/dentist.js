@@ -104,7 +104,7 @@ window.edit = function (id) {
 
 //supprimer
 async function remove(id) {
-  const confirmed = await showConfirm("Supprimer cette fiche ?");
+  const confirmed = await showConfirm("Supprimer cette fiche ?", { danger: true });
   if (!confirmed) return;
 
   await fetch(`${API_URL}/delete/${id}`, {

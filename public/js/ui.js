@@ -1,30 +1,36 @@
 (() => {
   let feedbackTimer = null;
-  let closeBound = false;
+  let confirmResolver = null;
 
-  function ensureUi() {
-    const mount = document.querySelector(".container") || document.body;
-
-    if (!document.getElementById("feedbackBanner")) {
-      const banner = document.createElement("div");
-      banner.id = "feedbackBanner";
-      banner.className = "feedback-banner";
-      banner.hidden = true;
-      banner.setAttribute("role", "alert");
-      banner.innerHTML = `
-        <span id="feedbackMessage"></span>
-        <button type="button" id="feedbackClose" class="feedback-close" aria-label="Fermer">×</button>
-      `;
-      mount.insertBefore(banner, mount.firstChild);
+  function ensureToast() {
+    let toast = document.getElementById("uiToast");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.id = "uiToast";
+      toast.className = "ui-toast";
+      toast.setAttribute("role", "alert");
+      document.body.appendChild(toast);
     }
+    return toast;
+  }
 
-    if (!document.getElementById("confirmModal")) {
-      const modal = document.createElement("div");
+  function closeConfirm(result) {
+    const modal = document.getElementById("confirmModal");
+    if (modal) modal.classList.remove("is-open");
+
+    const resolve = confirmResolver;
+    confirmResolver = null;
+    resolve?.(result);
+  }
+
+  function ensureConfirmModal() {
+    let modal = document.getElementById("confirmModal");
+    if (!modal) {
+      modal = document.createElement("div");
       modal.id = "confirmModal";
       modal.className = "confirm-modal";
-      modal.hidden = true;
       modal.innerHTML = `
-        <div class="confirm-modal__backdrop"></div>
+        <div class="confirm-modal__backdrop" data-confirm-dismiss></div>
         <div class="confirm-modal__box">
           <p id="confirmModalMessage"></p>
           <div class="confirm-modal__actions">
@@ -33,71 +39,73 @@
           </div>
         </div>
       `;
+
+      modal.addEventListener("click", (e) => {
+        if (!modal.classList.contains("is-open")) return;
+        if (e.target.id === "confirmModalOk") closeConfirm(true);
+        else if (e.target.id === "confirmModalCancel" || e.target.hasAttribute("data-confirm-dismiss")) {
+          closeConfirm(false);
+        }
+      });
+
       document.body.appendChild(modal);
     }
-
-    if (!closeBound) {
-      document.getElementById("feedbackClose")?.addEventListener("click", hideFeedback);
-      closeBound = true;
-    }
+    return modal;
   }
 
   function hideFeedback() {
-    const banner = document.getElementById("feedbackBanner");
-    if (banner) banner.hidden = true;
+    const toast = document.getElementById("uiToast");
+    if (!toast) return;
+
+    toast.classList.remove("is-visible");
+    toast.classList.add("is-leaving");
+
     if (feedbackTimer) {
       clearTimeout(feedbackTimer);
       feedbackTimer = null;
     }
+
+    setTimeout(() => {
+      toast.classList.remove("is-leaving", "ui-toast--success", "ui-toast--error");
+      toast.textContent = "";
+    }, 350);
   }
 
   function showFeedback(message, type = "success") {
-    ensureUi();
-    const banner = document.getElementById("feedbackBanner");
-    const messageEl = document.getElementById("feedbackMessage");
-    if (!banner || !messageEl) return;
+    const toast = ensureToast();
+    const duration = type === "error" ? 5000 : 3000;
 
     if (feedbackTimer) clearTimeout(feedbackTimer);
-    banner.className = `feedback-banner feedback-banner--${type}`;
-    messageEl.textContent = message;
-    banner.hidden = false;
 
-    if (type === "success") {
-      feedbackTimer = setTimeout(hideFeedback, 4000);
-    }
+    toast.textContent = message;
+    toast.className = `ui-toast ui-toast--${type}`;
+
+    requestAnimationFrame(() => {
+      toast.classList.add("is-visible");
+    });
+
+    feedbackTimer = setTimeout(hideFeedback, duration);
   }
 
-  function showConfirm(message) {
-    ensureUi();
+  function showConfirm(message, options = {}) {
+    const { danger = false } = options;
+    const modal = ensureConfirmModal();
+    const messageEl = document.getElementById("confirmModalMessage");
+    const okBtn = document.getElementById("confirmModalOk");
+
+    if (!messageEl || !okBtn) return Promise.resolve(false);
+
+    if (confirmResolver) closeConfirm(false);
+
+    messageEl.textContent = message;
+    okBtn.className = danger
+      ? "confirm-modal__btn confirm-modal__btn--danger"
+      : "confirm-modal__btn confirm-modal__btn--ok";
+
+    modal.classList.add("is-open");
+
     return new Promise((resolve) => {
-      const modal = document.getElementById("confirmModal");
-      const messageEl = document.getElementById("confirmModalMessage");
-      const okBtn = document.getElementById("confirmModalOk");
-      const cancelBtn = document.getElementById("confirmModalCancel");
-      const backdrop = modal?.querySelector(".confirm-modal__backdrop");
-
-      if (!modal || !messageEl || !okBtn || !cancelBtn) {
-        resolve(false);
-        return;
-      }
-
-      messageEl.textContent = message;
-      modal.hidden = false;
-
-      const close = (result) => {
-        modal.hidden = true;
-        okBtn.removeEventListener("click", onOk);
-        cancelBtn.removeEventListener("click", onCancel);
-        backdrop?.removeEventListener("click", onCancel);
-        resolve(result);
-      };
-
-      const onOk = () => close(true);
-      const onCancel = () => close(false);
-
-      okBtn.addEventListener("click", onOk);
-      cancelBtn.addEventListener("click", onCancel);
-      backdrop?.addEventListener("click", onCancel);
+      confirmResolver = resolve;
     });
   }
 

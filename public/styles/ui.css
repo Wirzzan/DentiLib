@@ -1,50 +1,57 @@
-/* Retours utilisateur et confirmations — partagé (ui.js) */
-
-.feedback-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  padding: 0.75rem 1rem;
+/* Toast de retour utilisateur */
+.ui-toast {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  z-index: 1100;
+  min-width: min(90vw, 420px);
+  max-width: 90vw;
+  padding: 0.75rem 1.25rem;
   border-radius: 10px;
   font-size: 0.95rem;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-50%) translateY(-1.5rem);
+  transition: transform 0.35s ease, opacity 0.35s ease;
 }
 
-.feedback-banner--success {
+.ui-toast.is-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.ui-toast.is-leaving {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-1.5rem);
+}
+
+.ui-toast--success {
   background-color: #d1e7dd;
   border: 1px solid #a3cfbb;
   color: #0f5132;
+  box-shadow: 0 8px 24px rgba(15, 81, 50, 0.12);
 }
 
-.feedback-banner--error {
+.ui-toast--error {
   background-color: #f8d7da;
   border: 1px solid #f1aeb5;
   color: #842029;
+  box-shadow: 0 8px 24px rgba(132, 32, 41, 0.12);
 }
 
-.feedback-close {
-  flex-shrink: 0;
-  border: none;
-  background: transparent;
-  font-size: 1.25rem;
-  line-height: 1;
-  cursor: pointer;
-  color: inherit;
-  opacity: 0.7;
-}
-
-.feedback-close:hover {
-  opacity: 1;
-}
-
+/* Modale de confirmation */
 .confirm-modal {
+  display: none;
   position: fixed;
   inset: 0;
   z-index: 1000;
-  display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.confirm-modal.is-open {
+  display: flex;
 }
 
 .confirm-modal__backdrop {
@@ -91,4 +98,8 @@
 
 .confirm-modal__btn--ok {
   background: linear-gradient(135deg, #27ae60, #1e8449);
+}
+
+.confirm-modal__btn--danger {
+  background: linear-gradient(135deg, #dc3545, #b02a37);
 }

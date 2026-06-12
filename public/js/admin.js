@@ -375,7 +375,9 @@ document.addEventListener("click", async (e) => {
   if (!deleteBtn) return;
 
   const userId = deleteBtn.dataset.id;
-  const confirmDelete = await showConfirm("Voulez-vous vraiment supprimer cet utilisateur ?");
+  const confirmDelete = await showConfirm("Voulez-vous vraiment supprimer cet utilisateur ?", {
+    danger: true,
+  });
   if (!confirmDelete) return;
 
   try {

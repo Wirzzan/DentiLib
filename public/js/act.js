@@ -162,7 +162,7 @@ editActForm.addEventListener("submit", async (e) => {
    SUPPRIMER UN ACTE
 ======================= */
 async function deleteAct(actId) {
-  const confirmed = await showConfirm("Voulez-vous vraiment supprimer cet acte ?");
+  const confirmed = await showConfirm("Voulez-vous vraiment supprimer cet acte ?", { danger: true });
   if (!confirmed) return;
 
   try {
