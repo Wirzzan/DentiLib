@@ -134,6 +134,9 @@ h1 {
   cursor: pointer;
   font-size: 0.9rem;
   transition: 0.3s;
+}
+
+#cancelPatientBtn {
   margin-bottom: 3.5rem;
 }
 
