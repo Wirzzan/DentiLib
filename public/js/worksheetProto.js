@@ -59,7 +59,7 @@ saveBtn.addEventListener("click", async () => {
   proDatePaiement.disabled = true;
   saveBtn.disabled = true;
 
-  alert("Mise à jour enregistrée !");
+  showFeedback("Mise à jour enregistrée !");
 });
 
 fetchWorksheet();

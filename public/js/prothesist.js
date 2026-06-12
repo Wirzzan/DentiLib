@@ -22,9 +22,7 @@ async function fetchWorksheets() {
 
   if (!res.ok) {
     if (res.status === 401 || res.status === 403) {
-      alert("Session expirée, veuillez vous reconnecter.");
-      localStorage.clear();
-      window.location.href = "/";
+      handleSessionExpired();
       return;
     }
     throw new Error("Erreur serveur");
@@ -52,12 +50,6 @@ function displayWorksheets(list) {
       </tr>`
     );
   });
-}
-
-//edit (juste visuel pour l'instant)
-window.edit = function(id) {
-  // On pourra rediriger vers une page prothésisteWorksheet.html plus tard
-  alert("Edition de la fiche : " + id);
 }
 
 //SEARCH

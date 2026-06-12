@@ -5,10 +5,16 @@
     <link rel="icon" href="/img/favicon.svg" type="image/svg+xml" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fiche travaux - Dentilib</title>
+    <link rel="stylesheet" href="./styles/ui.css" />
     <link rel="stylesheet" href="./styles/worksheet.css" />
   </head>
   <body>
     <div class="container">
+      <div id="feedbackBanner" class="feedback-banner" hidden role="alert">
+        <span id="feedbackMessage"></span>
+        <button type="button" id="feedbackClose" class="feedback-close" aria-label="Fermer">×</button>
+      </div>
+
       <!-- HEADER -->
       <div class="header">
         <h1>Fiche travaux</h1>
@@ -22,12 +28,18 @@
           <p><strong>Prénom :</strong> <span id="prenomPatient"></span></p>
           <p><strong>Email :</strong> <span id="emailPatient"></span></p>
           <p><strong>N° Sécurité sociale :</strong> <span id="numSecuPatient"></span></p>
-          <button id="editPatientBtn" class="createBtn" type="button"> ✏️ </button>
         </div>
         <div class="patient-right">
           <p><strong>Date :</strong> <span id="createdAt"></span></p>
           <p><strong>N° Fiche :</strong> <span id="numFiche"></span></p>
         </div>
+        <div class="patient-edit-actions">
+          <button id="editPatientBtn" type="button" title="Modifier les informations patient">✏️</button>
+          <button id="cancelPatientBtn" type="button" hidden>Annuler</button>
+        </div>
+        <p id="patientEditHint" class="patient-edit-hint" hidden>
+          Les modifications seront enregistrées lorsque vous cliquerez sur « Sauvegarder la fiche » en bas de page.
+        </p>
       </div>
 
       <!-- RECHERCHE ACTE -->
@@ -38,7 +50,8 @@
         <select id="selectAct">
           <option value="">-- Sélectionner un acte --</option>
         </select>
-        <button id="addActBtn">Ajouter</button>
+        <button id="addActBtn" type="button">Ajouter</button>
+        <p id="actSelectHint" class="field-hint field-hint--error" hidden>Veuillez sélectionner un acte.</p>
       </div>
 
       <!-- TABLE ACTES -->
@@ -102,10 +115,12 @@
       </div>
 
       <div class="save-section">
-        <button id="saveWorksheetBtn" class="saveBtn"><strong>💾Sauvegarder</strong></button>
+        <button id="saveWorksheetBtn" class="saveBtn" type="button"><strong>💾 Sauvegarder la fiche</strong></button>
       </div>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="./js/ui.js"></script>
     <script src="./js/worksheet.js"></script>
   </body>
 </html>

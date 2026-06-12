@@ -105,7 +105,7 @@ addActForm.addEventListener("submit", async (e) => {
     addActForm.reset();
     fetchActs();
   } catch (err) {
-    alert(err.message);
+    showFeedback(err.message, "error");
   }
 });
 
@@ -153,7 +153,7 @@ editActForm.addEventListener("submit", async (e) => {
     editActForm.reset();
     fetchActs();
   } catch (err) {
-    alert(err.message);
+    showFeedback(err.message, "error");
   }
 });
 
@@ -162,8 +162,8 @@ editActForm.addEventListener("submit", async (e) => {
    SUPPRIMER UN ACTE
 ======================= */
 async function deleteAct(actId) {
-  if (!confirm("Voulez-vous vraiment supprimer cet acte ?")) 
-    return;
+  const confirmed = await showConfirm("Voulez-vous vraiment supprimer cet acte ?");
+  if (!confirmed) return;
 
   try {
     const response = await fetch(`${API_URL}/delete/${actId}`, {
@@ -174,7 +174,7 @@ async function deleteAct(actId) {
     fetchActs();
   } catch (error) {
     console.error(error);
-    alert("Impossible de supprimer l'acte");
+    showFeedback("Impossible de supprimer l'acte", "error");
   }
 }
 

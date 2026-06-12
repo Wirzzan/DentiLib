@@ -8,18 +8,19 @@ const isProthesiste = role === "PROTHESISTE";
 let actes = [];
 let hasProthesiste = true;
 
+const PATIENT_FIELD_IDS = ["nomPatient", "prenomPatient", "emailPatient", "numSecuPatient"];
+let patientEditSnapshot = null;
+let isPatientEditing = false;
 
-
-const nomPatientSpan = document.getElementById("nomPatient");
-const prenomPatientSpan = document.getElementById("prenomPatient");
-const emailPatientSpan = document.getElementById("emailPatient");
-const numSecuPatientSpan = document.getElementById("numSecuPatient");
 const createdAtSpan = document.getElementById("createdAt");
 const numFicheSpan = document.getElementById("numFiche");
 const editPatientBtn = document.getElementById("editPatientBtn");
+const cancelPatientBtn = document.getElementById("cancelPatientBtn");
+const patientEditHint = document.getElementById("patientEditHint");
 
 const searchAct = document.getElementById("selectAct");
 const noProthesisteMsg = document.getElementById("noProthesisteMsg");
+const actSelectHint = document.getElementById("actSelectHint");
 const addActBtn = document.getElementById("addActBtn");
 const actsTableBody = document.getElementById("actsTableBody");
 const remarqueTextarea = document.getElementById("remarque");
@@ -35,7 +36,63 @@ const envoyerFicheBtn = document.getElementById("envoyerFicheBtn");
 const factureBtn = document.getElementById("factureBtn");
 const backBtn = document.getElementById("backBtn");
 
+function patientField(id) {
+  return document.getElementById(id);
+}
 
+function setPatientDisplayValue(id, value) {
+  const el = patientField(id);
+  if (!el) return;
+  if (el.tagName === "INPUT") {
+    el.value = value ?? "";
+  } else {
+    el.textContent = value ?? "";
+  }
+}
+
+function enterPatientEditMode() {
+  if (isPatientEditing || isProthesiste) return;
+
+  patientEditSnapshot = {};
+  PATIENT_FIELD_IDS.forEach((id) => {
+    const el = patientField(id);
+    patientEditSnapshot[id] = el.textContent.trim();
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = patientEditSnapshot[id];
+    input.id = id;
+    input.className = "patient-input";
+    el.replaceWith(input);
+  });
+
+  isPatientEditing = true;
+  editPatientBtn.hidden = true;
+  cancelPatientBtn.hidden = false;
+  patientEditHint.hidden = false;
+}
+
+function exitPatientEditMode(restore = false) {
+  if (!isPatientEditing) return;
+
+  PATIENT_FIELD_IDS.forEach((id) => {
+    const el = patientField(id);
+    const value = restore
+      ? patientEditSnapshot[id]
+      : el.tagName === "INPUT"
+        ? el.value.trim()
+        : el.textContent.trim();
+    const span = document.createElement("span");
+    span.id = id;
+    span.textContent = value;
+    el.replaceWith(span);
+  });
+
+  isPatientEditing = false;
+  patientEditSnapshot = null;
+  editPatientBtn.hidden = false;
+  cancelPatientBtn.hidden = true;
+  patientEditHint.hidden = true;
+}
 
 function applyNoProthesisteRestrictions() {
   if (isProthesiste || hasProthesiste) return;
@@ -48,9 +105,10 @@ function applyNoProthesisteRestrictions() {
     "Impossible d'envoyer cette fiche : aucun prothésiste n'est associé à votre compte.";
 }
 
-//================== Pour Proto ========================
 function applyProthesisteView() {
   editPatientBtn.style.display = "none";
+  cancelPatientBtn.style.display = "none";
+  patientEditHint.style.display = "none";
   document.querySelector(".search-act-section").style.display = "none";
   saveWorksheetBtn.closest(".save-section").style.display = "none";
   envoyerFicheBtn.style.display = "none";
@@ -77,7 +135,6 @@ editProSectionBtn?.addEventListener("click", () => {
   proStatusInput.disabled = false;
   proDateLivraisonInput.disabled = false;
   proDatePaiementInput.disabled = false;
-
   saveProSectionBtn.disabled = false;
 });
 
@@ -89,42 +146,37 @@ saveProSectionBtn?.addEventListener("click", async () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           status: proStatusInput.value,
           proDateLivraison: proDateLivraisonInput.value || null,
-          proDatePaiement: proDatePaiementInput.value || null
-        })
+          proDatePaiement: proDatePaiementInput.value || null,
+        }),
       }
     );
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Erreur serveur");
 
-    // re-griser après sauvegarde
     proStatusInput.disabled = true;
     proDateLivraisonInput.disabled = true;
     proDatePaiementInput.disabled = true;
     saveProSectionBtn.disabled = true;
 
-    alert("✅ Section prothésiste mise à jour");
+    showFeedback("Section prothésiste mise à jour");
     fetchWorksheet();
-
   } catch (err) {
     console.error(err);
-    alert(err.message);
+    showFeedback(err.message, "error");
   }
 });
 
-
-// ================== FETCH ACTES DISPONIBLES ==================
 async function fetchActes() {
   try {
-    const res = await fetch(
-      "http://localhost:3000/dentiste/worksheets/proto-acts",
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+    const res = await fetch("http://localhost:3000/dentiste/worksheets/proto-acts", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
     const data = await res.json();
     actes = data.acts || [];
@@ -134,28 +186,20 @@ async function fetchActes() {
 
     searchAct.innerHTML = `<option value="">-- Sélectionner un acte --</option>`;
 
-    actes.forEach(act => {
+    actes.forEach((act) => {
       const opt = document.createElement("option");
-      opt.value = act.acteId;              // IMPORTANT
+      opt.value = act.acteId;
       opt.textContent = `${act.name}`;
       opt.dataset.description = act.description;
       opt.dataset.price = act.price;
       searchAct.appendChild(opt);
     });
-
   } catch (err) {
-    console.error("❌ Erreur fetchActes :", err);
+    console.error("Erreur fetchActes :", err);
     actes = [];
   }
 }
 
-function formatDate(dateStr) {
-  if (!dateStr) return "—";
-  const d = new Date(dateStr);
-  return isNaN(d) ? "—" : d.toLocaleDateString();
-}
-
-// ================== FETCH FICHE ==================
 async function fetchWorksheet() {
   try {
     const worksheetUrl =
@@ -164,7 +208,7 @@ async function fetchWorksheet() {
         : `http://localhost:3000/dentiste/worksheets/${worksheetId}`;
 
     const res = await fetch(worksheetUrl, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     });
 
     if (!res.ok) throw new Error("Fiche introuvable");
@@ -172,45 +216,41 @@ async function fetchWorksheet() {
     const data = await res.json();
     const ws = data.workSheet;
 
-    // ================== INFOS PATIENT ==================
-    nomPatientSpan.textContent = ws.nomPatient;
-    prenomPatientSpan.textContent = ws.prenomPatient;
-    emailPatientSpan.textContent = ws.emailPatient;
-    numSecuPatientSpan.textContent = ws.numSecuPatient;
+    if (isPatientEditing) {
+      exitPatientEditMode(false);
+    }
+
+    setPatientDisplayValue("nomPatient", ws.nomPatient);
+    setPatientDisplayValue("prenomPatient", ws.prenomPatient);
+    setPatientDisplayValue("emailPatient", ws.emailPatient);
+    setPatientDisplayValue("numSecuPatient", ws.numSecuPatient);
     createdAtSpan.textContent = new Date(ws.createdAt).toLocaleDateString();
     numFicheSpan.textContent = ws.numFiche;
     remarqueTextarea.value = ws.remarque || "";
 
-    // ================== ACTES ==================
-    actsTableBody
-      .querySelectorAll("tr[data-acte-id]")
-      .forEach(tr => tr.remove());
+    actsTableBody.querySelectorAll("tr[data-acte-id]").forEach((tr) => tr.remove());
 
     if (Array.isArray(ws.acts)) {
-      ws.acts.forEach(a => addActToTable(a));
+      ws.acts.forEach((a) => addActToTable(a));
     }
-
-    // ================== SECTION PROTHÉSISTE ==================
-    const statusMap = {
-      BROUILLON: { label: "Brouillon", class: "brouillon" },
-      EN_ATTENTE: { label: "Travaux en attente", class: "attente" },
-      EN_COURS: { label: "Travaux en cours", class: "encours" },
-      TERMINE: { label: "Travaux terminés", class: "termine" },
-      EN_ATTENTE_PAIEMENT: { label: "En attente de paiement", class: "attente-paiement" },
-      PAYE: { label: "Payé", class: "paye" },
-    };
 
     proStatusInput.value = ws.status;
 
     if (!isProthesiste) {
       if (ws.status !== "BROUILLON") {
         envoyerFicheBtn.style.display = "none";
+        editPatientBtn.hidden = true;
+        cancelPatientBtn.hidden = true;
+        patientEditHint.hidden = true;
       } else {
         envoyerFicheBtn.style.display = "inline-block";
         envoyerFicheBtn.disabled = !hasProthesiste;
         envoyerFicheBtn.title = hasProthesiste
           ? ""
           : "Impossible d'envoyer cette fiche : aucun prothésiste n'est associé à votre compte.";
+        if (!isPatientEditing) {
+          editPatientBtn.hidden = false;
+        }
       }
       applyNoProthesisteRestrictions();
     }
@@ -227,41 +267,17 @@ async function fetchWorksheet() {
       : "";
 
     updateTotalActes();
-
   } catch (err) {
     console.error(err);
-    alert(err.message);
+    showFeedback(err.message, "error");
   }
 }
 
-// ================== MODIFIER INFOS PATIENT ==================
-editPatientBtn.addEventListener("click", () => {
-  // Convertir les spans en input
-  const fields = [
-    { span: nomPatientSpan, name: "nomPatient" },
-    { span: prenomPatientSpan, name: "prenomPatient" },
-    { span: emailPatientSpan, name: "emailPatient" },
-    { span: numSecuPatientSpan, name: "numSecuPatient" }
-  ];
+editPatientBtn?.addEventListener("click", enterPatientEditMode);
+cancelPatientBtn?.addEventListener("click", () => exitPatientEditMode(true));
 
-  fields.forEach(f => {
-    const input = document.createElement("input");
-    input.type = "text";
-    input.value = f.span.textContent;
-    input.id = f.name; // garde le même id pour la sauvegarde
-    input.className = "patient-input";
-    f.span.replaceWith(input);
-  });
-
-  // Optionnel : désactiver le bouton edit après clic
-  editPatientBtn.disabled = true;
-});
-
-
-// ================== AJOUTER UN ACTE ==================
 function addActToTable(act) {
   const tr = document.createElement("tr");
-  
   tr.dataset.acteId = act.acteId;
 
   const nameTd = document.createElement("td");
@@ -273,7 +289,6 @@ function addActToTable(act) {
   const priceTd = document.createElement("td");
   priceTd.classList.add("act-price");
   priceTd.textContent = `${act.price} €`;
-
 
   tr.append(nameTd, descTd, priceTd);
 
@@ -294,175 +309,158 @@ function addActToTable(act) {
   updateTotalActes();
 }
 
-// ================== BOUTON AJOUTER ==================
 addActBtn.addEventListener("click", () => {
   if (!hasProthesiste) return;
 
   const selectedOpt = searchAct.selectedOptions[0];
   if (!selectedOpt || !selectedOpt.value) {
-    alert("Veuillez sélectionner un acte");
+    if (actSelectHint) actSelectHint.hidden = false;
     return;
   }
+
+  if (actSelectHint) actSelectHint.hidden = true;
 
   const acte = {
     acteId: selectedOpt.value,
     name: selectedOpt.textContent,
     description: selectedOpt.dataset.description,
-    price: Number(selectedOpt.dataset.price)
+    price: Number(selectedOpt.dataset.price),
   };
 
   addActToTable(acte);
   searchAct.value = "";
 });
 
+searchAct?.addEventListener("change", () => {
+  if (actSelectHint) actSelectHint.hidden = true;
+});
 
-// ================== CALCUL TOTAL ==================
 function updateTotalActes() {
   let total = 0;
-  document.querySelectorAll(".act-price").forEach(td => {
-    const val = td.textContent.replace("€","").trim();
+  document.querySelectorAll(".act-price").forEach((td) => {
+    const val = td.textContent.replace("€", "").trim();
     if (val) total += Number(val);
   });
   document.getElementById("totalActes").textContent = total.toFixed(2);
 }
 
-//======================GETFIELD POUR SAUVEGARDER===============
 function getFieldValue(id) {
-  const el = document.getElementById(id);
+  const el = patientField(id);
+  if (!el) return "";
   return el.tagName === "INPUT" ? el.value.trim() : el.textContent.trim();
 }
-// ================== SAUVEGARDE ==================
+
 saveWorksheetBtn.addEventListener("click", async () => {
   try {
-    // ================== INFOS PATIENT ==================
     const nomPatient = getFieldValue("nomPatient");
     const prenomPatient = getFieldValue("prenomPatient");
     const emailPatient = getFieldValue("emailPatient");
     const numSecuPatient = getFieldValue("numSecuPatient");
 
-    // ================== ACTES ==================
     const acts = [...actsTableBody.querySelectorAll("tr")]
-      .filter(tr => tr.dataset.acteId) // ignore la ligne total
-      .map(tr => ({
+      .filter((tr) => tr.dataset.acteId)
+      .map((tr) => ({
         acteId: tr.dataset.acteId,
         name: tr.cells[0].textContent.trim(),
         description: tr.cells[1].textContent.trim(),
-        price: Number(tr.cells[2].textContent.replace("€", "").trim())
+        price: Number(tr.cells[2].textContent.replace("€", "").trim()),
       }));
 
-    console.log("📤 Sauvegarde worksheet :", {
-      nomPatient,
-      prenomPatient,
-      emailPatient,
-      numSecuPatient,
-      acts,
-      remarque: remarqueTextarea.value
+    const res = await fetch(`http://localhost:3000/dentiste/worksheets/update/${worksheetId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        nomPatient,
+        prenomPatient,
+        emailPatient,
+        numSecuPatient,
+        acts,
+        remarque: remarqueTextarea.value,
+      }),
     });
-
-    // ================== FETCH ==================
-    const res = await fetch(
-      `http://localhost:3000/dentiste/worksheets/update/${worksheetId}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          nomPatient,
-          prenomPatient,
-          emailPatient,
-          numSecuPatient,
-          acts,
-          remarque: remarqueTextarea.value
-        })
-      }
-    );
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Erreur serveur");
 
-    alert("✅ Fiche mise à jour avec succès");
-    window.location.reload();
-
+    exitPatientEditMode(false);
+    showFeedback("Fiche mise à jour avec succès");
+    await fetchWorksheet();
   } catch (err) {
-    console.error("❌ Erreur sauvegarde :", err);
-    alert(err.message);
+    console.error("Erreur sauvegarde :", err);
+    showFeedback(err.message, "error");
   }
 });
 
-//============= ENVOYER FICHE ================
 envoyerFicheBtn.addEventListener("click", async () => {
   if (!hasProthesiste) {
-    alert("Impossible d'envoyer cette fiche : aucun prothésiste n'est associé à votre compte.");
+    showFeedback(
+      "Impossible d'envoyer cette fiche : aucun prothésiste n'est associé à votre compte.",
+      "error"
+    );
     return;
   }
 
-  if (!confirm("Voulez-vous vraiment envoyer cette fiche au prothésiste associé ?")) return;
+  const confirmed = await showConfirm(
+    "Voulez-vous vraiment envoyer cette fiche au prothésiste associé ?"
+  );
+  if (!confirmed) return;
 
   try {
     const res = await fetch(`http://localhost:3000/dentiste/worksheets/send/${worksheetId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     const data = await res.json();
-
     if (!res.ok) throw new Error(data.message || "Erreur serveur");
 
-    alert("✅ " + data.message);
-
-    // Mettre à jour l'affichage localement
+    showFeedback(data.message || "Fiche envoyée au prothésiste");
     fetchWorksheet();
-
   } catch (err) {
-    console.error("❌ Erreur envoi fiche :", err);
-    alert(err.message);
+    console.error("Erreur envoi fiche :", err);
+    showFeedback(err.message, "error");
   }
 });
 
-
-// ============== RETOUR ===============
 backBtn.addEventListener("click", () => {
   window.history.back();
 });
 
 window.addEventListener("pageshow", (event) => {
-  // Si la page vient de l'historique (bfcache)
   if (event.persisted) {
     window.location.reload();
   }
 });
 
-//================= FACTURE ==================
 function getWorkSheetData() {
   const acts = [];
-  document.querySelectorAll("#actsTableBody tr").forEach(row => {
-    // Ignorer la ligne total
+  document.querySelectorAll("#actsTableBody tr").forEach((row) => {
     if (row.id === "totalActesRow") return;
 
     const cells = row.querySelectorAll("td");
     acts.push({
       name: cells[0].textContent.trim(),
       description: cells[1].textContent.trim(),
-      price: parseFloat(cells[2].textContent.trim()) || 0
+      price: parseFloat(cells[2].textContent.trim()) || 0,
     });
   });
 
   return {
-    numFiche: document.getElementById("numFiche").textContent.trim(),
-    nomPatient: document.getElementById("nomPatient").textContent.trim(),
-    prenomPatient: document.getElementById("prenomPatient").textContent.trim(),
-    emailPatient: document.getElementById("emailPatient").textContent.trim(),
-    createdAt: document.getElementById("createdAt").textContent.trim(),
-    acts
+    numFiche: numFicheSpan.textContent.trim(),
+    nomPatient: getFieldValue("nomPatient"),
+    prenomPatient: getFieldValue("prenomPatient"),
+    emailPatient: getFieldValue("emailPatient"),
+    createdAt: createdAtSpan.textContent.trim(),
+    acts,
   };
 }
 
-// Génération PDF
 factureBtn.addEventListener("click", () => {
   const data = getWorkSheetData();
   const { jsPDF } = window.jspdf;
@@ -471,13 +469,11 @@ factureBtn.addEventListener("click", () => {
   const margin = 40;
   let y = margin;
 
-  // TITRE
   doc.setFontSize(22);
   doc.setTextColor("#0d6efd");
   doc.text("FACTURE", margin, y);
   y += 30;
 
-  // INFO PATIENT
   doc.setFontSize(12);
   doc.setTextColor("#000");
   doc.text(`Numéro de fiche : ${data.numFiche}`, margin, y);
@@ -489,14 +485,11 @@ factureBtn.addEventListener("click", () => {
   doc.text(`Date : ${data.createdAt}`, margin, y);
   y += 30;
 
-  // TABLEAU DES ACTES
-  const tableTop = y;
-  const colWidths = [150, 250, 80]; // largeur des colonnes: Acte, Description, Prix
+  const colWidths = [150, 250, 80];
   const rowHeight = 20;
 
-  // Header
   doc.setFillColor("#f0f0f0");
-  doc.rect(margin, y, colWidths.reduce((a,b)=>a+b,0), rowHeight, "F");
+  doc.rect(margin, y, colWidths.reduce((a, b) => a + b, 0), rowHeight, "F");
   doc.setFontSize(12);
   doc.setTextColor("#000");
   doc.text("Acte", margin + 5, y + 15);
@@ -504,39 +497,33 @@ factureBtn.addEventListener("click", () => {
   doc.text("Prix (€)", margin + colWidths[0] + colWidths[1] + 5, y + 15);
   y += rowHeight;
 
-  // Lignes
-  data.acts.forEach(a => {
+  data.acts.forEach((a) => {
     doc.setFillColor("#fff");
-    doc.rect(margin, y, colWidths.reduce((a,b)=>a+b,0), rowHeight, "F");
+    doc.rect(margin, y, colWidths.reduce((a, b) => a + b, 0), rowHeight, "F");
     doc.text(a.name, margin + 5, y + 15);
     doc.text(a.description, margin + colWidths[0] + 5, y + 15);
     doc.text(a.price.toFixed(2), margin + colWidths[0] + colWidths[1] + 5, y + 15);
     y += rowHeight;
   });
 
-  // TOTAL
   const total = data.acts.reduce((sum, a) => sum + a.price, 0);
   y += 10;
   doc.setFontSize(14);
   doc.setFont("helvetica", "bold");
   doc.text(`Total : ${total.toFixed(2)} €`, margin + colWidths[0] + colWidths[1], y);
 
-  // Ouvrir le PDF dans un nouvel onglet
   const pdfBlob = doc.output("blob");
   const pdfUrl = URL.createObjectURL(pdfBlob);
   window.open(pdfUrl, "_blank");
 });
 
-// ================== LOGOUT ==================
 document.getElementById("logoutBtn").onclick = () => {
   localStorage.clear();
   location.href = "/";
 };
 
-// ================== INIT ==================
 if (isProthesiste) {
   fetchWorksheet();
 } else {
   fetchActes().then(fetchWorksheet);
 }
-

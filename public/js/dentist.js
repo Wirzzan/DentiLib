@@ -33,9 +33,7 @@ async function fetchWorksheets() {
 
   if (!res.ok) {
     if (res.status === 401 || res.status === 403) {
-      alert("Session expirée, veuillez vous reconnecter.");
-      localStorage.clear();
-      window.location.href = "/";
+      handleSessionExpired();
       return;
     }
     throw new Error("Erreur serveur");
@@ -91,7 +89,7 @@ form.addEventListener("submit", async (e) => {
 
   if (!res.ok) {
     const errorData = await res.json();
-    alert(errorData.message || "Erreur lors de la création de la fiche.");
+    showFeedback(errorData.message || "Erreur lors de la création de la fiche.", "error");
     return;
   }
   const data = await res.json();
@@ -106,7 +104,8 @@ window.edit = function (id) {
 
 //supprimer
 async function remove(id) {
-  if (!confirm("Supprimer cette fiche ?")) return;
+  const confirmed = await showConfirm("Supprimer cette fiche ?");
+  if (!confirmed) return;
 
   await fetch(`${API_URL}/delete/${id}`, {
     method: "DELETE",
@@ -183,7 +182,7 @@ dateFrom.addEventListener("change", () => {
 
 dateTo.addEventListener("change", () => {
   if (dateFrom.value && new Date(dateTo.value) < new Date(dateFrom.value)) {
-    alert("La date de fin ne peut pas être inférieure à la date de début.");
+    showFeedback("La date de fin ne peut pas être inférieure à la date de début.", "error");
     dateTo.value = dateFrom.value;
   }
   filterWorksheets();
@@ -196,7 +195,7 @@ dateTo.addEventListener("change", filterWorksheets);
 
 //modal-----
 addWorkBtn.addEventListener("click", () => {
-  workModal.style.display = "block";
+  modal.style.display = "block";
 });
 
 closeModalBtns.forEach((btn) => {

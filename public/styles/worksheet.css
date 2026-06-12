@@ -93,6 +93,7 @@ h1 {
 
 .patient-info {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   border: 1px solid #dbe9f5;
   padding: 1rem 2rem;
@@ -117,22 +118,54 @@ h1 {
   font-weight: 400;
 }
 
-#editPatientBtn {
+.patient-edit-actions {
   position: absolute;
   bottom: 10px;
   right: 20px;
+  display: flex;
+  gap: 0.5rem;
+}
+
+#editPatientBtn,
+#cancelPatientBtn {
   padding: 0.5rem 1rem;
   border-radius: 30px;
   border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: 0.3s;
+}
+
+#editPatientBtn {
   background: linear-gradient(135deg, #0d6efd, #4fc3f7);
   color: white;
-  cursor: pointer;
-  transition: 0.3s;
 }
 
 #editPatientBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(13,110,253,0.4);
+  box-shadow: 0 10px 25px rgba(13, 110, 253, 0.4);
+}
+
+#cancelPatientBtn {
+  background: linear-gradient(135deg, #e67e22, #d35400);
+  color: white;
+}
+
+#cancelPatientBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(211, 84, 0, 0.35);
+}
+
+.patient-edit-hint {
+  flex-basis: 100%;
+  width: 100%;
+  margin: 0.5rem 0 0;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.85rem;
+  color: #084298;
+  background-color: #e7f1ff;
+  border: 1px solid #b6d4fe;
+  border-radius: 8px;
 }
 
 /* ======================
@@ -280,9 +313,36 @@ h1 {
   transition: 0.3s;
 }
 
-#addActBtn:hover {
+#addActBtn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+}
+
+#addActBtn:disabled,
+#selectAct:disabled {
+  background-image: none;
+  background-color: #e9ecef;
+  color: #6c757d;
+  border-color: #ced4da;
+  cursor: not-allowed;
+  opacity: 0.8;
+  transform: none;
+  box-shadow: none;
+}
+
+#addActBtn:disabled {
+  background-color: #adb5bd;
+  color: #fff;
+}
+
+.field-hint {
+  width: 100%;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.field-hint--error {
+  color: #842029;
 }
 
 /* ======================
@@ -690,14 +750,29 @@ h1 {
   background-image: linear-gradient(135deg, #4a90e2, #357ab8); 
 }
 
-.button-section button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
-}
-
 /* Bouton Envoyer fiche */
 .button-section .send-btn {
-  background-image: linear-gradient(135deg, #27ae60, #1e8449); 
+  background-image: linear-gradient(135deg, #27ae60, #1e8449);
+}
+
+.button-section .send-btn:disabled {
+  background-image: none;
+  background-color: #adb5bd;
+  color: #fff;
+  cursor: not-allowed;
+  opacity: 0.75;
+  transform: none;
+  box-shadow: none;
+}
+
+.button-section button:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+}
+
+.button-section button:disabled:hover {
+  transform: none;
+  box-shadow: none;
 }
 
 /* Bouton facture */

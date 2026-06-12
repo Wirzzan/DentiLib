@@ -1,0 +1,94 @@
+/* Retours utilisateur et confirmations — partagé (ui.js) */
+
+.feedback-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+}
+
+.feedback-banner--success {
+  background-color: #d1e7dd;
+  border: 1px solid #a3cfbb;
+  color: #0f5132;
+}
+
+.feedback-banner--error {
+  background-color: #f8d7da;
+  border: 1px solid #f1aeb5;
+  color: #842029;
+}
+
+.feedback-close {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.7;
+}
+
+.feedback-close:hover {
+  opacity: 1;
+}
+
+.confirm-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirm-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(44, 62, 80, 0.45);
+}
+
+.confirm-modal__box {
+  position: relative;
+  z-index: 1;
+  width: min(90%, 420px);
+  padding: 1.5rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+}
+
+.confirm-modal__box p {
+  margin-bottom: 1.25rem;
+  line-height: 1.5;
+  color: #2c3e50;
+}
+
+.confirm-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.confirm-modal__btn {
+  padding: 0.55rem 1.1rem;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: white;
+  transition: 0.2s;
+}
+
+.confirm-modal__btn--cancel {
+  background: linear-gradient(135deg, #6c757d, #495057);
+}
+
+.confirm-modal__btn--ok {
+  background: linear-gradient(135deg, #27ae60, #1e8449);
+}

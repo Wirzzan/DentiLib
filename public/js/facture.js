@@ -1,11 +1,14 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
-  if (!id) return alert("ID fiche manquant");
+  if (!id) {
+    showFeedback("ID fiche manquant", "error");
+    return;
+  }
 
   try {
     const res = await fetch(`http://localhost:3000/dentiste/worksheets/${id}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     if (!res.ok) throw new Error("Impossible de récupérer la fiche");
 
@@ -24,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let y = 90;
     doc.text("Actes :", 20, y);
-    workSheet.acts.forEach(a => {
+    workSheet.acts.forEach((a) => {
       y += 10;
       doc.text(`- ${a.name} (${a.description}) : ${a.price} €`, 20, y);
     });
@@ -32,13 +35,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     y += 20;
     doc.text(`Total : ${workSheet.acts.reduce((sum, a) => sum + a.price, 0)} €`, 20, y);
 
-    // 🚀 Ouvrir le PDF dans un nouvel onglet
     const pdfBlob = doc.output("blob");
     const pdfUrl = URL.createObjectURL(pdfBlob);
     window.open(pdfUrl, "_blank");
-
   } catch (err) {
     console.error(err);
-    alert("Erreur génération facture : " + err.message);
+    showFeedback(`Erreur génération facture : ${err.message}`, "error");
   }
 });

@@ -111,9 +111,7 @@ async function fetchUsers() {
 
     if (!res.ok) {
     if (res.status === 401 || res.status === 403) {
-      alert("Session expirée, veuillez vous reconnecter.");
-      localStorage.clear();
-      window.location.href = "/";
+      handleSessionExpired();
       return;
     }
 
@@ -377,7 +375,7 @@ document.addEventListener("click", async (e) => {
   if (!deleteBtn) return;
 
   const userId = deleteBtn.dataset.id;
-  const confirmDelete = confirm("Voulez-vous vraiment supprimer cet utilisateur ?");
+  const confirmDelete = await showConfirm("Voulez-vous vraiment supprimer cet utilisateur ?");
   if (!confirmDelete) return;
 
   try {
