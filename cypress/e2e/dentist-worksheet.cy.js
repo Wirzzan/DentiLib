@@ -1,7 +1,8 @@
 // Prérequis : admin-users.cy.js exécuté avant (crée dentisteA + prothesisteA)
 import { DENTISTE_A } from "../support/constants";
 
-describe("Parcours dentiste — fiches de travaux", () => {
+// testIsolation: false → enchaînement création fiche → retour accueil → déconnexion
+describe("Parcours dentiste — fiches de travaux", { testIsolation: false }, () => {
   const dentiste = {
     email: DENTISTE_A.email,
     password: DENTISTE_A.password,
@@ -13,28 +14,34 @@ describe("Parcours dentiste — fiches de travaux", () => {
     email: "cypress.lefevre@test.fr",
   };
 
-  beforeEach(() => {
+  before(() => {
     cy.login(dentiste.email, dentiste.password);
     cy.url().should("include", "dentistHome.html");
   });
 
   it("refuse une fiche avec champs obligatoires vides", () => {
-    cy.get("#addWorkBtn").click();
+    cy.openWorkFormModal();
     cy.get("#workForm button[type='submit']").click();
-    cy.get("#workFormMessage").should("contain.text", "Veuillez compléter les champs obligatoires");
+    cy.get("#workFormMessage")
+      .should("be.visible")
+      .and("contain.text", "Veuillez compléter les champs obligatoires");
+    cy.closeWorkFormModal();
   });
 
   it("refuse un email patient invalide", () => {
-    cy.get("#addWorkBtn").click();
+    cy.openWorkFormModal();
     cy.get("#workForm input[name='nomPatient']").type(patient.nom);
     cy.get("#workForm input[name='prenomPatient']").type(patient.prenom);
     cy.get("#workForm input[name='emailPatient']").type("email-invalide");
     cy.get("#workForm button[type='submit']").click();
-    cy.get("#workFormMessage").should("contain.text", "Format email invalide");
+    cy.get("#workFormMessage")
+      .should("be.visible")
+      .and("contain.text", "Format email invalide");
+    cy.closeWorkFormModal();
   });
 
   it("crée une fiche et l'envoie au prothésiste", () => {
-    cy.get("#addWorkBtn").click();
+    cy.openWorkFormModal();
     cy.get("#workForm input[name='nomPatient']").type(patient.nom);
     cy.get("#workForm input[name='prenomPatient']").type(patient.prenom);
     cy.get("#workForm input[name='emailPatient']").type(patient.email);
@@ -53,7 +60,9 @@ describe("Parcours dentiste — fiches de travaux", () => {
   });
 
   it("déconnexion", () => {
+    cy.visit("/dentistHome.html");
+    cy.get("#worksheetTable").should("contain.text", `${patient.nom} ${patient.prenom}`);
     cy.get("#logoutBtn").click();
-    cy.url().should("include", "login.html");
+    cy.expectLoginPage();
   });
 });

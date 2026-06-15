@@ -68,13 +68,14 @@ describe("Admin Flow: Users & Acts", { testIsolation: false }, () => {
         cy.get("#addUserMessage").should("contain.text", "Utilisateur créé avec succès");
         cy.closeAddUserModal();
       }
-    });
 
-    cy.contains(DENTISTE_B.email).parents("tr").find(".btn-edit").click();
-    cy.get("#editUserForm input[name='firstName']").clear().type("AliceMod");
-    cy.get("#editUserForm button[type='submit']").click();
-    cy.get("#editUserMessage").should("contain.text", "Utilisateur modifié avec succès");
-    cy.closeEditUserModal();
+      cy.contains(DENTISTE_B.email).parents("tr").find(".btn-edit").click();
+      cy.get("#editUserForm input[name='firstName']").clear().type("AliceMod");
+      cy.get("#editUserForm button[type='submit']").click();
+      cy.get("#editUserMessage").should("contain.text", "Utilisateur modifié avec succès");
+      // La modale se ferme toute seule après succès (admin.js)
+      cy.get("#editUserModal").should("not.be.visible");
+    });
   });
 
   it("Supprimer le dentiste B", () => {
@@ -113,6 +114,6 @@ describe("Admin Flow: Users & Acts", { testIsolation: false }, () => {
 
   it("Déconnexion", () => {
     cy.get("#logoutBtn").click();
-    cy.url().should("include", "login.html");
+    cy.expectLoginPage();
   });
 });

@@ -30,9 +30,19 @@ Cypress.Commands.add("closeAddUserModal", () => {
   cy.get("#userModal").should("not.be.visible");
 });
 
-Cypress.Commands.add("closeEditUserModal", () => {
-  cy.get("#editUserModal .close").click();
-  cy.get("#editUserModal").should("not.be.visible");
+Cypress.Commands.add("expectLoginPage", () => {
+  cy.location("pathname").should("eq", "/");
+});
+
+Cypress.Commands.add("openWorkFormModal", () => {
+  cy.get("#addWorkBtn").should("be.visible").click();
+  cy.get("#workModal").should("be.visible");
+  cy.get("#workForm").should("be.visible");
+});
+
+Cypress.Commands.add("closeWorkFormModal", () => {
+  cy.get("#workModal .close").click();
+  cy.get("#workModal").should("not.be.visible");
 });
 
 Cypress.Commands.add("confirmModal", () => {
