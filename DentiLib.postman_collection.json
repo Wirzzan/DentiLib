@@ -7,246 +7,553 @@
 	},
 	"item": [
 		{
-			"name": "createAdmin",
-			"event": [
+			"name": "Auth",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"const statusCode = pm.response.code;\r",
-							" \r",
-							" \r",
-							"const response = pm.response.json();\r",
-							"pm.test(\"the response must be JSON\", function () {\r",
-							"    pm.response.to.be.json\r",
-							"})\r",
-							"\r",
-							"\r",
-							"if (statusCode === 409) {\r",
-							"    pm.test(\"Check if error  Message is correct\", function () {\r",
-							"        pm.expect(response.message).to.eql(\"Email déjà utilisé\");\r",
-							"    })\r",
-							"}\r",
-							"if (statusCode === 201) {\r",
-							"    pm.test(\"Check if body have properties message and user\", function () {\r",
-							"        pm.expect(response).to.have.property(\"message\");\r",
-							"        pm.expect(response).to.have.property(\"user\");\r",
-							"    })\r",
-							"}\r",
-							"\r",
-							"if (statusCode === 201) {\r",
-							"    pm.test(\"L'admin a été créé avec toutes les propriétés nécessaires\", function () {\r",
-							"        pm.expect(response.user).to.have.property(\"firstName\");\r",
-							"        pm.expect(response.user).to.have.property(\"lastName\");\r",
-							"        pm.expect(response.user).to.have.property(\"email\");\r",
-							"        pm.expect(response.user).to.have.property(\"role\");\r",
-							"    });\r",
-							"}\r",
-							"\r",
-							"if (statusCode === 500) {\r",
-							"    pm.test(\"500 - Erreur serveur\", function () {\r",
-							"        pm.expect(statusCode).to.eql(500);\r",
-							"    });\r",
-							"}\r",
-							"\r",
-							"if (statusCode === 400) {\r",
-							"\r",
-							"    if (response.message === \"L'email est requis\") {\r",
-							"        pm.test(\"Erreur - Créer un admin avec champ email vide   \", function () {\r",
-							"            pm.expect(response.message).to.eql(\"L'email est requis\");\r",
-							"        });\r",
-							"    }else if (response.message === \"Le mot de passe est requis\") {\r",
-							"        pm.test(\"Erreur - Créer un admin avec un champ mot de passe vide\", function () {\r",
-							"            pm.expect(response.message).to.eql(\"Le mot de passe est requis\");\r",
-							"        });\r",
-							"    } else if (response.message === \"Le mot de passe doit contenir plus de 3 caractères\") {\r",
-							"        pm.test(\"Erreur - Créer un admin avec un mot de passe trop court\", function () {\r",
-							"            pm.expect(response.message).to.eql(\"Le mot de passe doit contenir plus de 3 caractères\");\r",
-							"        });\r",
-							"    } else {\r",
-							"        pm.test(\"Requête invalide\", function () {\r",
-							"            pm.expect(response).to.have.property(\"message\");\r",
-							"        })\r",
-							"    }\r",
-							"}\r",
-							"\r",
-							"\r",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {},
-						"requests": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"firstName\": \"{{firstName}}\",\r\n  \"lastName\": \"{{lastName}}\",\r\n  \"email\": \"{{emailCreation}}\",\r\n  \"password\": \"{{passwordCreation}}\"\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
+					"name": "Création compte administrateur",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const statusCode = pm.response.code;",
+									"const response = pm.response.json();",
+									"",
+									"pm.test(\"Réponse JSON\", () => pm.response.to.be.json);",
+									"",
+									"if (statusCode === 201 || statusCode === 409) {",
+									"    pm.test(\"Création admin — succès ou email déjà utilisé\", () => {",
+									"        pm.expect([201, 409]).to.include(statusCode);",
+									"    });",
+									"}"
+								]
+							}
 						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"{{firstName}}\",\n  \"lastName\": \"{{lastName}}\",\n  \"email\": \"{{emailCreation}}\",\n  \"password\": \"{{passwordCreation}}\"\n}"
+						},
+						"url": "{{BASE-URL}}/api/user/registerAdmin"
 					}
 				},
-				"url": {
-					"raw": "{{BASE-URL}}/api/user/registerAdmin",
-					"host": [
-						"{{BASE-URL}}"
-					],
-					"path": [
-						"api",
-						"user",
-						"registerAdmin"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "login",
-			"event": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"const statusCode = pm.response.code;\r",
-							"const response = pm.response.json();\r",
-							"\r",
-							"pm.test(\"Response must be JSON\", function () {\r",
-							"    pm.response.to.be.json;\r",
-							"});\r",
-							"\r",
-							"if (statusCode === 200) {\r",
-							"    pm.environment.set(\"tokenAdmin\", response.token);\r",
-							"    pm.test(\"Login réussi avec token\", function () {\r",
-							"        pm.expect(response).to.have.property(\"token\");\r",
-							"        pm.expect(response.token).to.be.a(\"string\");\r",
-							"        pm.expect(response.message).to.include(\"connecté\");\r",
-							"    });\r",
-							"}\r",
-							"\r",
-							"if (statusCode === 400) {\r",
-							"    if (response.message === \"L'email est requis\") {\r",
-							"        pm.test(\"Erreur - Champ email vide\", function () {\r",
-							"            pm.expect(response.message).to.eql(\"L'email est requis\");\r",
-							"        });\r",
-							"    } else if (response.message === \"Email invalide\") {\r",
-							"        pm.test(\"Erreur - Email fourni invalide\", function () {\r",
-							"            pm.expect(response.message).to.eql(\"Email invalide\");\r",
-							"        });\r",
-							"    } else if (response.message === \"Le mot de passe est requis\") {\r",
-							"        pm.test(\"Erreur - Champ mot de passe vide\", function () {\r",
-							"            pm.expect(response.message).to.eql(\"Le mot de passe est requis\");\r",
-							"        });\r",
-							"    } else {\r",
-							"        pm.test(\"Erreur 400 - Requête invalide\", function () {\r",
-							"            pm.expect(response).to.have.property(\"message\");\r",
-							"        });\r",
-							"    }\r",
-							"}\r",
-							"\r",
-							"if (statusCode === 404) {\r",
-							"    pm.test(\"Erreur - l'utilisateur n'a pas été retrouvé\", function () {\r",
-							"        pm.expect(response.message).to.eql(\"L'utilisateur n'existe pas\");\r",
-							"    });\r",
-							"}\r",
-							"\r",
-							"if (statusCode === 401) {\r",
-							"    pm.test(\"Erreur - Mot de passe fourni incorrect\", function () {\r",
-							"        pm.expect(response.message).to.eql(\"Mot de passe incorrect\");\r",
-							"    });\r",
-							"}\r",
-							"\r",
-							"if (statusCode === 500) {\r",
-							"    pm.test(\"500 - Erreur serveur\", function () {\r",
-							"        pm.expect(statusCode).to.eql(500);\r",
-							"        pm.expect(response).to.have.property(\"message\");\r",
-							"    });\r",
-							"}"
-						],
-						"type": "text/javascript",
-						"packages": {},
-						"requests": {}
+					"name": "Connexion administrateur",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const statusCode = pm.response.code;",
+									"const response = pm.response.json();",
+									"",
+									"pm.test(\"Réponse JSON\", () => pm.response.to.be.json);",
+									"",
+									"if (statusCode === 200) {",
+									"    pm.environment.set(\"tokenAdmin\", response.token);",
+									"    pm.test(\"Connexion admin réussie avec token JWT\", () => {",
+									"        pm.expect(response.token).to.be.a(\"string\");",
+									"        pm.expect(response.role).to.eql(\"ADMIN\");",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{emailLogin}}\",\n  \"password\": \"{{passwordLogin}}\"\n}"
+						},
+						"url": "{{BASE-URL}}/api/user/login"
 					}
 				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"email\": \"{{emailLogin}}\",\r\n  \"password\": \"{{passwordLogin}}\"\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Création compte dentiste par admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const statusCode = pm.response.code;",
+									"const response = pm.response.json();",
+									"",
+									"if (statusCode === 201) {",
+									"    pm.environment.set(\"dentisteId\", response.user._id);",
+									"}",
+									"",
+									"pm.test(\"Création dentiste — 201 ou 409\", () => {",
+									"    pm.expect([201, 409]).to.include(statusCode);",
+									"});",
+									"",
+									"if (statusCode === 201) {",
+									"    pm.test(\"Rôle DENTISTE\", () => {",
+									"        pm.expect(response.user.role).to.eql(\"DENTISTE\");",
+									"    });",
+									"}"
+								]
+							}
 						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{tokenAdmin}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Dentiste\",\n  \"lastName\": \"Postman\",\n  \"email\": \"{{emailDentiste}}\",\n  \"password\": \"{{passwordDentiste}}\",\n  \"role\": \"DENTISTE\",\n  \"siret\": \"12345678900011\"\n}"
+						},
+						"url": "{{BASE-URL}}/admin/user/createAccount"
 					}
 				},
-				"url": {
-					"raw": "{{BASE-URL}}/api/user/login",
-					"host": [
-						"{{BASE-URL}}"
+				{
+					"name": "Création compte prothésiste par admin",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (!pm.environment.get(\"dentisteId\")) {",
+									"    throw new Error(\"dentisteId manquant — exécuter la création dentiste d'abord ou réinitialiser la BDD\");",
+									"}"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const statusCode = pm.response.code;",
+									"const response = pm.response.json();",
+									"",
+									"if (statusCode === 201) {",
+									"    pm.environment.set(\"prothesisteId\", response.prothesiste._id);",
+									"}",
+									"",
+									"pm.test(\"Création prothésiste — 201 ou 409\", () => {",
+									"    pm.expect([201, 409]).to.include(statusCode);",
+									"});",
+									"",
+									"if (statusCode === 201) {",
+									"    pm.test(\"Prothésiste lié au dentiste\", () => {",
+									"        pm.expect(response.prothesiste.role).to.eql(\"PROTHESISTE\");",
+									"        pm.expect(String(response.prothesiste.associatedUserId)).to.eql(String(pm.environment.get(\"dentisteId\")));",
+									"    });",
+									"}"
+								]
+							}
+						}
 					],
-					"path": [
-						"api",
-						"user",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "deleteMyAccount",
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer {{tokenAdmin}}",
-						"type": "text"
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{tokenAdmin}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Prothésiste\",\n  \"lastName\": \"Postman\",\n  \"email\": \"{{emailProthesiste}}\",\n  \"password\": \"{{passwordProthesiste}}\",\n  \"role\": \"PROTHESISTE\",\n  \"dentisteId\": \"{{dentisteId}}\"\n}"
+						},
+						"url": "{{BASE-URL}}/admin/user/createAccount"
 					}
-				],
-				"url": {
-					"raw": "{{BASE-URL}}/api/user/delete",
-					"host": [
-						"{{BASE-URL}}"
+				},
+				{
+					"name": "Liste de tous les utilisateurs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Liste utilisateurs — HTTP 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Réponse est un tableau\", () => {",
+									"    pm.expect(pm.response.json()).to.be.an(\"array\");",
+									"});"
+								]
+							}
+						}
 					],
-					"path": [
-						"api",
-						"user",
-						"delete"
-					]
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{tokenAdmin}}" }],
+						"url": "{{BASE-URL}}/admin/user/allUsers"
+					}
+				},
+				{
+					"name": "Modification compte dentiste par admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Modification dentiste — HTTP 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Prénom mis à jour\", () => {",
+									"    pm.expect(pm.response.json().user.firstName).to.eql(\"DentisteMod\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{tokenAdmin}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"DentisteMod\",\n  \"lastName\": \"Postman\",\n  \"email\": \"{{emailDentiste}}\",\n  \"siret\": \"12345678900011\"\n}"
+						},
+						"url": "{{BASE-URL}}/admin/user/updateAccount/{{dentisteId}}"
+					}
 				}
-			},
-			"response": []
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"requests": {},
-				"exec": [
-					""
-				]
-			}
+			]
 		},
 		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"requests": {},
-				"exec": [
-					""
-				]
-			}
+			"name": "Actes",
+			"item": [
+				{
+					"name": "Création acte catalogue",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const statusCode = pm.response.code;",
+									"const response = pm.response.json();",
+									"",
+									"if (statusCode === 201) {",
+									"    pm.environment.set(\"acteId\", response.acte._id);",
+									"}",
+									"",
+									"pm.test(\"Création acte — 201 ou 409\", () => {",
+									"    pm.expect([201, 409]).to.include(statusCode);",
+									"});",
+									"",
+									"if (statusCode === 201) {",
+									"    pm.test(\"Acte créé avec nom\", () => {",
+									"        pm.expect(response.acte.name).to.eql(\"Acte Postman\");",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Acte Postman\",\n  \"description\": \"Acte créé via Newman\"\n}"
+						},
+						"url": "{{BASE-URL}}/act/act/create"
+					}
+				},
+				{
+					"name": "Liste des actes catalogue",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Liste actes — HTTP 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Propriété actes présente\", () => {",
+									"    pm.expect(pm.response.json()).to.have.property(\"actes\");",
+									"    pm.expect(pm.response.json().actes).to.be.an(\"array\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{BASE-URL}}/act/act/getAllActs"
+					}
+				}
+			]
+		},
+		{
+			"name": "Dentiste",
+			"item": [
+				{
+					"name": "Connexion dentiste",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const response = pm.response.json();",
+									"pm.environment.set(\"tokenDentiste\", response.token);",
+									"pm.test(\"Connexion dentiste réussie\", () => {",
+									"    pm.response.to.have.status(200);",
+									"    pm.expect(response.role).to.eql(\"DENTISTE\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{emailDentiste}}\",\n  \"password\": \"{{passwordDentiste}}\"\n}"
+						},
+						"url": "{{BASE-URL}}/api/user/login"
+					}
+				},
+				{
+					"name": "Création fiche travaux",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const response = pm.response.json();",
+									"pm.environment.set(\"ficheId\", response.workSheet._id);",
+									"pm.test(\"Création fiche — HTTP 201\", () => {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Statut BROUILLON\", () => {",
+									"    pm.expect(response.workSheet.status).to.eql(\"BROUILLON\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{tokenDentiste}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nomPatient\": \"Martin\",\n  \"prenomPatient\": \"Postman\",\n  \"emailPatient\": \"patient.postman@test.fr\"\n}"
+						},
+						"url": "{{BASE-URL}}/dentiste/worksheets/create"
+					}
+				},
+				{
+					"name": "Liste des fiches dentiste",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Liste fiches — HTTP 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Au moins une fiche\", () => {",
+									"    pm.expect(pm.response.json().workSheets.length).to.be.at.least(1);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{tokenDentiste}}" }],
+						"url": "{{BASE-URL}}/dentiste/worksheets"
+					}
+				},
+				{
+					"name": "Envoi fiche au prothésiste",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const response = pm.response.json();",
+									"pm.test(\"Envoi fiche — HTTP 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Statut EN_ATTENTE\", () => {",
+									"    pm.expect(response.worksheet.status).to.eql(\"EN_ATTENTE\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [{ "key": "Authorization", "value": "Bearer {{tokenDentiste}}" }],
+						"url": "{{BASE-URL}}/dentiste/worksheets/send/{{ficheId}}"
+					}
+				}
+			]
+		},
+		{
+			"name": "Prothésiste",
+			"item": [
+				{
+					"name": "Connexion prothésiste",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const response = pm.response.json();",
+									"pm.environment.set(\"tokenProthesiste\", response.token);",
+									"pm.test(\"Connexion prothésiste réussie\", () => {",
+									"    pm.response.to.have.status(200);",
+									"    pm.expect(response.role).to.eql(\"PROTHESISTE\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{emailProthesiste}}\",\n  \"password\": \"{{passwordProthesiste}}\"\n}"
+						},
+						"url": "{{BASE-URL}}/api/user/login"
+					}
+				},
+				{
+					"name": "Liste fiches reçues",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Liste fiches prothésiste — HTTP 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Fiche patient Postman présente\", () => {",
+									"    const fiches = pm.response.json().workSheets;",
+									"    const found = fiches.some(f => f.nomPatient === \"Martin\" && f.prenomPatient === \"Postman\");",
+									"    pm.expect(found).to.be.true;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{tokenProthesiste}}" }],
+						"url": "{{BASE-URL}}/prothesiste/worksheets"
+					}
+				},
+				{
+					"name": "Détail fiche reçue",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Détail fiche — HTTP 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Fiche EN_ATTENTE\", () => {",
+									"    pm.expect(pm.response.json().workSheet.status).to.eql(\"EN_ATTENTE\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{tokenProthesiste}}" }],
+						"url": "{{BASE-URL}}/prothesiste/worksheets/{{ficheId}}"
+					}
+				},
+				{
+					"name": "Mise à jour statut fiche",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Mise à jour statut — HTTP 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Statut EN_COURS\", () => {",
+									"    pm.expect(pm.response.json().worksheet.status).to.eql(\"EN_COURS\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{tokenProthesiste}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"EN_COURS\",\n  \"proDateLivraison\": \"2026-06-20\"\n}"
+						},
+						"url": "{{BASE-URL}}/prothesiste/worksheets/update/{{ficheId}}"
+					}
+				}
+			]
+		},
+		{
+			"name": "Nettoyage",
+			"item": [
+				{
+					"name": "Suppression compte administrateur",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Suppression compte admin réussie\", () => {",
+									"    pm.response.to.have.status(200);",
+									"    pm.expect(pm.response.json().message).to.eql(\"Utilisateur supprimé avec succès\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [{ "key": "Authorization", "value": "Bearer {{tokenAdmin}}" }],
+						"url": "{{BASE-URL}}/api/user/delete"
+					}
+				}
+			]
 		}
 	]
 }
