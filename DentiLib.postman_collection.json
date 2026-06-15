@@ -84,7 +84,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"firstName\": \"{{fistName}}\",\r\n  \"lastName\": \"{{lastName}}\",\r\n  \"email\": \"{{emailCreation}}\",\r\n  \"password\": \"{{passwordCreation}\"\r\n}\r\n",
+					"raw": "{\r\n  \"firstName\": \"{{firstName}}\",\r\n  \"lastName\": \"{{lastName}}\",\r\n  \"email\": \"{{emailCreation}}\",\r\n  \"password\": \"{{passwordCreation}}\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -92,12 +92,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{BASE-URL}}/auth/user/registerAdmin",
+					"raw": "{{BASE-URL}}/api/user/registerAdmin",
 					"host": [
 						"{{BASE-URL}}"
 					],
 					"path": [
-						"auth",
+						"api",
 						"user",
 						"registerAdmin"
 					]
@@ -112,8 +112,6 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.environment.set(\"tokenAdmin\", pm.response.json().token);\r",
-							"\r",
 							"const statusCode = pm.response.code;\r",
 							"const response = pm.response.json();\r",
 							"\r",
@@ -122,6 +120,7 @@
 							"});\r",
 							"\r",
 							"if (statusCode === 200) {\r",
+							"    pm.environment.set(\"tokenAdmin\", response.token);\r",
 							"    pm.test(\"Login réussi avec token\", function () {\r",
 							"        pm.expect(response).to.have.property(\"token\");\r",
 							"        pm.expect(response.token).to.be.a(\"string\");\r",
@@ -187,12 +186,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{BASE-URL}}/auth/user/login",
+					"raw": "{{BASE-URL}}/api/user/login",
 					"host": [
 						"{{BASE-URL}}"
 					],
 					"path": [
-						"auth",
+						"api",
 						"user",
 						"login"
 					]
@@ -212,12 +211,12 @@
 					}
 				],
 				"url": {
-					"raw": "{{BASE-URL}}/auth/user/delete",
+					"raw": "{{BASE-URL}}/api/user/delete",
 					"host": [
 						"{{BASE-URL}}"
 					],
 					"path": [
-						"auth",
+						"api",
 						"user",
 						"delete"
 					]
