@@ -28,6 +28,7 @@
     "supertest": "^7.1.4"
   },
   "devDependencies": {
-    "cypress": "^15.8.1"
+    "cypress": "^15.8.1",
+    "newman-reporter-htmlextra": "^1.23.1"
   }
 }
