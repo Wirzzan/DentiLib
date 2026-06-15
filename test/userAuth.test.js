@@ -4,8 +4,8 @@ const { serverURL } = require("./helpers");
 
 let tokenAdmin;
 
-describe("POST - create Admin", () => {
-  it("ça doit créer un nouvel admin", async () => {
+describe("Compte administrateur — inscription", () => {
+  it("Création d'un compte administrateur", async () => {
     const res = await request(serverURL).post("/api/user/registerAdmin").send({
       email: "admin_test@gmail.com",
       firstName: "admin",
@@ -17,7 +17,7 @@ describe("POST - create Admin", () => {
     expect(res.body.user.email).toBe("admin_test@gmail.com");
   });
 
-  it("créer un admin avec un mail qui existe déjà", async () => {
+  it("Création compte admin avec un mail existant", async () => {
     const res = await request(serverURL).post("/api/user/registerAdmin").send({
       email: "admin_test@gmail.com",
       firstName: "admin",
@@ -29,7 +29,7 @@ describe("POST - create Admin", () => {
     expect(res.body.message).toBe("Email déjà utilisé");
   });
 
-  it("ça doit retourner un message d'erreur (email invalide)", async () => {
+  it("Création compte admin avec un email invalide", async () => {
     const res = await request(serverURL).post("/api/user/registerAdmin").send({
       email: "admin_test",
       firstName: "admin",
@@ -41,7 +41,7 @@ describe("POST - create Admin", () => {
     expect(res.body.message).toBe("Email invalide");
   });
 
-  it("ça doit retourner un message d'erreur (mdp < 6)", async () => {
+  it("Création compte admin avec un mot de passe trop court", async () => {
     const res = await request(serverURL).post("/api/user/registerAdmin").send({
       email: "admin_test@gmail.com",
       firstName: "admin",
@@ -54,8 +54,8 @@ describe("POST - create Admin", () => {
   });
 });
 
-describe("POST - Login", () => {
-  it("ça doit retourner un token en cas de succès", async () => {
+describe("Compte administrateur — connexion", () => {
+  it("Connexion admin réussie", async () => {
     const res = await request(serverURL).post("/api/user/login").send({
       email: "admin_test@gmail.com",
       password: "123456789",
@@ -68,7 +68,7 @@ describe("POST - Login", () => {
     tokenAdmin = res.body.token;
   });
 
-  it("ça doit retourner une erreur en cas de faux mot de passe", async () => {
+  it("Tentative de connexion admin avec mot de passe incorrect", async () => {
     const res = await request(serverURL).post("/api/user/login").send({
       email: "admin_test@gmail.com",
       password: "mdp invalide",
@@ -78,7 +78,7 @@ describe("POST - Login", () => {
     expect(res.body.message).toBe("Mot de passe incorrect");
   });
 
-  it("ça doit retourner une erreur si utilisateur inexistant", async () => {
+  it("Tentative de connexion admin avec email inexistant", async () => {
     const res = await request(serverURL).post("/api/user/login").send({
       email: "faux_admin_test@gmail.com",
       password: "mdp invalide",
@@ -88,7 +88,7 @@ describe("POST - Login", () => {
     expect(res.body.message).toBe("L'utilisateur n'existe pas");
   });
 
-  it("ça doit retourner une erreur si email vide", async () => {
+  it("Tentative de connexion admin avec email vide", async () => {
     const res = await request(serverURL).post("/api/user/login").send({
       email: "",
       password: "mdp invalide",
@@ -98,7 +98,7 @@ describe("POST - Login", () => {
     expect(res.body.message).toBe("Tous les champs sont requis");
   });
 
-  it("ça doit retourner une erreur si mot de passe vide", async () => {
+  it("Tentative de connexion admin avec mot de passe vide", async () => {
     const res = await request(serverURL).post("/api/user/login").send({
       email: "admin_test@gmail.com",
       password: "",
@@ -109,8 +109,8 @@ describe("POST - Login", () => {
   });
 });
 
-describe("DELETE - delete User", () => {
-  it("ça doit supprimer un admin", async () => {
+describe("Compte administrateur — suppression", () => {
+  it("Suppression du compte administrateur", async () => {
     const res = await request(serverURL)
       .delete("/api/user/delete")
       .set("Authorization", `Bearer ${tokenAdmin}`);
@@ -119,14 +119,14 @@ describe("DELETE - delete User", () => {
     expect(res.body.message).toBe("Utilisateur supprimé avec succès");
   });
 
-  it("ça doit refuser la suppression sans token", async () => {
+  it("Tentative de suppression de compte sans token JWT", async () => {
     const res = await request(serverURL).delete("/api/user/delete");
 
     expect(res.statusCode).toBe(403);
     expect(res.body.message).toBe("Token manquant ou invalide");
   });
 
-  it("ça doit retourner une erreur si user déjà supprimé", async () => {
+  it("Tentative de suppression d'un compte admin déjà supprimé", async () => {
     const res = await request(serverURL)
       .delete("/api/user/delete")
       .set("Authorization", `Bearer ${tokenAdmin}`);

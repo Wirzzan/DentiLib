@@ -8,8 +8,8 @@ beforeAll(async () => {
   tokenAdmin = await getAdminToken();
 });
 
-describe("POST - create User", () => {
-  it("ça doit créer un nouveau dentiste", async () => {
+describe("Comptes utilisateurs — création par l'admin", () => {
+  it("Création d'un compte dentiste par l'admin", async () => {
     const res = await request(serverURL)
       .post("/admin/user/createAccount")
       .set(authHeader(tokenAdmin))
@@ -27,7 +27,7 @@ describe("POST - create User", () => {
     expect(res.body.user.role).toBe("DENTISTE");
   });
 
-  it("ça doit créer un nouveau prothésiste", async () => {
+  it("Création d'un compte prothésiste lié à un dentiste par l'admin", async () => {
     const dentisteRes = await request(serverURL)
       .post("/admin/user/createAccount")
       .set(authHeader(tokenAdmin))
@@ -59,7 +59,7 @@ describe("POST - create User", () => {
     expect(String(res.body.prothesiste.associatedUserId)).toBe(String(dentisteId));
   });
 
-  it("doit refuser la création d'un prothésiste sans dentisteId", async () => {
+  it("Tentative de création prothésiste sans dentisteId par l'admin", async () => {
     const res = await request(serverURL)
       .post("/admin/user/createAccount")
       .set(authHeader(tokenAdmin))
@@ -75,7 +75,7 @@ describe("POST - create User", () => {
     expect(res.body.message).toBe("dentisteId is required for prothesiste");
   });
 
-  it("doit refuser un dentisteId inexistant", async () => {
+  it("Tentative de création prothésiste avec dentisteId inexistant", async () => {
     const res = await request(serverURL)
       .post("/admin/user/createAccount")
       .set(authHeader(tokenAdmin))
@@ -92,7 +92,7 @@ describe("POST - create User", () => {
     expect(res.body.message).toBe("Dentiste not found");
   });
 
-  it("doit refuser si dentisteId ne correspond pas à un DENTISTE", async () => {
+  it("Tentative de création prothésiste avec dentisteId invalide (compte admin)", async () => {
     const adminRes = await request(serverURL).post("/api/user/registerAdmin").send({
       firstName: "Admin",
       lastName: "Test",
@@ -118,7 +118,7 @@ describe("POST - create User", () => {
     expect(res.body.message).toBe("Dentiste not found");
   });
 
-  it("doit refuser la création avec un rôle invalide", async () => {
+  it("Tentative de création de compte avec un rôle invalide par l'admin", async () => {
     const res = await request(serverURL)
       .post("/admin/user/createAccount")
       .set(authHeader(tokenAdmin))
