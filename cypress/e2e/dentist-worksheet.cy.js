@@ -1,8 +1,10 @@
-// Prérequis : npm start + MySQL actifs, comptes dentisteA / prothesisteA créés (cf. admin-users.cy.js)
+// Prérequis : admin-users.cy.js exécuté avant (crée dentisteA + prothesisteA)
+import { DENTISTE_A } from "../support/constants";
+
 describe("Parcours dentiste — fiches de travaux", () => {
   const dentiste = {
-    email: "dentisteA@cypress.com",
-    password: "password123",
+    email: DENTISTE_A.email,
+    password: DENTISTE_A.password,
   };
 
   const patient = {

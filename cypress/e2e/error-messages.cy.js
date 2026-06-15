@@ -17,10 +17,10 @@ describe("Messages d'erreur — connexion", () => {
   });
 });
 
+// Prérequis : npm start + MySQL · lancer admin-users.cy.js avant (ou npx cypress run complet)
 describe("Messages d'erreur — administrateur", () => {
   beforeEach(() => {
-    cy.login("admin@admin.com", "admin123");
-    cy.url().should("include", "adminDashboard.html");
+    cy.ensureAdmin();
   });
 
   it("affiche une erreur si le formulaire utilisateur est incomplet", () => {
@@ -32,7 +32,7 @@ describe("Messages d'erreur — administrateur", () => {
 
 describe("Messages d'erreur — actes admin", () => {
   beforeEach(() => {
-    cy.login("admin@admin.com", "admin123");
+    cy.ensureAdmin();
     cy.get("#manageActesBtn").click();
     cy.url().should("include", "actManage.html");
   });
