@@ -1,7 +1,9 @@
 // Ordre : admin (crée comptes + actes) → dentiste → prothésiste → messages d'erreur
 import { DENTISTE_A, PROTHESISTE_A, DENTISTE_B } from "../support/constants";
 
-describe("Admin Flow: Users & Acts", () => {
+// testIsolation: false → les tests s'enchaînent sur la même session (obligatoire ici :
+// connexion admin dans before(), puis navigation actManage → dashboard)
+describe("Admin Flow: Users & Acts", { testIsolation: false }, () => {
   const acts = [
     { name: "Acte 1", description: "Description 1" },
     { name: "Acte 2", description: "Description 2" },
