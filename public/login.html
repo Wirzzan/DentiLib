@@ -6,10 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DentiLib — Accès à l'application</title>
     <link rel="stylesheet" href="/styles/login.css" />
+    <link rel="stylesheet" href="/styles/legal.css" />
 </head>
 <body>
-    <header>
-        <h1>DentiLib</h1>
+    <header class="login-header">
+        <a class="login-header__brand" href="/" aria-label="DentiLib — accueil">
+            <img
+                src="/img/logo%20dentilib%202.png"
+                alt="DentiLib — Connecter, Partager, Simplifier"
+                class="login-header__logo"
+            />
+        </a>
+        <h1 class="login-header__title">DentiLib</h1>
     </header>
 
     <main>
@@ -26,9 +34,15 @@
     </main>
 
     <footer>
-        <p>Consulting School Project © 2025 Dentilib</p>
+        <p>MediLink Solutions © 2025 DentiLib</p>
+        <p class="legal-footer-links">
+            <button type="button" class="legal-link" data-legal="mentions">Mentions légales</button>
+            ·
+            <button type="button" class="legal-link" data-legal="privacy">Politique de confidentialité</button>
+        </p>
     </footer>
 
+    <script src="/js/legal.js"></script>
     <script src="/js/login.js"></script>
 </body>
 </html>

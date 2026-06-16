@@ -1,0 +1,133 @@
+.legal-footer-links {
+  margin-top: 0.5rem;
+}
+
+footer .legal-link,
+.legal-modal .legal-link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 0;
+  font-size: inherit;
+  color: #0d6efd;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 500;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+footer .legal-link:hover,
+.legal-modal .legal-link:hover {
+  color: #084298;
+  transform: none;
+  box-shadow: none;
+  background: none;
+}
+
+.legal-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.legal-modal.is-open {
+  display: flex;
+}
+
+.legal-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(44, 62, 80, 0.5);
+}
+
+.legal-modal__panel {
+  position: relative;
+  z-index: 1;
+  width: min(92vw, 720px);
+  max-height: 85vh;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.legal-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e8eef5;
+  background: #f6fbff;
+}
+
+.legal-modal__header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #1a1a1a;
+}
+
+.legal-modal__close {
+  margin: 0;
+  margin-top: 0;
+  padding: 0.35rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  background: #e9ecef;
+  color: #333;
+  border: none;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.legal-modal__close:hover {
+  transform: none;
+  box-shadow: none;
+  background: #dee2e6;
+}
+
+.legal-modal__body {
+  padding: 1.25rem 1.5rem;
+  overflow-y: auto;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #333;
+  text-align: left;
+}
+
+.legal-modal__body h3 {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 0.95rem;
+  color: #0d6efd;
+}
+
+.legal-modal__body h3:first-child {
+  margin-top: 0;
+}
+
+.legal-modal__body p,
+.legal-modal__body ul {
+  margin: 0.5rem 0;
+}
+
+.legal-modal__body ul {
+  padding-left: 1.25rem;
+}
+
+.legal-modal__body li {
+  margin: 0.35rem 0;
+}
+
+.legal-modal__updated {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: #6b7a90;
+}
