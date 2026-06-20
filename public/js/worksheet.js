@@ -421,13 +421,7 @@ envoyerFicheBtn.addEventListener("click", async () => {
 });
 
 backBtn.addEventListener("click", () => {
-  window.history.back();
-});
-
-window.addEventListener("pageshow", (event) => {
-  if (event.persisted) {
-    window.location.reload();
-  }
+  window.location.href = isProthesiste ? "/prothesistHome.html" : "/dentistHome.html";
 });
 
 function getWorkSheetData() {

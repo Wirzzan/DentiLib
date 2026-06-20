@@ -71,10 +71,10 @@ describe("Parcours prothésiste — suivi et actes", () => {
   it("accède à la gestion des actes", () => {
     cy.get("#manageActesBtn").click();
     cy.url().should("include", "prothesistActs.html");
-    cy.get("#addActToProto").click();
+    cy.get("#addActBtn").click();
     cy.get(".act-select").last().select(1);
     cy.get(".priceInput").last().clear().type("120");
-    cy.get("#backBtn").click();
+    cy.get("#returnBtn").click();
     cy.url().should("include", "prothesistHome.html");
   });
 });

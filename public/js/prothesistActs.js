@@ -2,8 +2,8 @@ const API = "/prothesiste";
 
 
 const actsBody = document.getElementById("actsBody");
-const addActToProto = document.getElementById("addActToProto");
-const backBtn = document.getElementById("backBtn");
+const addActBtn = document.getElementById("addActBtn");
+const returnBtn = document.getElementById("returnBtn");
 
 let acts = [];
 
@@ -33,8 +33,7 @@ async function fetchMyActs() {
     const data = await res.json();
     const myActs = data.acts || [];
 
-    // vider le tableau sauf la ligne add-act-row
-    actsBody.querySelectorAll("tr:not(.add-act-row)").forEach(tr => tr.remove());
+    actsBody.innerHTML = "";
 
     // remplir le tableau
     myActs.forEach(a => addActToTable(a.acte._id, a.acte.name, a.acte.description, a.price));
@@ -62,7 +61,7 @@ function addActToTable(acteId = "", name = "", description = "", price = "") {
     <td><input type="number" class="priceInput" value="${price}" min="0" step="0.01" aria-label="Prix en euros"></td>
     <td><button class="btn-delete-act">✖</button></td>
   `;
-  actsBody.insertBefore(tr, addActToProto.parentElement);
+  actsBody.appendChild(tr);
 
   const select = tr.querySelector(".act-select");
   const descTd = tr.querySelector(".act-description");
@@ -129,22 +128,11 @@ function addActToTable(acteId = "", name = "", description = "", price = "") {
 // ==========================
 // CLIQUE SUR "Ajouter un acte"
 // ==========================
-if (addActToProto) {
-  addActToProto.addEventListener("click", () => addActToTable());
-} else {
-  console.error("addActToProto introuvable dans le DOM !");
-}
+addActBtn?.addEventListener("click", () => addActToTable());
 
-// ==========================
-// BOUTON RETOUR
-// ==========================
-if (backBtn) {
-  backBtn.addEventListener("click", () => {
-    window.location.href = "/prothesistHome.html";
-  });
-} else {
-  console.error("backBtn introuvable dans le DOM !");
-}
+returnBtn?.addEventListener("click", () => {
+  window.location.href = "/prothesistHome.html";
+});
 
 // ==========================
 // INIT
