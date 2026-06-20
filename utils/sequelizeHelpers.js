@@ -1,5 +1,12 @@
 const toId = (id) => (id != null ? String(id) : id);
 
+/** acte_id nullable sur actes_fiche (ON DELETE SET NULL) */
+const parseActeId = (acteId) => {
+  if (acteId == null || acteId === "") return null;
+  const n = Number(acteId);
+  return Number.isFinite(n) && n > 0 ? n : null;
+};
+
 const formatActe = (acte) => {
   if (!acte) return null;
   const plain = acte.get ? acte.get({ plain: true }) : acte;
@@ -37,7 +44,7 @@ const formatWorkSheet = (fiche) => {
 
   const acts = (plain.acts || []).map((a) => ({
     _id: toId(a.id),
-    acteId: toId(a.acteId),
+    acteId: a.acteId != null ? toId(a.acteId) : null,
     name: a.name,
     description: a.description,
     price: a.price != null ? parseFloat(a.price) : 0,
@@ -61,4 +68,5 @@ module.exports = {
   formatWorkSheet,
   userId,
   toId,
+  parseActeId,
 };

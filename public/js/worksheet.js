@@ -228,7 +228,7 @@ async function fetchWorksheet() {
     numFicheSpan.textContent = ws.numFiche;
     remarqueTextarea.value = ws.remarque || "";
 
-    actsTableBody.querySelectorAll("tr[data-acte-id]").forEach((tr) => tr.remove());
+    actsTableBody.querySelectorAll("tr.act-row").forEach((tr) => tr.remove());
 
     if (Array.isArray(ws.acts)) {
       ws.acts.forEach((a) => addActToTable(a));
@@ -278,7 +278,10 @@ cancelPatientBtn?.addEventListener("click", () => exitPatientEditMode(true));
 
 function addActToTable(act) {
   const tr = document.createElement("tr");
-  tr.dataset.acteId = act.acteId;
+  tr.classList.add("act-row");
+  if (act.acteId != null && act.acteId !== "") {
+    tr.dataset.acteId = act.acteId;
+  }
 
   const nameTd = document.createElement("td");
   nameTd.textContent = act.name;
@@ -357,14 +360,12 @@ saveWorksheetBtn.addEventListener("click", async () => {
     const emailPatient = getFieldValue("emailPatient");
     const numSecuPatient = getFieldValue("numSecuPatient");
 
-    const acts = [...actsTableBody.querySelectorAll("tr")]
-      .filter((tr) => tr.dataset.acteId)
-      .map((tr) => ({
-        acteId: tr.dataset.acteId,
-        name: tr.cells[0].textContent.trim(),
-        description: tr.cells[1].textContent.trim(),
-        price: Number(tr.cells[2].textContent.replace("€", "").trim()),
-      }));
+    const acts = [...actsTableBody.querySelectorAll("tr.act-row")].map((tr) => ({
+      acteId: tr.dataset.acteId || null,
+      name: tr.cells[0].textContent.trim(),
+      description: tr.cells[1].textContent.trim(),
+      price: Number(tr.cells[2].textContent.replace("€", "").trim()),
+    }));
 
     const res = await fetch(`http://localhost:3000/dentiste/worksheets/update/${worksheetId}`, {
       method: "PUT",
@@ -440,9 +441,7 @@ window.addEventListener("pageshow", (event) => {
 
 function getWorkSheetData() {
   const acts = [];
-  document.querySelectorAll("#actsTableBody tr").forEach((row) => {
-    if (row.id === "totalActesRow") return;
-
+  document.querySelectorAll("#actsTableBody tr.act-row").forEach((row) => {
     const cells = row.querySelectorAll("td");
     acts.push({
       name: cells[0].textContent.trim(),

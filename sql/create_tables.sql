@@ -104,7 +104,7 @@ CREATE TABLE fiches_travaux (
 CREATE TABLE actes_fiche (
   id INT AUTO_INCREMENT PRIMARY KEY,
   fiche_id INT NOT NULL,
-  acte_id INT NOT NULL,
+  acte_id INT NULL,
   name VARCHAR(255) NULL,
   description TEXT NULL,
   price DECIMAL(10, 2) NOT NULL,
@@ -114,6 +114,6 @@ CREATE TABLE actes_fiche (
     ON UPDATE CASCADE,
   CONSTRAINT fk_af_acte
     FOREIGN KEY (acte_id) REFERENCES actes(id)
-    ON DELETE RESTRICT
+    ON DELETE SET NULL
     ON UPDATE CASCADE
 );

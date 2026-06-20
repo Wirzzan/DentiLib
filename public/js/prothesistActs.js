@@ -60,7 +60,7 @@ function addActToTable(acteId = "", name = "", description = "", price = "") {
       </select>
     </td>
     <td class="act-description">${description}</td>
-    <td><input type="number" class="priceInput" value="${price}" min="0" step="0.01"></td>
+    <td><input type="number" class="priceInput" value="${price}" min="0" step="0.01" aria-label="Prix en euros"></td>
     <td><button class="btn-delete-act">✖</button></td>
   `;
   actsBody.insertBefore(tr, addActToProto.parentElement);
