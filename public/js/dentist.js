@@ -34,11 +34,13 @@ async function fetchWorksheets() {
   });
 
   if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
     if (res.status === 401 || res.status === 403) {
       handleSessionExpired();
       return;
     }
-    throw new Error("Erreur serveur");
+    console.error("GET worksheets:", errData);
+    throw new Error(errData.error || errData.message || "Erreur serveur");
   }
   const data = await res.json();
   worksheets = data.workSheets;
