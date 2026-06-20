@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const res = await fetch(`http://localhost:3000/dentiste/worksheets/${id}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    const res = await fetch(`/dentiste/worksheets/${id}`, {
+      headers: authHeaders(),
     });
     if (!res.ok) throw new Error("Impossible de récupérer la fiche");
 

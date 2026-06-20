@@ -1,5 +1,5 @@
-const API_URL = "http://localhost:3000/admin/user"; //endpoint pour récupérer les users
-const token = localStorage.getItem("token");
+const API_URL = "/admin/user";
+const token = getToken();
 const role = localStorage.getItem("role");
 
 const searchInput = document.getElementById("searchInput");
@@ -29,18 +29,8 @@ let editingUserId = null;
 let users = [];
 
 /* =======================
-   FETCH Securisé
+   FETCH Securisé — authFetch() dans api.js
 ======================= */
-function authFetch(url, options = {}) {
-  return fetch(url, {
-    ...options,
-    headers: {
-      "Authorization": `Bearer ${token}`,
-      "Content-Type": "application/json",
-      ...(options.headers || {})
-    }
-  });
-}
 
 
 /* =======================

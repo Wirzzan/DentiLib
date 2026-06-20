@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/act/act"
+const API_URL = "/act/act"
 
 const actsTable = document.getElementById("actsTable");
 const addActBtn = document.getElementById("addActBtn");

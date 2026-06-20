@@ -1,5 +1,5 @@
-const API_URL = "http://localhost:3000/prothesiste/worksheets";
-const token = localStorage.getItem("token");
+const API_URL = "/prothesiste/worksheets";
+const token = getToken();
 const role = localStorage.getItem("role");
 
 const table = document.getElementById("worksheetTable").querySelector("tbody");
@@ -17,7 +17,7 @@ let worksheets = [];
 //Fetch et affichage
 async function fetchWorksheets() {
   const res = await fetch(API_URL, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: authHeaders(),
   });
 
   if (!res.ok) {

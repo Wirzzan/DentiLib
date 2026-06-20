@@ -1,5 +1,6 @@
-const API_URL = "http://localhost:3000/dentiste/worksheets";
-const token = localStorage.getItem("token");
+const API_URL = "/dentiste/worksheets";
+
+const token = getToken();
 const role = localStorage.getItem("role");
 
 const table = document.getElementById("worksheetTable");
@@ -29,7 +30,7 @@ let editingId = null;
 //Fetch et affichage
 async function fetchWorksheets() {
   const res = await fetch(API_URL, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: authHeaders(),
   });
 
   if (!res.ok) {
@@ -120,10 +121,7 @@ form.addEventListener("submit", async (e) => {
 
   const res = await fetch(`${API_URL}/create`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+    headers: authHeaders(true),
     body: JSON.stringify(payload),
   });
 
@@ -149,7 +147,7 @@ async function remove(id) {
 
   await fetch(`${API_URL}/delete/${id}`, {
     method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` },
+    headers: authHeaders(),
   });
 
   fetchWorksheets();

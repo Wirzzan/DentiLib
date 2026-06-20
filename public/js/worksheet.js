@@ -1,6 +1,6 @@
 const params = new URLSearchParams(window.location.search);
 const worksheetId = params.get("id");
-const token = localStorage.getItem("token");
+const token = getToken();
 const role = localStorage.getItem("role");
 if (!token) window.location.href = "/";
 
@@ -141,13 +141,10 @@ editProSectionBtn?.addEventListener("click", () => {
 saveProSectionBtn?.addEventListener("click", async () => {
   try {
     const res = await fetch(
-      `http://localhost:3000/prothesiste/worksheets/update/${worksheetId}`,
+      `/prothesiste/worksheets/update/${worksheetId}`,
       {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: authHeaders(true),
         body: JSON.stringify({
           status: proStatusInput.value,
           proDateLivraison: proDateLivraisonInput.value || null,
@@ -174,8 +171,8 @@ saveProSectionBtn?.addEventListener("click", async () => {
 
 async function fetchActes() {
   try {
-    const res = await fetch("http://localhost:3000/dentiste/worksheets/proto-acts", {
-      headers: { Authorization: `Bearer ${token}` },
+    const res = await fetch("/dentiste/worksheets/proto-acts", {
+      headers: authHeaders(),
     });
 
     const data = await res.json();
@@ -204,11 +201,11 @@ async function fetchWorksheet() {
   try {
     const worksheetUrl =
       role === "PROTHESISTE"
-        ? `http://localhost:3000/prothesiste/worksheets/${worksheetId}`
-        : `http://localhost:3000/dentiste/worksheets/${worksheetId}`;
+        ? `/prothesiste/worksheets/${worksheetId}`
+        : `/dentiste/worksheets/${worksheetId}`;
 
     const res = await fetch(worksheetUrl, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: authHeaders(),
     });
 
     if (!res.ok) throw new Error("Fiche introuvable");
@@ -367,12 +364,9 @@ saveWorksheetBtn.addEventListener("click", async () => {
       price: Number(tr.cells[2].textContent.replace("€", "").trim()),
     }));
 
-    const res = await fetch(`http://localhost:3000/dentiste/worksheets/update/${worksheetId}`, {
+    const res = await fetch(`/dentiste/worksheets/update/${worksheetId}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: authHeaders(true),
       body: JSON.stringify({
         nomPatient,
         prenomPatient,
@@ -410,12 +404,9 @@ envoyerFicheBtn.addEventListener("click", async () => {
   if (!confirmed) return;
 
   try {
-    const res = await fetch(`http://localhost:3000/dentiste/worksheets/send/${worksheetId}`, {
+    const res = await fetch(`/dentiste/worksheets/send/${worksheetId}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: authHeaders(true),
     });
 
     const data = await res.json();
