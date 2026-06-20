@@ -15,7 +15,7 @@ module.exports = (sequelize) => {
       },
       acteId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
       name: {
         type: DataTypes.STRING(255),

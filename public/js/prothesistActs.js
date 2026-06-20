@@ -1,5 +1,4 @@
-const token = localStorage.getItem("token");
-const API = "http://localhost:3000/prothesiste";
+const API = "/prothesiste";
 
 
 const actsBody = document.getElementById("actsBody");
@@ -14,7 +13,7 @@ let acts = [];
 async function fetchAdminActs() {
   try {
     const res = await fetch(`${API}/acts/admin`, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: authHeaders()
     });
     const data = await res.json();
     acts = data.acts || [];
@@ -29,7 +28,7 @@ async function fetchAdminActs() {
 async function fetchMyActs() {
   try {
     const res = await fetch(`${API}/acts/my`, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: authHeaders()
     });
     const data = await res.json();
     const myActs = data.acts || [];
@@ -60,7 +59,7 @@ function addActToTable(acteId = "", name = "", description = "", price = "") {
       </select>
     </td>
     <td class="act-description">${description}</td>
-    <td><input type="number" class="priceInput" value="${price}" min="0" step="0.01"></td>
+    <td><input type="number" class="priceInput" value="${price}" min="0" step="0.01" aria-label="Prix en euros"></td>
     <td><button class="btn-delete-act">✖</button></td>
   `;
   actsBody.insertBefore(tr, addActToProto.parentElement);
@@ -83,10 +82,7 @@ function addActToTable(acteId = "", name = "", description = "", price = "") {
   try {
     await fetch(`${API}/acts/add`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
+      headers: authHeaders(true),
       body: JSON.stringify({
         acteId,
         price: priceInput.value || 0
@@ -106,7 +102,7 @@ function addActToTable(acteId = "", name = "", description = "", price = "") {
       const acteId = tr.dataset.acteId;  
       await fetch(`${API}/acts/delete/${acteId}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` }
+        headers: authHeaders()
       });
       tr.remove();
     } catch (err) {
@@ -121,10 +117,7 @@ function addActToTable(acteId = "", name = "", description = "", price = "") {
       const acteId = tr.dataset.acteId;  
       await fetch(`${API}/acts/update/${acteId}`, {
         method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
+        headers: authHeaders(true),
         body: JSON.stringify({ price: priceInput.value })
       });
     } catch (err) {

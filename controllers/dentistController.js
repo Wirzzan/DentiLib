@@ -6,7 +6,7 @@ const {
   ActeFiche,
   sequelize,
 } = require("../models");
-const { formatWorkSheet, userId } = require("../utils/sequelizeHelpers");
+const { formatWorkSheet, userId, parseActeId } = require("../utils/sequelizeHelpers");
 
 const workSheetInclude = [{ model: ActeFiche, as: "acts" }];
 
@@ -34,7 +34,7 @@ const syncFicheActs = async (ficheId, acts, transaction) => {
   await ActeFiche.bulkCreate(
     acts.map((a) => ({
       ficheId,
-      acteId: Number(a.acteId),
+      acteId: parseActeId(a.acteId),
       name: a.name,
       description: a.description,
       price: a.price,
@@ -92,7 +92,7 @@ const getAllWorkSheets = async (req, res) => {
     return res.status(200).json({ workSheets: workSheets.map(formatWorkSheet) });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Erreur serveur" });
+    return res.status(500).json({ message: "Erreur serveur", error: error.message });
   }
 };
 

@@ -49,6 +49,7 @@ module.exports = (sequelize) => {
       facturePDF: {
         type: DataTypes.STRING(500),
         allowNull: true,
+        field: "facture_pdf",
       },
       utilisateurId: {
         type: DataTypes.INTEGER,

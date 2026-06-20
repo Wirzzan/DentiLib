@@ -1,6 +1,6 @@
 const params = new URLSearchParams(window.location.search);
 const worksheetId = params.get("id");
-const token = localStorage.getItem("token");
+const token = getToken();
 const role = localStorage.getItem("role");
 if (!token) window.location.href = "/";
 
@@ -141,13 +141,10 @@ editProSectionBtn?.addEventListener("click", () => {
 saveProSectionBtn?.addEventListener("click", async () => {
   try {
     const res = await fetch(
-      `http://localhost:3000/prothesiste/worksheets/update/${worksheetId}`,
+      `/prothesiste/worksheets/update/${worksheetId}`,
       {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: authHeaders(true),
         body: JSON.stringify({
           status: proStatusInput.value,
           proDateLivraison: proDateLivraisonInput.value || null,
@@ -174,8 +171,8 @@ saveProSectionBtn?.addEventListener("click", async () => {
 
 async function fetchActes() {
   try {
-    const res = await fetch("http://localhost:3000/dentiste/worksheets/proto-acts", {
-      headers: { Authorization: `Bearer ${token}` },
+    const res = await fetch("/dentiste/worksheets/proto-acts", {
+      headers: authHeaders(),
     });
 
     const data = await res.json();
@@ -204,11 +201,11 @@ async function fetchWorksheet() {
   try {
     const worksheetUrl =
       role === "PROTHESISTE"
-        ? `http://localhost:3000/prothesiste/worksheets/${worksheetId}`
-        : `http://localhost:3000/dentiste/worksheets/${worksheetId}`;
+        ? `/prothesiste/worksheets/${worksheetId}`
+        : `/dentiste/worksheets/${worksheetId}`;
 
     const res = await fetch(worksheetUrl, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: authHeaders(),
     });
 
     if (!res.ok) throw new Error("Fiche introuvable");
@@ -228,7 +225,7 @@ async function fetchWorksheet() {
     numFicheSpan.textContent = ws.numFiche;
     remarqueTextarea.value = ws.remarque || "";
 
-    actsTableBody.querySelectorAll("tr[data-acte-id]").forEach((tr) => tr.remove());
+    actsTableBody.querySelectorAll("tr.act-row").forEach((tr) => tr.remove());
 
     if (Array.isArray(ws.acts)) {
       ws.acts.forEach((a) => addActToTable(a));
@@ -278,7 +275,10 @@ cancelPatientBtn?.addEventListener("click", () => exitPatientEditMode(true));
 
 function addActToTable(act) {
   const tr = document.createElement("tr");
-  tr.dataset.acteId = act.acteId;
+  tr.classList.add("act-row");
+  if (act.acteId != null && act.acteId !== "") {
+    tr.dataset.acteId = act.acteId;
+  }
 
   const nameTd = document.createElement("td");
   nameTd.textContent = act.name;
@@ -357,21 +357,16 @@ saveWorksheetBtn.addEventListener("click", async () => {
     const emailPatient = getFieldValue("emailPatient");
     const numSecuPatient = getFieldValue("numSecuPatient");
 
-    const acts = [...actsTableBody.querySelectorAll("tr")]
-      .filter((tr) => tr.dataset.acteId)
-      .map((tr) => ({
-        acteId: tr.dataset.acteId,
-        name: tr.cells[0].textContent.trim(),
-        description: tr.cells[1].textContent.trim(),
-        price: Number(tr.cells[2].textContent.replace("€", "").trim()),
-      }));
+    const acts = [...actsTableBody.querySelectorAll("tr.act-row")].map((tr) => ({
+      acteId: tr.dataset.acteId || null,
+      name: tr.cells[0].textContent.trim(),
+      description: tr.cells[1].textContent.trim(),
+      price: Number(tr.cells[2].textContent.replace("€", "").trim()),
+    }));
 
-    const res = await fetch(`http://localhost:3000/dentiste/worksheets/update/${worksheetId}`, {
+    const res = await fetch(`/dentiste/worksheets/update/${worksheetId}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: authHeaders(true),
       body: JSON.stringify({
         nomPatient,
         prenomPatient,
@@ -409,12 +404,9 @@ envoyerFicheBtn.addEventListener("click", async () => {
   if (!confirmed) return;
 
   try {
-    const res = await fetch(`http://localhost:3000/dentiste/worksheets/send/${worksheetId}`, {
+    const res = await fetch(`/dentiste/worksheets/send/${worksheetId}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: authHeaders(true),
     });
 
     const data = await res.json();
@@ -440,9 +432,7 @@ window.addEventListener("pageshow", (event) => {
 
 function getWorkSheetData() {
   const acts = [];
-  document.querySelectorAll("#actsTableBody tr").forEach((row) => {
-    if (row.id === "totalActesRow") return;
-
+  document.querySelectorAll("#actsTableBody tr.act-row").forEach((row) => {
     const cells = row.querySelectorAll("td");
     acts.push({
       name: cells[0].textContent.trim(),

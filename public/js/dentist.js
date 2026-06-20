@@ -1,5 +1,6 @@
-const API_URL = "http://localhost:3000/dentiste/worksheets";
-const token = localStorage.getItem("token");
+const API_URL = "/dentiste/worksheets";
+
+const token = getToken();
 const role = localStorage.getItem("role");
 
 const table = document.getElementById("worksheetTable");
@@ -29,15 +30,17 @@ let editingId = null;
 //Fetch et affichage
 async function fetchWorksheets() {
   const res = await fetch(API_URL, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: authHeaders(),
   });
 
   if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
     if (res.status === 401 || res.status === 403) {
       handleSessionExpired();
       return;
     }
-    throw new Error("Erreur serveur");
+    console.error("GET worksheets:", errData);
+    throw new Error(errData.error || errData.message || "Erreur serveur");
   }
   const data = await res.json();
   worksheets = data.workSheets;
@@ -120,10 +123,7 @@ form.addEventListener("submit", async (e) => {
 
   const res = await fetch(`${API_URL}/create`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+    headers: authHeaders(true),
     body: JSON.stringify(payload),
   });
 
@@ -149,7 +149,7 @@ async function remove(id) {
 
   await fetch(`${API_URL}/delete/${id}`, {
     method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` },
+    headers: authHeaders(),
   });
 
   fetchWorksheets();
