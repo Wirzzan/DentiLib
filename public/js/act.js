@@ -99,7 +99,8 @@ addActForm.addEventListener("submit", async (e) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newAct)
     });
-    if (!res.ok) throw new Error("Erreur création acte");
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message || "Erreur création acte");
 
     createModal.style.display = "none";
     addActForm.reset();
@@ -146,12 +147,14 @@ editActForm.addEventListener("submit", async (e) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updatedAct)
     });
-    if (!res.ok) throw new Error("Erreur modification acte");
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message || "Erreur modification acte");
 
     editModal.style.display = "none";
     editingActId = null;
     editActForm.reset();
     fetchActs();
+    showFeedback("Acte modifié avec succès");
   } catch (err) {
     showFeedback(err.message, "error");
   }
@@ -169,12 +172,14 @@ async function deleteAct(actId) {
     const response = await fetch(`${API_URL}/delete/${actId}`, {
       method: "DELETE"
     });
-    if (!response.ok) throw new Error("Erreur lors de la suppression");
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.message || "Erreur lors de la suppression");
 
     fetchActs();
+    showFeedback("Acte supprimé avec succès");
   } catch (error) {
     console.error(error);
-    showFeedback("Impossible de supprimer l'acte", "error");
+    showFeedback(error.message || "Impossible de supprimer l'acte", "error");
   }
 }
 

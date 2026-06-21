@@ -194,6 +194,7 @@ async function fetchActes() {
   } catch (err) {
     console.error("Erreur fetchActes :", err);
     actes = [];
+    showFeedback("Impossible de charger les actes du prothésiste", "error");
   }
 }
 
