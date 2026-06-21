@@ -20,7 +20,7 @@ const editDentisteSelect = document.getElementById("editDentisteSelect");
 if (!token || role !== "ADMIN") {
   window.location.href = "/";
 }else {
-  document.body.style.display = "block";
+  document.body.style.display = "flex";
 }
 
 

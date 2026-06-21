@@ -9,7 +9,7 @@ const searchInput = document.getElementById("searchInput");
 if (!token || role !== "PROTHESISTE") {
   window.location.href = "/";
 } else {
-  document.body.style.display = "block";
+  document.body.style.display = "flex";
 }
 
 let worksheets = [];
