@@ -20,7 +20,7 @@ const dateTo = document.getElementById("dateTo");
 if (!token || role !== "DENTISTE") {
   window.location.href = "/";
 } else {
-  document.body.style.display = "block";
+  document.body.style.display = "flex";
 }
 
 let worksheets = [];
