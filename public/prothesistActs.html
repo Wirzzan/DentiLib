@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <link rel="icon" href="/img/favicon.svg" type="image/svg+xml" />
-  <title>Mes actes - Prothésiste</title>
-  <link rel="stylesheet" href="./styles/prothesistActs.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liste des actes</title>
+  <link rel="stylesheet" href="/styles/ui.css" />
+  <link rel="stylesheet" href="/styles/actManage.css" />
+  <link rel="stylesheet" href="/styles/legal.css" />
+  <link rel="stylesheet" href="/styles/prothesistActs.css" />
 </head>
 <body>
-  <header>
-    <h1>Mes actes</h1>
-    <button id="backBtn">← Retour</button>
-  </header>
+  <div class="container">
+    <h1>Liste des actes</h1>
 
-  <main>
-    <table id="actsTable">
+    <table>
       <thead>
         <tr>
           <th>Acte</th>
@@ -23,15 +24,27 @@
         </tr>
       </thead>
       <tbody id="actsBody">
-        <!-- Les lignes seront injectées ici -->
-        <tr class="add-act-row">
-          <td id="addActToProto" colspan="4">Cliquez ici pour ajouter un acte</td>
-        </tr>
       </tbody>
     </table>
-  </main>
+
+    <div class="table-footer">
+      <button class="btn btn-add" id="addActBtn" type="button">Ajouter un acte</button>
+      <button class="btn btn-return" id="returnBtn" type="button">Retour</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>MediLink Solutions © 2025 DentiLib</p>
+    <p class="legal-footer-links">
+      <button type="button" class="legal-link" data-legal="mentions">Mentions légales</button>
+      ·
+      <button type="button" class="legal-link" data-legal="privacy">Politique de confidentialité</button>
+    </p>
+  </footer>
 
   <script src="/js/api.js"></script>
-  <script src="./js/prothesistActs.js"></script>
+  <script src="/js/ui.js"></script>
+  <script src="/js/legal.js"></script>
+  <script src="/js/prothesistActs.js"></script>
 </body>
 </html>
