@@ -194,6 +194,7 @@ async function fetchActes() {
   } catch (err) {
     console.error("Erreur fetchActes :", err);
     actes = [];
+    showFeedback("Impossible de charger les actes du prothésiste", "error");
   }
 }
 
@@ -421,13 +422,7 @@ envoyerFicheBtn.addEventListener("click", async () => {
 });
 
 backBtn.addEventListener("click", () => {
-  window.history.back();
-});
-
-window.addEventListener("pageshow", (event) => {
-  if (event.persisted) {
-    window.location.reload();
-  }
+  window.location.href = isProthesiste ? "/prothesistHome.html" : "/dentistHome.html";
 });
 
 function getWorkSheetData() {

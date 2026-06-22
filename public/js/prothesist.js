@@ -9,28 +9,34 @@ const searchInput = document.getElementById("searchInput");
 if (!token || role !== "PROTHESISTE") {
   window.location.href = "/";
 } else {
-  document.body.style.display = "block";
+  document.body.style.display = "flex";
 }
 
 let worksheets = [];
 
 //Fetch et affichage
 async function fetchWorksheets() {
-  const res = await fetch(API_URL, {
-    headers: authHeaders(),
-  });
+  try {
+    const res = await fetch(API_URL, {
+      headers: authHeaders(),
+    });
 
-  if (!res.ok) {
-    if (res.status === 401 || res.status === 403) {
-      handleSessionExpired();
-      return;
+    if (!res.ok) {
+      if (res.status === 401 || res.status === 403) {
+        handleSessionExpired();
+        return;
+      }
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.message || "Erreur serveur");
     }
-    throw new Error("Erreur serveur");
-  }
 
-  const data = await res.json();
-  worksheets = data.workSheets;
-  displayWorksheets(worksheets);
+    const data = await res.json();
+    worksheets = data.workSheets;
+    displayWorksheets(worksheets);
+  } catch (err) {
+    console.error(err);
+    showFeedback(err.message || "Impossible de charger les fiches", "error");
+  }
 }
 
 function displayWorksheets(list) {

@@ -20,7 +20,7 @@ const dateTo = document.getElementById("dateTo");
 if (!token || role !== "DENTISTE") {
   window.location.href = "/";
 } else {
-  document.body.style.display = "block";
+  document.body.style.display = "flex";
 }
 
 let worksheets = [];
@@ -29,22 +29,26 @@ let editingId = null;
 
 //Fetch et affichage
 async function fetchWorksheets() {
-  const res = await fetch(API_URL, {
-    headers: authHeaders(),
-  });
+  try {
+    const res = await fetch(API_URL, {
+      headers: authHeaders(),
+    });
 
-  if (!res.ok) {
-    const errData = await res.json().catch(() => ({}));
-    if (res.status === 401 || res.status === 403) {
-      handleSessionExpired();
-      return;
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      if (res.status === 401 || res.status === 403) {
+        handleSessionExpired();
+        return;
+      }
+      throw new Error(errData.error || errData.message || "Erreur serveur");
     }
-    console.error("GET worksheets:", errData);
-    throw new Error(errData.error || errData.message || "Erreur serveur");
+    const data = await res.json();
+    worksheets = data.workSheets;
+    displayWorksheets(worksheets);
+  } catch (err) {
+    console.error("GET worksheets:", err);
+    showFeedback(err.message || "Impossible de charger les fiches", "error");
   }
-  const data = await res.json();
-  worksheets = data.workSheets;
-  displayWorksheets(worksheets);
 }
 
 function displayWorksheets(list) {
@@ -147,12 +151,20 @@ async function remove(id) {
   const confirmed = await showConfirm("Supprimer cette fiche ?", { danger: true });
   if (!confirmed) return;
 
-  await fetch(`${API_URL}/delete/${id}`, {
-    method: "DELETE",
-    headers: authHeaders(),
-  });
+  try {
+    const res = await fetch(`${API_URL}/delete/${id}`, {
+      method: "DELETE",
+      headers: authHeaders(),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message || "Erreur lors de la suppression");
 
-  fetchWorksheets();
+    showFeedback("Fiche supprimée avec succès");
+    fetchWorksheets();
+  } catch (err) {
+    console.error(err);
+    showFeedback(err.message, "error");
+  }
 }
 
 //SEARCH

@@ -20,7 +20,7 @@ const editDentisteSelect = document.getElementById("editDentisteSelect");
 if (!token || role !== "ADMIN") {
   window.location.href = "/";
 }else {
-  document.body.style.display = "block";
+  document.body.style.display = "flex";
 }
 
 
@@ -115,6 +115,7 @@ async function fetchUsers() {
     console.error(err);
     userTableBody.innerHTML =
       "<tr><td colspan='5'>Erreur de chargement</td></tr>";
+    showFeedback(err.message || "Impossible de charger les utilisateurs", "error");
   }
 }
 
@@ -288,14 +289,15 @@ addUserForm.addEventListener("submit", async e => {
       return;
     }
 
-    showFormMessage("addUserMessage", "Utilisateur créé avec succès", "green");
-
+    showFormMessage("addUserMessage", "");
     addUserForm.reset();
     clearFormValidation(addUserForm);
     dentisteSelect.style.display = "none";
     dentisteSelect.value = "";
     addUserForm.role.dispatchEvent(new Event("change"));
+    userModal.style.display = "none";
     fetchUsers();
+    showFeedback("Utilisateur créé avec succès");
 
   } catch (err) {
     console.error(err);
@@ -378,19 +380,20 @@ editUserForm.addEventListener("submit", async e => {
     const data = await res.json();
 
     if (!res.ok) {
-      showFormMessage("editUserMessage", data.message || "Erreur modification");
+      showFeedback(data.message || "Erreur modification", "error");
       return;
     }
 
-    showFormMessage("editUserMessage", "Utilisateur modifié avec succès", "green");
+    showFormMessage("editUserMessage", "");
     editUserForm.reset();
     editUserModal.style.display = "none";
     editingUserId = null;
     fetchUsers();
+    showFeedback("Utilisateur modifié avec succès");
 
   } catch (err) {
     console.error(err);
-    showFormMessage("editUserMessage", "Erreur modification");
+    showFeedback("Erreur modification", "error");
   }
 });
 
@@ -426,16 +429,16 @@ document.addEventListener("click", async (e) => {
     const data = await res.json();
 
     if (!res.ok) {
-      showUserMessage(data.message || "Erreur suppression");
+      showFeedback(data.message || "Erreur suppression", "error");
       return;
     }
 
-    showUserMessage("Utilisateur supprimé avec succès", "green");
+    showFeedback("Utilisateur supprimé avec succès");
     fetchUsers();
 
   } catch (err) {
     console.error(err);
-    showUserMessage("Erreur serveur lors de la suppression");
+    showFeedback("Erreur serveur lors de la suppression", "error");
   }
 });
 
