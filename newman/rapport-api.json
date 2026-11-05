@@ -6,11 +6,11 @@
     },
     "item": [
       {
-        "id": "39973fd1-507b-44a5-942e-66e82487740e",
+        "id": "ece8a18a-c0c9-45a2-8891-b00b9a55e387",
         "name": "Auth",
         "item": [
           {
-            "id": "e22b7517-81c2-4c6d-b225-6a565056a62e",
+            "id": "1464998c-ac07-458e-920a-be06a2f4743f",
             "name": "Création compte administrateur",
             "request": {
               "url": {
@@ -42,7 +42,7 @@
               {
                 "listen": "test",
                 "script": {
-                  "id": "e01e6797-810c-4fcb-9580-a9b5c910d795",
+                  "id": "31432d05-8ddb-4edd-953b-4659344ce4a7",
                   "type": "text/javascript",
                   "exec": [
                     "const statusCode = pm.response.code;",
@@ -56,13 +56,13 @@
                     "    });",
                     "}"
                   ],
-                  "_lastExecutionId": "e7b1b269-5520-4eda-adab-3c2d17c869a4"
+                  "_lastExecutionId": "aa7363c1-7fd3-42bc-b974-7b8284c72074"
                 }
               }
             ]
           },
           {
-            "id": "a220ac8c-e01f-4a97-adee-acdcc9384057",
+            "id": "986f5d54-82da-48a4-8315-0cb6a1fe13ea",
             "name": "Connexion administrateur",
             "request": {
               "url": {
@@ -94,7 +94,7 @@
               {
                 "listen": "test",
                 "script": {
-                  "id": "a8dc2379-2e4c-4aa2-87ed-346f113ab585",
+                  "id": "8b886054-45ba-43dc-957d-a09a8ae30645",
                   "type": "text/javascript",
                   "exec": [
                     "const statusCode = pm.response.code;",
@@ -110,7 +110,7 @@
                     "    });",
                     "}"
                   ],
-                  "_lastExecutionId": "61bdbfa0-b95a-42f1-aad9-54453c6cdf20"
+                  "_lastExecutionId": "52448e0b-b8c6-4c2f-b4b9-0242536a3cc4"
                 }
               }
             ]
@@ -119,11 +119,11 @@
         "event": []
       },
       {
-        "id": "123b9202-6384-417e-abf9-dfc17ce7739e",
+        "id": "73a946ab-8c90-4da7-9099-0906e465db27",
         "name": "Admin",
         "item": [
           {
-            "id": "d7e8d3e7-b663-4c22-87ad-f6e31d6eafb9",
+            "id": "4bf01669-ff55-4a6c-b43a-0b8db4d81ad3",
             "name": "Création compte dentiste par admin",
             "request": {
               "url": {
@@ -159,7 +159,7 @@
               {
                 "listen": "test",
                 "script": {
-                  "id": "8ed4f6f3-46e3-4f74-9f97-9e19f2410c4f",
+                  "id": "51bab3d8-ef0d-47d5-aa5d-fc008940ef74",
                   "type": "text/javascript",
                   "exec": [
                     "const statusCode = pm.response.code;",
@@ -179,13 +179,13 @@
                     "    });",
                     "}"
                   ],
-                  "_lastExecutionId": "41b47d18-5279-4910-9f83-2284fe1de333"
+                  "_lastExecutionId": "2aa0b571-23e8-455d-9f2c-8b3635b572a3"
                 }
               }
             ]
           },
           {
-            "id": "d2d86d03-3fa9-4c73-98a5-2763c5eeeb06",
+            "id": "b4255bd8-d386-42d4-899d-8a1a31f3fcc8",
             "name": "Création compte prothésiste par admin",
             "request": {
               "url": {
@@ -221,20 +221,20 @@
               {
                 "listen": "prerequest",
                 "script": {
-                  "id": "0fbe2a57-71f8-417b-ab00-f9f2a710dff8",
+                  "id": "838fea91-2683-4943-82c7-7a1ee9e9baed",
                   "type": "text/javascript",
                   "exec": [
                     "if (!pm.environment.get(\"dentisteId\")) {",
                     "    throw new Error(\"dentisteId manquant — exécuter la création dentiste d'abord ou réinitialiser la BDD\");",
                     "}"
                   ],
-                  "_lastExecutionId": "09eb580a-bd9f-4f67-a27d-e231e45e5025"
+                  "_lastExecutionId": "15afca14-ef55-4326-b04c-8c8f2a51b52a"
                 }
               },
               {
                 "listen": "test",
                 "script": {
-                  "id": "38059b9a-978f-4e02-92f1-9c04450ed2a4",
+                  "id": "b64e3bfd-7aad-4fef-a710-ac343e41967f",
                   "type": "text/javascript",
                   "exec": [
                     "const statusCode = pm.response.code;",
@@ -255,13 +255,13 @@
                     "    });",
                     "}"
                   ],
-                  "_lastExecutionId": "218a67ea-a06c-40bb-a99e-a4ab773a9d0b"
+                  "_lastExecutionId": "3fa38348-46d1-4595-89f0-09d2379b16e4"
                 }
               }
             ]
           },
           {
-            "id": "038b1910-bbc2-4f6e-90d0-9c9d2934d54e",
+            "id": "32c24af0-2308-4844-b511-c40a78f2a833",
             "name": "Liste de tous les utilisateurs",
             "request": {
               "url": {
@@ -289,7 +289,7 @@
               {
                 "listen": "test",
                 "script": {
-                  "id": "a79ae5b7-0fa1-4b4b-a465-6287b11bc2c8",
+                  "id": "34e46e53-6327-4a98-b997-af0efbfdaf25",
                   "type": "text/javascript",
                   "exec": [
                     "pm.test(\"Liste utilisateurs — HTTP 200\", () => {",
@@ -299,13 +299,13 @@
                     "    pm.expect(pm.response.json()).to.be.an(\"array\");",
                     "});"
                   ],
-                  "_lastExecutionId": "a6c69d4b-78c6-4c5f-9116-5f8198c92a14"
+                  "_lastExecutionId": "fe52ff9f-4ecf-45c2-95c7-27cfae952ebc"
                 }
               }
             ]
           },
           {
-            "id": "6d2b45aa-02ec-4c65-b522-8c04467a3e0a",
+            "id": "2e014506-6e1a-453f-b7e5-90d550cb7b02",
             "name": "Modification compte dentiste par admin",
             "request": {
               "url": {
@@ -342,7 +342,7 @@
               {
                 "listen": "test",
                 "script": {
-                  "id": "d46d208e-6bfa-485b-9759-efce4ba2f515",
+                  "id": "d4a182d7-58eb-44d2-9747-1aa057aeedc8",
                   "type": "text/javascript",
                   "exec": [
                     "pm.test(\"Modification dentiste — HTTP 200\", () => {",
@@ -352,7 +352,7 @@
                     "    pm.expect(pm.response.json().user.firstName).to.eql(\"DentisteMod\");",
                     "});"
                   ],
-                  "_lastExecutionId": "caf104b4-4387-45ba-bbfa-373e9ea2e653"
+                  "_lastExecutionId": "da244c5e-4b62-4b59-815f-475c5afe1497"
                 }
               }
             ]
@@ -361,11 +361,11 @@
         "event": []
       },
       {
-        "id": "c8cd808f-2988-4865-9f12-25b442161097",
+        "id": "bccd8215-f446-4706-9eda-01097cdf428e",
         "name": "Actes",
         "item": [
           {
-            "id": "dab057c6-096c-4aff-b8c6-73463def3600",
+            "id": "c3440b71-c397-42d0-b11a-058de57b728c",
             "name": "Création acte catalogue",
             "request": {
               "url": {
@@ -397,7 +397,7 @@
               {
                 "listen": "test",
                 "script": {
-                  "id": "a5e46365-9c1c-4256-893c-fcea269ad083",
+                  "id": "9bcf98d0-9f0d-4434-a5b3-f6fe8f61cd86",
                   "type": "text/javascript",
                   "exec": [
                     "const statusCode = pm.response.code;",
@@ -417,13 +417,13 @@
                     "    });",
                     "}"
                   ],
-                  "_lastExecutionId": "e484e103-be3f-44a3-b355-b02336849906"
+                  "_lastExecutionId": "fcee707e-2805-4a1d-b250-2c5347caa0b9"
                 }
               }
             ]
           },
           {
-            "id": "5d9c5153-950d-4473-a16c-0c86e7ff91ef",
+            "id": "6e2b1de8-37e3-49d0-b3cb-b862d4e9522b",
             "name": "Liste des actes catalogue",
             "request": {
               "url": {
@@ -445,7 +445,7 @@
               {
                 "listen": "test",
                 "script": {
-                  "id": "570e618f-172a-44df-b2f3-760b8b340b27",
+                  "id": "fdd398bd-e840-4b0f-9ca3-c8f817f11bbb",
                   "type": "text/javascript",
                   "exec": [
                     "pm.test(\"Liste actes — HTTP 200\", () => {",
@@ -456,7 +456,7 @@
                     "    pm.expect(pm.response.json().actes).to.be.an(\"array\");",
                     "});"
                   ],
-                  "_lastExecutionId": "46e652f0-6c44-4821-8eb6-c0c472f37526"
+                  "_lastExecutionId": "06aa0d21-c21b-45ef-bfad-7b2f511b519c"
                 }
               }
             ]
@@ -465,11 +465,11 @@
         "event": []
       },
       {
-        "id": "5b4fbb71-03c1-457a-b30a-71777a41f4db",
+        "id": "92ee39dd-b2f2-4ce3-969e-a5adfbd10916",
         "name": "Dentiste",
         "item": [
           {
-            "id": "5e31fdb3-b311-40da-838c-93b1c90d270c",
+            "id": "4c9f3100-d35e-4cdd-bb33-f6cd2e5ced52",
             "name": "Connexion dentiste",
             "request": {
               "url": {
@@ -501,7 +501,7 @@
               {
                 "listen": "test",
                 "script": {
-                  "id": "4d9d6463-71a3-4974-8ff4-df9bf611a971",
+                  "id": "4642ba1b-b812-495c-bf51-997d7b01113a",
                   "type": "text/javascript",
                   "exec": [
                     "const response = pm.response.json();",
@@ -511,13 +511,13 @@
                     "    pm.expect(response.role).to.eql(\"DENTISTE\");",
                     "});"
                   ],
-                  "_lastExecutionId": "d6b72a1f-875b-45a3-b022-9c49d5959455"
+                  "_lastExecutionId": "d5031f02-e340-45cc-9a28-b8595625082a"
                 }
               }
             ]
           },
           {
-            "id": "09983aa5-eb28-47ba-ba8f-34a745df678e",
+            "id": "55737659-83bc-451b-bbf5-37ed444b7008",
             "name": "Création fiche travaux",
             "request": {
               "url": {
@@ -553,7 +553,7 @@
               {
                 "listen": "test",
                 "script": {
-                  "id": "39647fdb-18d9-45b7-8702-8e2d6e8d64dd",
+                  "id": "0edaa778-4f68-4584-8ff1-22f040eb0df8",
                   "type": "text/javascript",
                   "exec": [
                     "const response = pm.response.json();",
@@ -565,13 +565,13 @@
                     "    pm.expect(response.workSheet.status).to.eql(\"BROUILLON\");",
                     "});"
                   ],
-                  "_lastExecutionId": "2cd6215d-34bf-4132-b77a-0103af4986ec"
+                  "_lastExecutionId": "cacb1bc9-6f7a-4eb6-95d7-dd80cb2694bd"
                 }
               }
             ]
           },
           {
-            "id": "8f80a519-a79e-47ff-9c85-8604984bc0dd",
+            "id": "011f6889-c607-40c5-bc9f-359e9b9cd4d6",
             "name": "Liste des fiches dentiste",
             "request": {
               "url": {
@@ -598,7 +598,7 @@
               {
                 "listen": "test",
                 "script": {
-                  "id": "2d566eeb-a1c8-4f88-ae19-40a085cbbe35",
+                  "id": "e164241a-fd2a-4a07-98fe-3ece56667802",
                   "type": "text/javascript",
                   "exec": [
                     "pm.test(\"Liste fiches — HTTP 200\", () => {",
@@ -608,13 +608,13 @@
                     "    pm.expect(pm.response.json().workSheets.length).to.be.at.least(1);",
                     "});"
                   ],
-                  "_lastExecutionId": "e62d3f78-386c-4f6a-92eb-d8d824390d8b"
+                  "_lastExecutionId": "b6fadd69-8f45-4e04-9596-444e4190b152"
                 }
               }
             ]
           },
           {
-            "id": "83037c86-ee67-4016-a67d-36def611216e",
+            "id": "c3026dd6-e524-49cb-aecb-12674495e7f1",
             "name": "Envoi fiche au prothésiste",
             "request": {
               "url": {
@@ -643,7 +643,7 @@
               {
                 "listen": "test",
                 "script": {
-                  "id": "0e47c93d-f651-41c8-b701-bc648f7cd3da",
+                  "id": "fa8f2ffa-a25f-4c35-86b6-400ee8a59ec8",
                   "type": "text/javascript",
                   "exec": [
                     "const response = pm.response.json();",
@@ -654,7 +654,7 @@
                     "    pm.expect(response.worksheet.status).to.eql(\"EN_ATTENTE\");",
                     "});"
                   ],
-                  "_lastExecutionId": "681de1bf-6446-4732-82a8-28cdf4f9ddb1"
+                  "_lastExecutionId": "b1ca5f34-f761-4a70-b29e-cd70c178c0eb"
                 }
               }
             ]
@@ -663,11 +663,11 @@
         "event": []
       },
       {
-        "id": "ea9a3e00-6fa4-418a-addf-d39cba5d89ad",
+        "id": "9c232c17-7351-4b80-9422-cce1ccfd2586",
         "name": "Prothésiste",
         "item": [
           {
-            "id": "675e217c-e2c6-45fd-a59d-4eeaca880dc2",
+            "id": "d3a2d8b8-68b5-4e0e-9ee2-b13207b5b5e8",
             "name": "Connexion prothésiste",
             "request": {
               "url": {
@@ -699,7 +699,7 @@
               {
                 "listen": "test",
                 "script": {
-                  "id": "0a581bb0-36c6-4956-bdec-a5ba35e9a97d",
+                  "id": "b8eb87d6-34cc-4b1a-83f4-b623d4efe60b",
                   "type": "text/javascript",
                   "exec": [
                     "const response = pm.response.json();",
@@ -709,13 +709,13 @@
                     "    pm.expect(response.role).to.eql(\"PROTHESISTE\");",
                     "});"
                   ],
-                  "_lastExecutionId": "5c2c6b4f-e0b2-4ab7-a0a8-a239e80a007e"
+                  "_lastExecutionId": "ef60092d-c9cb-42f1-a608-396d502a2965"
                 }
               }
             ]
           },
           {
-            "id": "a5c2e263-c961-4bd0-bae3-fab6d3564725",
+            "id": "3d9c61cf-e6ef-4cc0-aad9-b766f0c6318a",
             "name": "Liste fiches reçues",
             "request": {
               "url": {
@@ -742,7 +742,7 @@
               {
                 "listen": "test",
                 "script": {
-                  "id": "861f5b62-2630-45b7-9b21-0cda47081740",
+                  "id": "ff85c872-e5f1-4f78-93d5-4d459766bfd2",
                   "type": "text/javascript",
                   "exec": [
                     "pm.test(\"Liste fiches prothésiste — HTTP 200\", () => {",
@@ -754,13 +754,13 @@
                     "    pm.expect(found).to.be.true;",
                     "});"
                   ],
-                  "_lastExecutionId": "047dc6d2-8051-4ccb-b5a9-234de4b94403"
+                  "_lastExecutionId": "cddc253f-7ba8-4f5c-938e-8d6b3543178e"
                 }
               }
             ]
           },
           {
-            "id": "656ba134-3cc3-453d-a71e-02f69e8acc65",
+            "id": "d77a5490-08bf-424b-acb7-45b344184897",
             "name": "Détail fiche reçue",
             "request": {
               "url": {
@@ -788,7 +788,7 @@
               {
                 "listen": "test",
                 "script": {
-                  "id": "42d61f3d-1bfb-4e86-9e55-74ac6dc3b414",
+                  "id": "63de8473-d48b-4cef-b392-088c35af93f1",
                   "type": "text/javascript",
                   "exec": [
                     "pm.test(\"Détail fiche — HTTP 200\", () => {",
@@ -798,13 +798,13 @@
                     "    pm.expect(pm.response.json().workSheet.status).to.eql(\"EN_ATTENTE\");",
                     "});"
                   ],
-                  "_lastExecutionId": "9a9f96f8-ce9f-41c9-be89-b91f59ccfce9"
+                  "_lastExecutionId": "56be81d9-49d7-416d-8bfc-85b1d6aa1235"
                 }
               }
             ]
           },
           {
-            "id": "00795053-5ec6-42ef-a196-4dc32edee405",
+            "id": "bd21d117-3a69-4748-9123-e14b4c5be803",
             "name": "Mise à jour statut fiche",
             "request": {
               "url": {
@@ -841,7 +841,7 @@
               {
                 "listen": "test",
                 "script": {
-                  "id": "1eae64af-2dac-4d02-ba09-7f2c230b4818",
+                  "id": "bab82ede-0c1a-47c9-9670-1f23a20da70f",
                   "type": "text/javascript",
                   "exec": [
                     "pm.test(\"Mise à jour statut — HTTP 200\", () => {",
@@ -851,7 +851,7 @@
                     "    pm.expect(pm.response.json().worksheet.status).to.eql(\"EN_COURS\");",
                     "});"
                   ],
-                  "_lastExecutionId": "4470da57-b3da-46fa-9aad-c4c43d647b01"
+                  "_lastExecutionId": "d273f9d1-3eb6-4afa-942b-6afe8b5d3e33"
                 }
               }
             ]
@@ -860,11 +860,11 @@
         "event": []
       },
       {
-        "id": "edc80ed6-4a5f-4827-9bea-9c8e975461fc",
+        "id": "9ef6c5c0-d28d-4c94-817b-ab528682d3a9",
         "name": "Nettoyage",
         "item": [
           {
-            "id": "0ca849c8-5d3e-4391-9ca4-71292b2e421c",
+            "id": "eb02df8f-0e4f-4404-94ed-1a6ef58a9ca4",
             "name": "Suppression compte administrateur",
             "request": {
               "url": {
@@ -892,7 +892,7 @@
               {
                 "listen": "test",
                 "script": {
-                  "id": "06d0a748-f926-40a6-918d-6e38a5bd40f5",
+                  "id": "262eb2ab-d013-4d92-a709-aaafd3613aee",
                   "type": "text/javascript",
                   "exec": [
                     "pm.test(\"Suppression compte admin réussie\", () => {",
@@ -900,7 +900,7 @@
                     "    pm.expect(pm.response.json().message).to.eql(\"Utilisateur supprimé avec succès\");",
                     "});"
                   ],
-                  "_lastExecutionId": "b38d0c92-7f8b-47b6-8272-b7a23872c4ab"
+                  "_lastExecutionId": "768c999e-6fb7-41e7-82a5-185520c16518"
                 }
               }
             ]
@@ -928,7 +928,7 @@
     "values": [
       {
         "type": "any",
-        "value": "http://localhost:3000",
+        "value": "http://localhost:3001",
         "key": "BASE-URL"
       },
       {
@@ -983,43 +983,43 @@
       },
       {
         "type": "any",
-        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTUsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc4MTUxMTk0OCwiZXhwIjoxNzgxNTE5MTQ4fQ.Bbw0iegejJHi1BzIaMB8e-mg0XyssoJLOeDrOB08PFE",
+        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc5MzkyMjg4MywiZXhwIjoxNzkzOTMwMDgzfQ.NV-jxVdNoaJgYTPTVKMpGcuHPbXSIBgeFrX5u7LYDYc",
         "key": "tokenAdmin"
       },
       {
         "type": "any",
-        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTYsInJvbGUiOiJERU5USVNURSIsImlhdCI6MTc4MTUxMTk1MSwiZXhwIjoxNzgxNTE5MTUxfQ.MSgCxOGVBuyiiy_gN3gcvjAtY11Qzj-ugj8w66c2L_s",
+        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTIsInJvbGUiOiJERU5USVNURSIsImlhdCI6MTc5MzkyMjg4MywiZXhwIjoxNzkzOTMwMDgzfQ.nmcqDHI0oR_MWaB0HCNKSfQj1zEojfP8gQpZFk3Fcyw",
         "key": "tokenDentiste"
       },
       {
         "type": "any",
-        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTcsInJvbGUiOiJQUk9USEVTSVNURSIsImlhdCI6MTc4MTUxMTk1MiwiZXhwIjoxNzgxNTE5MTUyfQ.xmuezvB78t9QQEN2EX_5cIPL3VpdukOr7ZzFi2vLcmg",
+        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTMsInJvbGUiOiJQUk9USEVTSVNURSIsImlhdCI6MTc5MzkyMjg4MywiZXhwIjoxNzkzOTMwMDgzfQ.jpwMcKui174MgdTkc_6yQv1FYiSWhQ9RP3sRxWMuJNM",
         "key": "tokenProthesiste"
       },
       {
         "type": "any",
-        "value": "56",
+        "value": "52",
         "key": "dentisteId"
       },
       {
         "type": "any",
-        "value": "57",
+        "value": "53",
         "key": "prothesisteId"
       },
       {
         "type": "any",
-        "value": "14",
+        "value": "8",
         "key": "ficheId"
       },
       {
         "type": "any",
-        "value": "35",
+        "value": "52",
         "key": "acteId"
       }
     ]
   },
   "globals": {
-    "id": "9b897bc6-a4fd-44bc-bb12-015a44a9ab6c",
+    "id": "c50d82ff-9404-45ba-a4e3-804e2afcd156",
     "values": []
   },
   "run": {
@@ -1071,10 +1071,10 @@
       }
     },
     "timings": {
-      "responseAverage": 203.29411764705878,
-      "responseMin": 8,
-      "responseMax": 1428,
-      "responseSd": 432.3367103796167,
+      "responseAverage": 31.058823529411764,
+      "responseMin": 2,
+      "responseMax": 93,
+      "responseSd": 36.52311208348729,
       "dnsAverage": 0,
       "dnsMin": 0,
       "dnsMax": 0,
@@ -1083,8 +1083,8 @@
       "firstByteMin": 0,
       "firstByteMax": 0,
       "firstByteSd": 0,
-      "started": 1781511947886,
-      "completed": 1781511952890
+      "started": 1793922883288,
+      "completed": 1793922884035
     },
     "executions": [
       {
@@ -1097,11 +1097,11 @@
           "eof": false,
           "bof": true,
           "cr": false,
-          "ref": "71eb6eeb-5820-4fc3-a69b-0a067b3f96b4",
-          "httpRequestId": "9745d028-93cb-4d36-bac5-dbd511c09784"
+          "ref": "4e7d8ac5-5119-4e88-ae3e-d337673d7a17",
+          "httpRequestId": "3364ea99-aef7-4a98-9a1a-beb967becd6c"
         },
         "item": {
-          "id": "e22b7517-81c2-4c6d-b225-6a565056a62e",
+          "id": "1464998c-ac07-458e-920a-be06a2f4743f",
           "name": "Création compte administrateur",
           "request": {
             "url": {
@@ -1133,7 +1133,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "e01e6797-810c-4fcb-9580-a9b5c910d795",
+                "id": "31432d05-8ddb-4edd-953b-4659344ce4a7",
                 "type": "text/javascript",
                 "exec": [
                   "const statusCode = pm.response.code;",
@@ -1147,7 +1147,7 @@
                   "    });",
                   "}"
                 ],
-                "_lastExecutionId": "e7b1b269-5520-4eda-adab-3c2d17c869a4"
+                "_lastExecutionId": "aa7363c1-7fd3-42bc-b974-7b8284c72074"
               }
             }
           ]
@@ -1155,7 +1155,7 @@
         "request": {
           "url": {
             "protocol": "http",
-            "port": "3000",
+            "port": "3001",
             "path": [
               "api",
               "user",
@@ -1189,12 +1189,12 @@
             },
             {
               "key": "Postman-Token",
-              "value": "a0f86046-8a02-4637-a028-9d6d56dbf0aa",
+              "value": "745ebcb7-4a1a-4158-b96b-d483f12b6942",
               "system": true
             },
             {
               "key": "Host",
-              "value": "localhost:3000",
+              "value": "localhost:3001",
               "system": true
             },
             {
@@ -1220,7 +1220,7 @@
           }
         },
         "response": {
-          "id": "67ac2c02-f327-4e99-9e77-ed9fc4723d22",
+          "id": "4a8116c6-31e9-42b8-b9b3-7e5aed37f9e8",
           "status": "Created",
           "code": 201,
           "header": [
@@ -1230,7 +1230,7 @@
             },
             {
               "key": "Access-Control-Allow-Origin",
-              "value": "http://localhost:3000"
+              "value": "http://localhost:3001"
             },
             {
               "key": "Vary",
@@ -1250,11 +1250,11 @@
             },
             {
               "key": "ETag",
-              "value": "W/\"e0-H2iURwTGI4cM6tXI49QMR1I0Nlk\""
+              "value": "W/\"e0-JD+Wa1i79XamxxrSqPNO8/LA3jQ\""
             },
             {
               "key": "Date",
-              "value": "Mon, 15 Jun 2026 08:25:48 GMT"
+              "value": "Thu, 05 Nov 2026 23:54:43 GMT"
             },
             {
               "key": "Connection",
@@ -1314,7 +1314,7 @@
               34,
               58,
               53,
-              53,
+              49,
               44,
               34,
               101,
@@ -1420,24 +1420,24 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
+              51,
+              58,
               53,
+              52,
               58,
               52,
-              56,
+              51,
               46,
-              48,
-              57,
-              48,
+              51,
+              56,
+              50,
               90,
               34,
               44,
@@ -1459,24 +1459,24 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
+              51,
+              58,
               53,
+              52,
               58,
               52,
-              56,
+              51,
               46,
-              48,
-              57,
-              48,
+              51,
+              56,
+              50,
               90,
               34,
               44,
@@ -1488,17 +1488,17 @@
               58,
               34,
               53,
-              53,
+              49,
               34,
               125,
               125
             ]
           },
           "cookie": [],
-          "responseTime": 188,
+          "responseTime": 93,
           "responseSize": 224
         },
-        "id": "e22b7517-81c2-4c6d-b225-6a565056a62e",
+        "id": "1464998c-ac07-458e-920a-be06a2f4743f",
         "assertions": [
           {
             "assertion": "Réponse JSON",
@@ -1512,15 +1512,15 @@
       },
       {
         "cursor": {
-          "ref": "787f1e5a-b300-4755-8997-c8cfd3a11fd4",
+          "ref": "ffff1d0f-43a9-49c0-a7c6-feaba17f3294",
           "length": 17,
           "cycles": 1,
           "position": 1,
           "iteration": 0,
-          "httpRequestId": "40b86341-be00-4bfe-bc1c-abcf90332041"
+          "httpRequestId": "2ada0b5b-9fde-48a4-8ae4-7ba2ff6f4fbf"
         },
         "item": {
-          "id": "a220ac8c-e01f-4a97-adee-acdcc9384057",
+          "id": "986f5d54-82da-48a4-8315-0cb6a1fe13ea",
           "name": "Connexion administrateur",
           "request": {
             "url": {
@@ -1552,7 +1552,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "a8dc2379-2e4c-4aa2-87ed-346f113ab585",
+                "id": "8b886054-45ba-43dc-957d-a09a8ae30645",
                 "type": "text/javascript",
                 "exec": [
                   "const statusCode = pm.response.code;",
@@ -1568,7 +1568,7 @@
                   "    });",
                   "}"
                 ],
-                "_lastExecutionId": "61bdbfa0-b95a-42f1-aad9-54453c6cdf20"
+                "_lastExecutionId": "52448e0b-b8c6-4c2f-b4b9-0242536a3cc4"
               }
             }
           ]
@@ -1576,7 +1576,7 @@
         "request": {
           "url": {
             "protocol": "http",
-            "port": "3000",
+            "port": "3001",
             "path": [
               "api",
               "user",
@@ -1610,12 +1610,12 @@
             },
             {
               "key": "Postman-Token",
-              "value": "c4ec3e79-8316-4823-9847-1d7034c8d116",
+              "value": "e73864b2-7884-49ac-b9e4-52edc26f9213",
               "system": true
             },
             {
               "key": "Host",
-              "value": "localhost:3000",
+              "value": "localhost:3001",
               "system": true
             },
             {
@@ -1641,7 +1641,7 @@
           }
         },
         "response": {
-          "id": "ba78e87d-9c13-4e71-b5a8-04c5ce53f893",
+          "id": "7972eabf-cd71-4f25-9d30-a17ae374109a",
           "status": "OK",
           "code": 200,
           "header": [
@@ -1651,7 +1651,7 @@
             },
             {
               "key": "Access-Control-Allow-Origin",
-              "value": "http://localhost:3000"
+              "value": "http://localhost:3001"
             },
             {
               "key": "Vary",
@@ -1671,11 +1671,11 @@
             },
             {
               "key": "ETag",
-              "value": "W/\"e1-hTP81IeBVIhBP3i1JdmC6d11qzk\""
+              "value": "W/\"e1-+HcqvX4klT/O3NKrVbtiKgbUnYU\""
             },
             {
               "key": "Date",
-              "value": "Mon, 15 Jun 2026 08:25:48 GMT"
+              "value": "Thu, 05 Nov 2026 23:54:43 GMT"
             },
             {
               "key": "Connection",
@@ -1785,7 +1785,7 @@
               54,
               78,
               84,
-              85,
+              69,
               115,
               73,
               110,
@@ -1818,17 +1818,17 @@
               77,
               84,
               99,
+              53,
+              77,
+              122,
+              107,
+              121,
+              77,
+              106,
+              103,
               52,
               77,
-              84,
-              85,
-              120,
-              77,
-              84,
-              107,
-              48,
-              79,
-              67,
+              121,
               119,
               105,
               90,
@@ -1841,62 +1841,62 @@
               120,
               78,
               122,
-              103,
-              120,
-              78,
+              107,
+              122,
+              79,
               84,
-              69,
-              53,
               77,
-              84,
-              81,
-              52,
+              119,
+              77,
+              68,
+              103,
+              122,
               102,
               81,
               46,
-              66,
-              98,
-              119,
-              48,
-              105,
-              101,
-              103,
-              101,
-              106,
-              74,
-              72,
-              105,
-              49,
-              66,
-              122,
-              73,
-              97,
-              77,
-              66,
-              56,
-              101,
+              78,
+              86,
               45,
-              109,
-              103,
-              48,
-              88,
-              121,
-              115,
-              115,
+              106,
+              120,
+              86,
+              100,
+              78,
               111,
+              97,
               74,
-              76,
-              79,
-              101,
-              68,
-              114,
-              79,
-              66,
-              48,
-              56,
+              103,
+              89,
+              84,
               80,
+              84,
+              86,
+              75,
+              77,
+              112,
+              71,
+              99,
+              117,
+              72,
+              80,
+              98,
+              88,
+              83,
+              73,
+              66,
+              103,
+              101,
               70,
-              69,
+              114,
+              88,
+              53,
+              117,
+              55,
+              76,
+              89,
+              68,
+              89,
+              99,
               34,
               44,
               34,
@@ -1917,10 +1917,10 @@
             ]
           },
           "cookie": [],
-          "responseTime": 125,
+          "responseTime": 72,
           "responseSize": 225
         },
-        "id": "a220ac8c-e01f-4a97-adee-acdcc9384057",
+        "id": "986f5d54-82da-48a4-8315-0cb6a1fe13ea",
         "assertions": [
           {
             "assertion": "Réponse JSON",
@@ -1934,15 +1934,15 @@
       },
       {
         "cursor": {
-          "ref": "8668d8fb-120d-4f90-a81b-e23742ad1007",
+          "ref": "e60eb17d-ffe4-4278-82cb-ad55c40540b9",
           "length": 17,
           "cycles": 1,
           "position": 2,
           "iteration": 0,
-          "httpRequestId": "1cd57917-5d3a-4cfb-b79b-0f2d9cbbdc69"
+          "httpRequestId": "fe0eca95-3367-4ef7-8a28-22b5458f4f48"
         },
         "item": {
-          "id": "d7e8d3e7-b663-4c22-87ad-f6e31d6eafb9",
+          "id": "4bf01669-ff55-4a6c-b43a-0b8db4d81ad3",
           "name": "Création compte dentiste par admin",
           "request": {
             "url": {
@@ -1978,7 +1978,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "8ed4f6f3-46e3-4f74-9f97-9e19f2410c4f",
+                "id": "51bab3d8-ef0d-47d5-aa5d-fc008940ef74",
                 "type": "text/javascript",
                 "exec": [
                   "const statusCode = pm.response.code;",
@@ -1998,7 +1998,7 @@
                   "    });",
                   "}"
                 ],
-                "_lastExecutionId": "41b47d18-5279-4910-9f83-2284fe1de333"
+                "_lastExecutionId": "2aa0b571-23e8-455d-9f2c-8b3635b572a3"
               }
             }
           ]
@@ -2006,7 +2006,7 @@
         "request": {
           "url": {
             "protocol": "http",
-            "port": "3000",
+            "port": "3001",
             "path": [
               "admin",
               "user",
@@ -2025,7 +2025,7 @@
             },
             {
               "key": "Authorization",
-              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTUsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc4MTUxMTk0OCwiZXhwIjoxNzgxNTE5MTQ4fQ.Bbw0iegejJHi1BzIaMB8e-mg0XyssoJLOeDrOB08PFE"
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc5MzkyMjg4MywiZXhwIjoxNzkzOTMwMDgzfQ.NV-jxVdNoaJgYTPTVKMpGcuHPbXSIBgeFrX5u7LYDYc"
             },
             {
               "key": "User-Agent",
@@ -2044,12 +2044,12 @@
             },
             {
               "key": "Postman-Token",
-              "value": "143f59ee-1af1-4ebd-8ffc-43e13c456247",
+              "value": "11f509ae-fc87-4885-ad31-95b36d2666d1",
               "system": true
             },
             {
               "key": "Host",
-              "value": "localhost:3000",
+              "value": "localhost:3001",
               "system": true
             },
             {
@@ -2075,7 +2075,7 @@
           }
         },
         "response": {
-          "id": "62f80b07-73ad-4d25-bb45-25a8c99aa3d9",
+          "id": "ca215402-3a2e-4682-bbfe-9c8fe5d23ca5",
           "status": "Created",
           "code": 201,
           "header": [
@@ -2085,7 +2085,7 @@
             },
             {
               "key": "Access-Control-Allow-Origin",
-              "value": "http://localhost:3000"
+              "value": "http://localhost:3001"
             },
             {
               "key": "Vary",
@@ -2105,11 +2105,11 @@
             },
             {
               "key": "ETag",
-              "value": "W/\"124-95yZB7l994UqdgqIv+qaw2W7fhE\""
+              "value": "W/\"124-OQVcgQNIeUjrngNDytQkPaiISoI\""
             },
             {
               "key": "Date",
-              "value": "Mon, 15 Jun 2026 08:25:49 GMT"
+              "value": "Thu, 05 Nov 2026 23:54:43 GMT"
             },
             {
               "key": "Connection",
@@ -2177,7 +2177,7 @@
               34,
               58,
               53,
-              54,
+              50,
               44,
               34,
               102,
@@ -2343,24 +2343,24 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
+              51,
+              58,
               53,
+              52,
               58,
               52,
-              56,
+              51,
               46,
               53,
+              54,
               52,
-              53,
               90,
               34,
               44,
@@ -2382,24 +2382,24 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
+              51,
+              58,
               53,
+              52,
               58,
               52,
-              56,
+              51,
               46,
               53,
+              54,
               52,
-              53,
               90,
               34,
               44,
@@ -2411,17 +2411,17 @@
               58,
               34,
               53,
-              54,
+              50,
               34,
               125,
               125
             ]
           },
           "cookie": [],
-          "responseTime": 1329,
+          "responseTime": 92,
           "responseSize": 292
         },
-        "id": "d7e8d3e7-b663-4c22-87ad-f6e31d6eafb9",
+        "id": "4bf01669-ff55-4a6c-b43a-0b8db4d81ad3",
         "assertions": [
           {
             "assertion": "Création dentiste — 201 ou 409",
@@ -2435,15 +2435,15 @@
       },
       {
         "cursor": {
-          "ref": "815bd4ba-68c8-4b93-ba8c-b6db2fa17456",
+          "ref": "8a3f6613-3d81-469e-91a5-f3c627dbbb1d",
           "length": 17,
           "cycles": 1,
           "position": 3,
           "iteration": 0,
-          "httpRequestId": "58b2f22f-d7af-4324-8f64-efc478589c2a"
+          "httpRequestId": "d4bf36b8-da6b-45ca-8e79-bdf1746fc599"
         },
         "item": {
-          "id": "d2d86d03-3fa9-4c73-98a5-2763c5eeeb06",
+          "id": "b4255bd8-d386-42d4-899d-8a1a31f3fcc8",
           "name": "Création compte prothésiste par admin",
           "request": {
             "url": {
@@ -2479,20 +2479,20 @@
             {
               "listen": "prerequest",
               "script": {
-                "id": "0fbe2a57-71f8-417b-ab00-f9f2a710dff8",
+                "id": "838fea91-2683-4943-82c7-7a1ee9e9baed",
                 "type": "text/javascript",
                 "exec": [
                   "if (!pm.environment.get(\"dentisteId\")) {",
                   "    throw new Error(\"dentisteId manquant — exécuter la création dentiste d'abord ou réinitialiser la BDD\");",
                   "}"
                 ],
-                "_lastExecutionId": "09eb580a-bd9f-4f67-a27d-e231e45e5025"
+                "_lastExecutionId": "15afca14-ef55-4326-b04c-8c8f2a51b52a"
               }
             },
             {
               "listen": "test",
               "script": {
-                "id": "38059b9a-978f-4e02-92f1-9c04450ed2a4",
+                "id": "b64e3bfd-7aad-4fef-a710-ac343e41967f",
                 "type": "text/javascript",
                 "exec": [
                   "const statusCode = pm.response.code;",
@@ -2513,7 +2513,7 @@
                   "    });",
                   "}"
                 ],
-                "_lastExecutionId": "218a67ea-a06c-40bb-a99e-a4ab773a9d0b"
+                "_lastExecutionId": "3fa38348-46d1-4595-89f0-09d2379b16e4"
               }
             }
           ]
@@ -2521,7 +2521,7 @@
         "request": {
           "url": {
             "protocol": "http",
-            "port": "3000",
+            "port": "3001",
             "path": [
               "admin",
               "user",
@@ -2540,7 +2540,7 @@
             },
             {
               "key": "Authorization",
-              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTUsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc4MTUxMTk0OCwiZXhwIjoxNzgxNTE5MTQ4fQ.Bbw0iegejJHi1BzIaMB8e-mg0XyssoJLOeDrOB08PFE"
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc5MzkyMjg4MywiZXhwIjoxNzkzOTMwMDgzfQ.NV-jxVdNoaJgYTPTVKMpGcuHPbXSIBgeFrX5u7LYDYc"
             },
             {
               "key": "User-Agent",
@@ -2559,12 +2559,12 @@
             },
             {
               "key": "Postman-Token",
-              "value": "91f30155-3e03-4c25-ac2a-21e4e57dce74",
+              "value": "e82a1d68-fe0c-4560-b34d-5da5a72410e1",
               "system": true
             },
             {
               "key": "Host",
-              "value": "localhost:3000",
+              "value": "localhost:3001",
               "system": true
             },
             {
@@ -2586,11 +2586,11 @@
           "method": "POST",
           "body": {
             "mode": "raw",
-            "raw": "{\n  \"firstName\": \"Prothésiste\",\n  \"lastName\": \"Postman\",\n  \"email\": \"proto_postman@test.fr\",\n  \"password\": \"123456789\",\n  \"role\": \"PROTHESISTE\",\n  \"dentisteId\": \"56\"\n}"
+            "raw": "{\n  \"firstName\": \"Prothésiste\",\n  \"lastName\": \"Postman\",\n  \"email\": \"proto_postman@test.fr\",\n  \"password\": \"123456789\",\n  \"role\": \"PROTHESISTE\",\n  \"dentisteId\": \"52\"\n}"
           }
         },
         "response": {
-          "id": "79a53d71-262a-40b2-ad2d-9907b6929c49",
+          "id": "ad5cc931-a6e1-4ab1-aab4-bd01ddab61ad",
           "status": "Created",
           "code": 201,
           "header": [
@@ -2600,7 +2600,7 @@
             },
             {
               "key": "Access-Control-Allow-Origin",
-              "value": "http://localhost:3000"
+              "value": "http://localhost:3001"
             },
             {
               "key": "Vary",
@@ -2620,11 +2620,11 @@
             },
             {
               "key": "ETag",
-              "value": "W/\"222-loPC6txAbToD46IdMLxV23ejLtg\""
+              "value": "W/\"222-fHXiV/EcG6eovhhsGB5Ka+5R+tw\""
             },
             {
               "key": "Date",
-              "value": "Mon, 15 Jun 2026 08:25:51 GMT"
+              "value": "Thu, 05 Nov 2026 23:54:43 GMT"
             },
             {
               "key": "Connection",
@@ -2715,7 +2715,7 @@
               34,
               58,
               53,
-              55,
+              51,
               44,
               34,
               102,
@@ -2838,7 +2838,7 @@
               34,
               58,
               53,
-              54,
+              50,
               44,
               34,
               117,
@@ -2858,24 +2858,24 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
+              51,
+              58,
               53,
+              52,
               58,
               52,
-              57,
-              46,
-              57,
-              53,
               51,
+              46,
+              54,
+              55,
+              48,
               90,
               34,
               44,
@@ -2897,24 +2897,24 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
+              51,
+              58,
               53,
+              52,
               58,
               52,
-              57,
-              46,
-              57,
-              53,
               51,
+              46,
+              54,
+              55,
+              48,
               90,
               34,
               44,
@@ -2926,7 +2926,7 @@
               58,
               34,
               53,
-              55,
+              51,
               34,
               125,
               44,
@@ -2948,7 +2948,7 @@
               34,
               58,
               53,
-              54,
+              50,
               44,
               34,
               102,
@@ -3092,7 +3092,7 @@
               34,
               58,
               53,
-              55,
+              51,
               44,
               34,
               99,
@@ -3112,20 +3112,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
+              51,
+              58,
               53,
+              52,
               58,
               52,
-              56,
+              51,
               46,
               48,
               48,
@@ -3151,20 +3151,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
+              51,
+              58,
               53,
+              52,
               58,
               52,
-              57,
+              51,
               46,
               48,
               48,
@@ -3180,17 +3180,17 @@
               58,
               34,
               53,
-              54,
+              50,
               34,
               125,
               125
             ]
           },
           "cookie": [],
-          "responseTime": 1428,
+          "responseTime": 80,
           "responseSize": 546
         },
-        "id": "d2d86d03-3fa9-4c73-98a5-2763c5eeeb06",
+        "id": "b4255bd8-d386-42d4-899d-8a1a31f3fcc8",
         "assertions": [
           {
             "assertion": "Création prothésiste — 201 ou 409",
@@ -3204,15 +3204,15 @@
       },
       {
         "cursor": {
-          "ref": "2bfa8b4f-74a6-459a-8418-a4c5a8787337",
+          "ref": "5beb8c28-7249-4454-97ab-31971dcffe94",
           "length": 17,
           "cycles": 1,
           "position": 4,
           "iteration": 0,
-          "httpRequestId": "8f884606-40e5-40ab-aeeb-ff4f0ff22885"
+          "httpRequestId": "d502dc54-9aff-42b0-bcc6-efad02bfa0f4"
         },
         "item": {
-          "id": "038b1910-bbc2-4f6e-90d0-9c9d2934d54e",
+          "id": "32c24af0-2308-4844-b511-c40a78f2a833",
           "name": "Liste de tous les utilisateurs",
           "request": {
             "url": {
@@ -3240,7 +3240,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "a79ae5b7-0fa1-4b4b-a465-6287b11bc2c8",
+                "id": "34e46e53-6327-4a98-b997-af0efbfdaf25",
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Liste utilisateurs — HTTP 200\", () => {",
@@ -3250,7 +3250,7 @@
                   "    pm.expect(pm.response.json()).to.be.an(\"array\");",
                   "});"
                 ],
-                "_lastExecutionId": "a6c69d4b-78c6-4c5f-9116-5f8198c92a14"
+                "_lastExecutionId": "fe52ff9f-4ecf-45c2-95c7-27cfae952ebc"
               }
             }
           ]
@@ -3258,7 +3258,7 @@
         "request": {
           "url": {
             "protocol": "http",
-            "port": "3000",
+            "port": "3001",
             "path": [
               "admin",
               "user",
@@ -3273,7 +3273,7 @@
           "header": [
             {
               "key": "Authorization",
-              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTUsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc4MTUxMTk0OCwiZXhwIjoxNzgxNTE5MTQ4fQ.Bbw0iegejJHi1BzIaMB8e-mg0XyssoJLOeDrOB08PFE"
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc5MzkyMjg4MywiZXhwIjoxNzkzOTMwMDgzfQ.NV-jxVdNoaJgYTPTVKMpGcuHPbXSIBgeFrX5u7LYDYc"
             },
             {
               "key": "User-Agent",
@@ -3292,12 +3292,12 @@
             },
             {
               "key": "Postman-Token",
-              "value": "15c4c052-438c-4fe6-9cf8-8f46a2f45701",
+              "value": "c0823883-db8a-4ee0-8fc2-5d5fc1b7a3de",
               "system": true
             },
             {
               "key": "Host",
-              "value": "localhost:3000",
+              "value": "localhost:3001",
               "system": true
             },
             {
@@ -3314,7 +3314,7 @@
           "method": "GET"
         },
         "response": {
-          "id": "5617671f-58d5-4499-ba10-604702eccf65",
+          "id": "f1de254f-f731-4c97-8f99-fb34c7534f23",
           "status": "OK",
           "code": 200,
           "header": [
@@ -3324,7 +3324,7 @@
             },
             {
               "key": "Access-Control-Allow-Origin",
-              "value": "http://localhost:3000"
+              "value": "http://localhost:3001"
             },
             {
               "key": "Vary",
@@ -3344,11 +3344,11 @@
             },
             {
               "key": "ETag",
-              "value": "W/\"2bd-kYLaM4iMAgnsZT1fbX2gDwyHA4w\""
+              "value": "W/\"2bd-UK50k3uHvQyGB31bmON7OAnCnKc\""
             },
             {
               "key": "Date",
-              "value": "Mon, 15 Jun 2026 08:25:51 GMT"
+              "value": "Thu, 05 Nov 2026 23:54:43 GMT"
             },
             {
               "key": "Connection",
@@ -3370,7 +3370,7 @@
               34,
               58,
               53,
-              53,
+              49,
               44,
               34,
               102,
@@ -3513,20 +3513,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
+              51,
+              58,
               53,
+              52,
               58,
               52,
-              56,
+              51,
               46,
               48,
               48,
@@ -3552,20 +3552,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
+              51,
+              58,
               53,
+              52,
               58,
               52,
-              56,
+              51,
               46,
               48,
               48,
@@ -3581,7 +3581,7 @@
               58,
               34,
               53,
-              53,
+              49,
               34,
               125,
               44,
@@ -3592,7 +3592,7 @@
               34,
               58,
               53,
-              54,
+              50,
               44,
               34,
               102,
@@ -3736,7 +3736,7 @@
               34,
               58,
               53,
-              55,
+              51,
               44,
               34,
               99,
@@ -3756,20 +3756,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
+              51,
+              58,
               53,
+              52,
               58,
               52,
-              56,
+              51,
               46,
               48,
               48,
@@ -3795,20 +3795,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
+              51,
+              58,
               53,
+              52,
               58,
               52,
-              57,
+              51,
               46,
               48,
               48,
@@ -3824,7 +3824,7 @@
               58,
               34,
               53,
-              54,
+              50,
               34,
               125,
               44,
@@ -3835,7 +3835,7 @@
               34,
               58,
               53,
-              55,
+              51,
               44,
               34,
               102,
@@ -3971,7 +3971,7 @@
               34,
               58,
               53,
-              54,
+              50,
               44,
               34,
               99,
@@ -3991,20 +3991,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
+              51,
+              58,
               53,
+              52,
               58,
               52,
-              57,
+              51,
               46,
               48,
               48,
@@ -4030,20 +4030,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
+              51,
+              58,
               53,
+              52,
               58,
               52,
-              57,
+              51,
               46,
               48,
               48,
@@ -4059,17 +4059,17 @@
               58,
               34,
               53,
-              55,
+              51,
               34,
               125,
               93
             ]
           },
           "cookie": [],
-          "responseTime": 11,
+          "responseTime": 3,
           "responseSize": 701
         },
-        "id": "038b1910-bbc2-4f6e-90d0-9c9d2934d54e",
+        "id": "32c24af0-2308-4844-b511-c40a78f2a833",
         "assertions": [
           {
             "assertion": "Liste utilisateurs — HTTP 200",
@@ -4083,15 +4083,15 @@
       },
       {
         "cursor": {
-          "ref": "ec2dd587-eb5e-49a9-a56a-1c88709cc64e",
+          "ref": "a6f5be23-5eb6-4699-a59b-dc1802598666",
           "length": 17,
           "cycles": 1,
           "position": 5,
           "iteration": 0,
-          "httpRequestId": "3fac7ea0-a044-4b6d-bb51-a2c4f7d1ca03"
+          "httpRequestId": "42748af5-e919-4523-a9e1-205c1fd0342b"
         },
         "item": {
-          "id": "6d2b45aa-02ec-4c65-b522-8c04467a3e0a",
+          "id": "2e014506-6e1a-453f-b7e5-90d550cb7b02",
           "name": "Modification compte dentiste par admin",
           "request": {
             "url": {
@@ -4128,7 +4128,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "d46d208e-6bfa-485b-9759-efce4ba2f515",
+                "id": "d4a182d7-58eb-44d2-9747-1aa057aeedc8",
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Modification dentiste — HTTP 200\", () => {",
@@ -4138,7 +4138,7 @@
                   "    pm.expect(pm.response.json().user.firstName).to.eql(\"DentisteMod\");",
                   "});"
                 ],
-                "_lastExecutionId": "caf104b4-4387-45ba-bbfa-373e9ea2e653"
+                "_lastExecutionId": "da244c5e-4b62-4b59-815f-475c5afe1497"
               }
             }
           ]
@@ -4146,12 +4146,12 @@
         "request": {
           "url": {
             "protocol": "http",
-            "port": "3000",
+            "port": "3001",
             "path": [
               "admin",
               "user",
               "updateAccount",
-              "56"
+              "52"
             ],
             "host": [
               "localhost"
@@ -4166,7 +4166,7 @@
             },
             {
               "key": "Authorization",
-              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTUsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc4MTUxMTk0OCwiZXhwIjoxNzgxNTE5MTQ4fQ.Bbw0iegejJHi1BzIaMB8e-mg0XyssoJLOeDrOB08PFE"
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc5MzkyMjg4MywiZXhwIjoxNzkzOTMwMDgzfQ.NV-jxVdNoaJgYTPTVKMpGcuHPbXSIBgeFrX5u7LYDYc"
             },
             {
               "key": "User-Agent",
@@ -4185,12 +4185,12 @@
             },
             {
               "key": "Postman-Token",
-              "value": "6803e6be-5b02-46eb-b0eb-9ffa05f1b20d",
+              "value": "cb897af2-99be-494f-936c-b7eff9e92a64",
               "system": true
             },
             {
               "key": "Host",
-              "value": "localhost:3000",
+              "value": "localhost:3001",
               "system": true
             },
             {
@@ -4216,7 +4216,7 @@
           }
         },
         "response": {
-          "id": "61fdfb93-01e1-4236-95a5-0ad23ce48791",
+          "id": "a7d99d86-48a6-49f7-81f4-18cf272ede9a",
           "status": "OK",
           "code": 200,
           "header": [
@@ -4226,7 +4226,7 @@
             },
             {
               "key": "Access-Control-Allow-Origin",
-              "value": "http://localhost:3000"
+              "value": "http://localhost:3001"
             },
             {
               "key": "Vary",
@@ -4246,11 +4246,11 @@
             },
             {
               "key": "ETag",
-              "value": "W/\"12a-UZpEswkamqswAb6Dugqh1jsAwec\""
+              "value": "W/\"12a-uUEiVo1Yl2IFNIkbngVulz2D4pM\""
             },
             {
               "key": "Date",
-              "value": "Mon, 15 Jun 2026 08:25:51 GMT"
+              "value": "Thu, 05 Nov 2026 23:54:43 GMT"
             },
             {
               "key": "Connection",
@@ -4323,7 +4323,7 @@
               34,
               58,
               53,
-              54,
+              50,
               44,
               34,
               102,
@@ -4470,7 +4470,7 @@
               34,
               58,
               53,
-              55,
+              51,
               44,
               34,
               99,
@@ -4490,20 +4490,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
+              51,
+              58,
               53,
+              52,
               58,
               52,
-              56,
+              51,
               46,
               48,
               48,
@@ -4529,24 +4529,24 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
-              53,
+              51,
               58,
               53,
-              49,
-              46,
               52,
-              54,
-              56,
+              58,
+              52,
+              51,
+              46,
+              55,
+              48,
+              53,
               90,
               34,
               44,
@@ -4558,17 +4558,17 @@
               58,
               34,
               53,
-              54,
+              50,
               34,
               125,
               125
             ]
           },
           "cookie": [],
-          "responseTime": 17,
+          "responseTime": 4,
           "responseSize": 298
         },
-        "id": "6d2b45aa-02ec-4c65-b522-8c04467a3e0a",
+        "id": "2e014506-6e1a-453f-b7e5-90d550cb7b02",
         "assertions": [
           {
             "assertion": "Modification dentiste — HTTP 200",
@@ -4582,15 +4582,15 @@
       },
       {
         "cursor": {
-          "ref": "d87cceb0-26de-4dd1-8eb4-8c9c2c2c7bd2",
+          "ref": "400f83bb-a1ca-4777-9f5c-f28ee6e69104",
           "length": 17,
           "cycles": 1,
           "position": 6,
           "iteration": 0,
-          "httpRequestId": "bf54275f-ea0a-4185-9537-7b166a07ffc2"
+          "httpRequestId": "ef8f9d86-e3f0-4987-a96d-d0429371ba4d"
         },
         "item": {
-          "id": "dab057c6-096c-4aff-b8c6-73463def3600",
+          "id": "c3440b71-c397-42d0-b11a-058de57b728c",
           "name": "Création acte catalogue",
           "request": {
             "url": {
@@ -4622,7 +4622,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "a5e46365-9c1c-4256-893c-fcea269ad083",
+                "id": "9bcf98d0-9f0d-4434-a5b3-f6fe8f61cd86",
                 "type": "text/javascript",
                 "exec": [
                   "const statusCode = pm.response.code;",
@@ -4642,7 +4642,7 @@
                   "    });",
                   "}"
                 ],
-                "_lastExecutionId": "e484e103-be3f-44a3-b355-b02336849906"
+                "_lastExecutionId": "fcee707e-2805-4a1d-b250-2c5347caa0b9"
               }
             }
           ]
@@ -4650,7 +4650,7 @@
         "request": {
           "url": {
             "protocol": "http",
-            "port": "3000",
+            "port": "3001",
             "path": [
               "act",
               "act",
@@ -4684,12 +4684,12 @@
             },
             {
               "key": "Postman-Token",
-              "value": "28eef78e-b235-48e7-a6e5-c1704c01d3f2",
+              "value": "9f14d4c2-13f0-4073-ba8c-4527b6e7408b",
               "system": true
             },
             {
               "key": "Host",
-              "value": "localhost:3000",
+              "value": "localhost:3001",
               "system": true
             },
             {
@@ -4715,7 +4715,7 @@
           }
         },
         "response": {
-          "id": "588633e7-3365-4429-8cd8-94f13a0fbe39",
+          "id": "709c0b7a-ee0f-4781-a88b-509db89384b0",
           "status": "Created",
           "code": 201,
           "header": [
@@ -4725,7 +4725,7 @@
             },
             {
               "key": "Access-Control-Allow-Origin",
-              "value": "http://localhost:3000"
+              "value": "http://localhost:3001"
             },
             {
               "key": "Vary",
@@ -4745,11 +4745,11 @@
             },
             {
               "key": "ETag",
-              "value": "W/\"80-jPW0uAkGebWLzTA1ns039ORbius\""
+              "value": "W/\"80-J8Xus1dm1tV5JPPY5mJZO/MTdJc\""
             },
             {
               "key": "Date",
-              "value": "Mon, 15 Jun 2026 08:25:51 GMT"
+              "value": "Thu, 05 Nov 2026 23:54:43 GMT"
             },
             {
               "key": "Connection",
@@ -4815,8 +4815,8 @@
               100,
               34,
               58,
-              51,
               53,
+              50,
               44,
               34,
               110,
@@ -4886,18 +4886,18 @@
               34,
               58,
               34,
-              51,
               53,
+              50,
               34,
               125,
               125
             ]
           },
           "cookie": [],
-          "responseTime": 14,
+          "responseTime": 3,
           "responseSize": 128
         },
-        "id": "dab057c6-096c-4aff-b8c6-73463def3600",
+        "id": "c3440b71-c397-42d0-b11a-058de57b728c",
         "assertions": [
           {
             "assertion": "Création acte — 201 ou 409",
@@ -4911,15 +4911,15 @@
       },
       {
         "cursor": {
-          "ref": "1f6accd7-8cad-41da-9e85-6bdbc947a022",
+          "ref": "7123d351-1b33-48c1-ad74-cd5451b2945a",
           "length": 17,
           "cycles": 1,
           "position": 7,
           "iteration": 0,
-          "httpRequestId": "f58a52f9-f75a-4e63-9a95-25e4f9d048d9"
+          "httpRequestId": "04a5d83b-ff0b-4e70-80af-7c0afa776226"
         },
         "item": {
-          "id": "5d9c5153-950d-4473-a16c-0c86e7ff91ef",
+          "id": "6e2b1de8-37e3-49d0-b3cb-b862d4e9522b",
           "name": "Liste des actes catalogue",
           "request": {
             "url": {
@@ -4941,7 +4941,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "570e618f-172a-44df-b2f3-760b8b340b27",
+                "id": "fdd398bd-e840-4b0f-9ca3-c8f817f11bbb",
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Liste actes — HTTP 200\", () => {",
@@ -4952,7 +4952,7 @@
                   "    pm.expect(pm.response.json().actes).to.be.an(\"array\");",
                   "});"
                 ],
-                "_lastExecutionId": "46e652f0-6c44-4821-8eb6-c0c472f37526"
+                "_lastExecutionId": "06aa0d21-c21b-45ef-bfad-7b2f511b519c"
               }
             }
           ]
@@ -4960,7 +4960,7 @@
         "request": {
           "url": {
             "protocol": "http",
-            "port": "3000",
+            "port": "3001",
             "path": [
               "act",
               "act",
@@ -4990,12 +4990,12 @@
             },
             {
               "key": "Postman-Token",
-              "value": "5876060a-c72f-433d-98e2-b7eb52b040ec",
+              "value": "d501b81e-8a66-4bcb-890b-04267fa4dc7d",
               "system": true
             },
             {
               "key": "Host",
-              "value": "localhost:3000",
+              "value": "localhost:3001",
               "system": true
             },
             {
@@ -5012,7 +5012,7 @@
           "method": "GET"
         },
         "response": {
-          "id": "5b9e0fbe-6fdf-4c9e-9fdf-f84e77f1098d",
+          "id": "54662ebd-a397-47cc-81aa-a6cc1dab6928",
           "status": "OK",
           "code": 200,
           "header": [
@@ -5022,7 +5022,7 @@
             },
             {
               "key": "Access-Control-Allow-Origin",
-              "value": "http://localhost:3000"
+              "value": "http://localhost:3001"
             },
             {
               "key": "Vary",
@@ -5042,11 +5042,11 @@
             },
             {
               "key": "ETag",
-              "value": "W/\"5d-r+NfndTH6Kzz6yrKYAwgzLLkVNQ\""
+              "value": "W/\"5d-X/9A3kTByQTr+/yuzFJREnrOKY0\""
             },
             {
               "key": "Date",
-              "value": "Mon, 15 Jun 2026 08:25:51 GMT"
+              "value": "Thu, 05 Nov 2026 23:54:43 GMT"
             },
             {
               "key": "Connection",
@@ -5076,8 +5076,8 @@
               100,
               34,
               58,
-              51,
               53,
+              50,
               44,
               34,
               110,
@@ -5147,8 +5147,8 @@
               34,
               58,
               34,
-              51,
               53,
+              50,
               34,
               125,
               93,
@@ -5156,10 +5156,10 @@
             ]
           },
           "cookie": [],
-          "responseTime": 8,
+          "responseTime": 3,
           "responseSize": 93
         },
-        "id": "5d9c5153-950d-4473-a16c-0c86e7ff91ef",
+        "id": "6e2b1de8-37e3-49d0-b3cb-b862d4e9522b",
         "assertions": [
           {
             "assertion": "Liste actes — HTTP 200",
@@ -5173,15 +5173,15 @@
       },
       {
         "cursor": {
-          "ref": "9d63b4d9-de68-47aa-9fb4-b3d3eeb7c19a",
+          "ref": "2a0c26ca-59ed-4e0d-b987-d316d566d058",
           "length": 17,
           "cycles": 1,
           "position": 8,
           "iteration": 0,
-          "httpRequestId": "761c4152-570b-473b-a6cd-c26fa2b7b309"
+          "httpRequestId": "30f96406-7857-4f99-afcc-f24857ebf8f0"
         },
         "item": {
-          "id": "5e31fdb3-b311-40da-838c-93b1c90d270c",
+          "id": "4c9f3100-d35e-4cdd-bb33-f6cd2e5ced52",
           "name": "Connexion dentiste",
           "request": {
             "url": {
@@ -5213,7 +5213,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "4d9d6463-71a3-4974-8ff4-df9bf611a971",
+                "id": "4642ba1b-b812-495c-bf51-997d7b01113a",
                 "type": "text/javascript",
                 "exec": [
                   "const response = pm.response.json();",
@@ -5223,7 +5223,7 @@
                   "    pm.expect(response.role).to.eql(\"DENTISTE\");",
                   "});"
                 ],
-                "_lastExecutionId": "d6b72a1f-875b-45a3-b022-9c49d5959455"
+                "_lastExecutionId": "d5031f02-e340-45cc-9a28-b8595625082a"
               }
             }
           ]
@@ -5231,7 +5231,7 @@
         "request": {
           "url": {
             "protocol": "http",
-            "port": "3000",
+            "port": "3001",
             "path": [
               "api",
               "user",
@@ -5265,12 +5265,12 @@
             },
             {
               "key": "Postman-Token",
-              "value": "5734a3cf-c6ac-4598-b22a-23e8f7ebf98e",
+              "value": "f2c3df83-220c-4c95-b778-3352bdc6a2b4",
               "system": true
             },
             {
               "key": "Host",
-              "value": "localhost:3000",
+              "value": "localhost:3001",
               "system": true
             },
             {
@@ -5296,7 +5296,7 @@
           }
         },
         "response": {
-          "id": "a9bf68e8-4ed8-470c-a68b-2242d4032786",
+          "id": "0358120c-0f8d-40cf-8875-5da5987b7d6e",
           "status": "OK",
           "code": 200,
           "header": [
@@ -5306,7 +5306,7 @@
             },
             {
               "key": "Access-Control-Allow-Origin",
-              "value": "http://localhost:3000"
+              "value": "http://localhost:3001"
             },
             {
               "key": "Vary",
@@ -5326,11 +5326,11 @@
             },
             {
               "key": "ETag",
-              "value": "W/\"ee-aZFhTjbfmQiUD4zNziVeiqTxIOA\""
+              "value": "W/\"ee-TGeL6kJZ3zNVRsrNIwV+VYq/Ycc\""
             },
             {
               "key": "Date",
-              "value": "Mon, 15 Jun 2026 08:25:51 GMT"
+              "value": "Thu, 05 Nov 2026 23:54:43 GMT"
             },
             {
               "key": "Connection",
@@ -5446,7 +5446,7 @@
               54,
               78,
               84,
-              89,
+              73,
               115,
               73,
               110,
@@ -5483,17 +5483,17 @@
               77,
               84,
               99,
+              53,
+              77,
+              122,
+              107,
+              121,
+              77,
+              106,
+              103,
               52,
               77,
-              84,
-              85,
-              120,
-              77,
-              84,
-              107,
-              49,
-              77,
-              83,
+              121,
               119,
               105,
               90,
@@ -5506,62 +5506,62 @@
               120,
               78,
               122,
-              103,
-              120,
-              78,
+              107,
+              122,
+              79,
               84,
-              69,
-              53,
               77,
-              84,
-              85,
-              120,
+              119,
+              77,
+              68,
+              103,
+              122,
               102,
               81,
               46,
+              110,
+              109,
+              99,
+              113,
+              68,
+              72,
+              73,
+              48,
+              111,
+              82,
+              95,
               77,
-              83,
-              103,
-              67,
-              120,
-              79,
-              71,
-              86,
+              87,
+              97,
               66,
-              117,
-              121,
-              105,
-              105,
-              121,
-              95,
-              103,
+              48,
+              72,
+              67,
               78,
-              51,
-              103,
-              99,
-              118,
-              106,
-              65,
-              116,
-              89,
-              49,
-              49,
+              75,
+              83,
+              102,
               81,
+              106,
+              49,
               122,
+              69,
+              111,
               106,
-              45,
-              117,
-              103,
-              106,
+              102,
+              80,
               56,
-              119,
-              54,
-              54,
+              103,
+              81,
+              112,
+              90,
+              70,
+              107,
+              51,
+              70,
               99,
-              50,
-              76,
-              95,
-              115,
+              121,
+              119,
               34,
               44,
               34,
@@ -5585,10 +5585,10 @@
             ]
           },
           "cookie": [],
-          "responseTime": 100,
+          "responseTime": 71,
           "responseSize": 238
         },
-        "id": "5e31fdb3-b311-40da-838c-93b1c90d270c",
+        "id": "4c9f3100-d35e-4cdd-bb33-f6cd2e5ced52",
         "assertions": [
           {
             "assertion": "Connexion dentiste réussie",
@@ -5598,15 +5598,15 @@
       },
       {
         "cursor": {
-          "ref": "3b40f769-b227-49e5-a0a2-28405fcfdbd4",
+          "ref": "99fd9fcd-2156-4486-8fb3-beb9054433e7",
           "length": 17,
           "cycles": 1,
           "position": 9,
           "iteration": 0,
-          "httpRequestId": "77edc390-168d-49b7-83d1-37e56cbc810f"
+          "httpRequestId": "e351a9c3-7306-4a36-a933-f3c6d0961459"
         },
         "item": {
-          "id": "09983aa5-eb28-47ba-ba8f-34a745df678e",
+          "id": "55737659-83bc-451b-bbf5-37ed444b7008",
           "name": "Création fiche travaux",
           "request": {
             "url": {
@@ -5642,7 +5642,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "39647fdb-18d9-45b7-8702-8e2d6e8d64dd",
+                "id": "0edaa778-4f68-4584-8ff1-22f040eb0df8",
                 "type": "text/javascript",
                 "exec": [
                   "const response = pm.response.json();",
@@ -5654,7 +5654,7 @@
                   "    pm.expect(response.workSheet.status).to.eql(\"BROUILLON\");",
                   "});"
                 ],
-                "_lastExecutionId": "2cd6215d-34bf-4132-b77a-0103af4986ec"
+                "_lastExecutionId": "cacb1bc9-6f7a-4eb6-95d7-dd80cb2694bd"
               }
             }
           ]
@@ -5662,7 +5662,7 @@
         "request": {
           "url": {
             "protocol": "http",
-            "port": "3000",
+            "port": "3001",
             "path": [
               "dentiste",
               "worksheets",
@@ -5681,7 +5681,7 @@
             },
             {
               "key": "Authorization",
-              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTYsInJvbGUiOiJERU5USVNURSIsImlhdCI6MTc4MTUxMTk1MSwiZXhwIjoxNzgxNTE5MTUxfQ.MSgCxOGVBuyiiy_gN3gcvjAtY11Qzj-ugj8w66c2L_s"
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTIsInJvbGUiOiJERU5USVNURSIsImlhdCI6MTc5MzkyMjg4MywiZXhwIjoxNzkzOTMwMDgzfQ.nmcqDHI0oR_MWaB0HCNKSfQj1zEojfP8gQpZFk3Fcyw"
             },
             {
               "key": "User-Agent",
@@ -5700,12 +5700,12 @@
             },
             {
               "key": "Postman-Token",
-              "value": "0a17262b-9887-41ac-a291-9da6519d7366",
+              "value": "d6973f7f-8141-4a8a-ab13-9d9698b19a2f",
               "system": true
             },
             {
               "key": "Host",
-              "value": "localhost:3000",
+              "value": "localhost:3001",
               "system": true
             },
             {
@@ -5731,7 +5731,7 @@
           }
         },
         "response": {
-          "id": "1589023c-d4a0-41dc-b745-776781fb58aa",
+          "id": "5970f819-7d21-4f54-a418-12d80b01051e",
           "status": "Created",
           "code": 201,
           "header": [
@@ -5741,7 +5741,7 @@
             },
             {
               "key": "Access-Control-Allow-Origin",
-              "value": "http://localhost:3000"
+              "value": "http://localhost:3001"
             },
             {
               "key": "Vary",
@@ -5757,15 +5757,15 @@
             },
             {
               "key": "Content-Length",
-              "value": "457"
+              "value": "455"
             },
             {
               "key": "ETag",
-              "value": "W/\"1c9-wi/HPJRUhQGIHHWuIjQUiMElwXY\""
+              "value": "W/\"1c7-36AqDNBE/Kt0Ig5Bvje7lG6mDV4\""
             },
             {
               "key": "Date",
-              "value": "Mon, 15 Jun 2026 08:25:52 GMT"
+              "value": "Thu, 05 Nov 2026 23:54:43 GMT"
             },
             {
               "key": "Connection",
@@ -5832,8 +5832,7 @@
               100,
               34,
               58,
-              49,
-              52,
+              56,
               44,
               34,
               110,
@@ -6031,7 +6030,7 @@
               34,
               58,
               53,
-              54,
+              50,
               44,
               34,
               112,
@@ -6119,20 +6118,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
-              53,
+              51,
               58,
               53,
-              50,
+              52,
+              58,
+              52,
+              51,
               46,
               48,
               48,
@@ -6158,20 +6157,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
-              53,
+              51,
               58,
               53,
-              50,
+              52,
+              58,
+              52,
+              51,
               46,
               48,
               48,
@@ -6196,8 +6195,7 @@
               34,
               58,
               34,
-              49,
-              52,
+              56,
               34,
               44,
               34,
@@ -6211,7 +6209,7 @@
               58,
               34,
               53,
-              54,
+              50,
               34,
               44,
               34,
@@ -6239,10 +6237,10 @@
             ]
           },
           "cookie": [],
-          "responseTime": 37,
-          "responseSize": 457
+          "responseTime": 5,
+          "responseSize": 455
         },
-        "id": "09983aa5-eb28-47ba-ba8f-34a745df678e",
+        "id": "55737659-83bc-451b-bbf5-37ed444b7008",
         "assertions": [
           {
             "assertion": "Création fiche — HTTP 201",
@@ -6256,15 +6254,15 @@
       },
       {
         "cursor": {
-          "ref": "c184a296-f1c5-4ba5-aa1f-e300ca4f3114",
+          "ref": "592eb515-9e32-4236-8dc2-e49fa378f9da",
           "length": 17,
           "cycles": 1,
           "position": 10,
           "iteration": 0,
-          "httpRequestId": "8e2fe08e-4a7f-4e49-bec3-7d992d9ece70"
+          "httpRequestId": "cb07e40b-d1e2-4399-866b-160f5722637c"
         },
         "item": {
-          "id": "8f80a519-a79e-47ff-9c85-8604984bc0dd",
+          "id": "011f6889-c607-40c5-bc9f-359e9b9cd4d6",
           "name": "Liste des fiches dentiste",
           "request": {
             "url": {
@@ -6291,7 +6289,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "2d566eeb-a1c8-4f88-ae19-40a085cbbe35",
+                "id": "e164241a-fd2a-4a07-98fe-3ece56667802",
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Liste fiches — HTTP 200\", () => {",
@@ -6301,7 +6299,7 @@
                   "    pm.expect(pm.response.json().workSheets.length).to.be.at.least(1);",
                   "});"
                 ],
-                "_lastExecutionId": "e62d3f78-386c-4f6a-92eb-d8d824390d8b"
+                "_lastExecutionId": "b6fadd69-8f45-4e04-9596-444e4190b152"
               }
             }
           ]
@@ -6309,7 +6307,7 @@
         "request": {
           "url": {
             "protocol": "http",
-            "port": "3000",
+            "port": "3001",
             "path": [
               "dentiste",
               "worksheets"
@@ -6323,7 +6321,7 @@
           "header": [
             {
               "key": "Authorization",
-              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTYsInJvbGUiOiJERU5USVNURSIsImlhdCI6MTc4MTUxMTk1MSwiZXhwIjoxNzgxNTE5MTUxfQ.MSgCxOGVBuyiiy_gN3gcvjAtY11Qzj-ugj8w66c2L_s"
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTIsInJvbGUiOiJERU5USVNURSIsImlhdCI6MTc5MzkyMjg4MywiZXhwIjoxNzkzOTMwMDgzfQ.nmcqDHI0oR_MWaB0HCNKSfQj1zEojfP8gQpZFk3Fcyw"
             },
             {
               "key": "User-Agent",
@@ -6342,12 +6340,12 @@
             },
             {
               "key": "Postman-Token",
-              "value": "be4af513-b571-4bfc-a593-4b2edf714b47",
+              "value": "85835f43-07e5-4e0e-beb8-f6aa0f709d3d",
               "system": true
             },
             {
               "key": "Host",
-              "value": "localhost:3000",
+              "value": "localhost:3001",
               "system": true
             },
             {
@@ -6364,7 +6362,7 @@
           "method": "GET"
         },
         "response": {
-          "id": "4191959d-fcf8-489b-bfc2-d7befda0f52c",
+          "id": "79d4186e-1ed8-4fcf-ab85-f33e44820260",
           "status": "OK",
           "code": 200,
           "header": [
@@ -6374,7 +6372,7 @@
             },
             {
               "key": "Access-Control-Allow-Origin",
-              "value": "http://localhost:3000"
+              "value": "http://localhost:3001"
             },
             {
               "key": "Vary",
@@ -6390,15 +6388,15 @@
             },
             {
               "key": "Content-Length",
-              "value": "426"
+              "value": "424"
             },
             {
               "key": "ETag",
-              "value": "W/\"1aa-LPzRHB/d3/DDps90LvxeDUqdC/4\""
+              "value": "W/\"1a8-qec56dBMt2aOMxkDFgVl2WylhOs\""
             },
             {
               "key": "Date",
-              "value": "Mon, 15 Jun 2026 08:25:52 GMT"
+              "value": "Thu, 05 Nov 2026 23:54:43 GMT"
             },
             {
               "key": "Connection",
@@ -6433,8 +6431,7 @@
               100,
               34,
               58,
-              49,
-              52,
+              56,
               44,
               34,
               110,
@@ -6632,7 +6629,7 @@
               34,
               58,
               53,
-              54,
+              50,
               44,
               34,
               112,
@@ -6720,20 +6717,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
-              53,
+              51,
               58,
               53,
-              50,
+              52,
+              58,
+              52,
+              51,
               46,
               48,
               48,
@@ -6759,20 +6756,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
-              53,
+              51,
               58,
               53,
-              50,
+              52,
+              58,
+              52,
+              51,
               46,
               48,
               48,
@@ -6797,8 +6794,7 @@
               34,
               58,
               34,
-              49,
-              52,
+              56,
               34,
               44,
               34,
@@ -6812,7 +6808,7 @@
               58,
               34,
               53,
-              54,
+              50,
               34,
               44,
               34,
@@ -6841,10 +6837,10 @@
             ]
           },
           "cookie": [],
-          "responseTime": 21,
-          "responseSize": 426
+          "responseTime": 12,
+          "responseSize": 424
         },
-        "id": "8f80a519-a79e-47ff-9c85-8604984bc0dd",
+        "id": "011f6889-c607-40c5-bc9f-359e9b9cd4d6",
         "assertions": [
           {
             "assertion": "Liste fiches — HTTP 200",
@@ -6858,15 +6854,15 @@
       },
       {
         "cursor": {
-          "ref": "4b509e76-f43c-41a9-9be6-b1a607421ea7",
+          "ref": "dba46e3f-4dc4-41b5-a357-1a982f8101cf",
           "length": 17,
           "cycles": 1,
           "position": 11,
           "iteration": 0,
-          "httpRequestId": "de56c34d-b6f7-4781-a57c-3b0e4b7cd131"
+          "httpRequestId": "39fc529d-cf27-4ad0-a2ea-354b59221fb9"
         },
         "item": {
-          "id": "83037c86-ee67-4016-a67d-36def611216e",
+          "id": "c3026dd6-e524-49cb-aecb-12674495e7f1",
           "name": "Envoi fiche au prothésiste",
           "request": {
             "url": {
@@ -6895,7 +6891,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "0e47c93d-f651-41c8-b701-bc648f7cd3da",
+                "id": "fa8f2ffa-a25f-4c35-86b6-400ee8a59ec8",
                 "type": "text/javascript",
                 "exec": [
                   "const response = pm.response.json();",
@@ -6906,7 +6902,7 @@
                   "    pm.expect(response.worksheet.status).to.eql(\"EN_ATTENTE\");",
                   "});"
                 ],
-                "_lastExecutionId": "681de1bf-6446-4732-82a8-28cdf4f9ddb1"
+                "_lastExecutionId": "b1ca5f34-f761-4a70-b29e-cd70c178c0eb"
               }
             }
           ]
@@ -6914,12 +6910,12 @@
         "request": {
           "url": {
             "protocol": "http",
-            "port": "3000",
+            "port": "3001",
             "path": [
               "dentiste",
               "worksheets",
               "send",
-              "14"
+              "8"
             ],
             "host": [
               "localhost"
@@ -6930,7 +6926,7 @@
           "header": [
             {
               "key": "Authorization",
-              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTYsInJvbGUiOiJERU5USVNURSIsImlhdCI6MTc4MTUxMTk1MSwiZXhwIjoxNzgxNTE5MTUxfQ.MSgCxOGVBuyiiy_gN3gcvjAtY11Qzj-ugj8w66c2L_s"
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTIsInJvbGUiOiJERU5USVNURSIsImlhdCI6MTc5MzkyMjg4MywiZXhwIjoxNzkzOTMwMDgzfQ.nmcqDHI0oR_MWaB0HCNKSfQj1zEojfP8gQpZFk3Fcyw"
             },
             {
               "key": "User-Agent",
@@ -6949,12 +6945,12 @@
             },
             {
               "key": "Postman-Token",
-              "value": "73522866-f38c-4a55-88a5-36999c5575c5",
+              "value": "f9236731-5d44-4969-b51d-ca0aad3f8b71",
               "system": true
             },
             {
               "key": "Host",
-              "value": "localhost:3000",
+              "value": "localhost:3001",
               "system": true
             },
             {
@@ -6976,7 +6972,7 @@
           "method": "PUT"
         },
         "response": {
-          "id": "79d4b201-bf03-4d7e-847a-527b40faebf8",
+          "id": "8af471a2-54a7-4275-8e54-cf169ce9bd46",
           "status": "OK",
           "code": 200,
           "header": [
@@ -6986,7 +6982,7 @@
             },
             {
               "key": "Access-Control-Allow-Origin",
-              "value": "http://localhost:3000"
+              "value": "http://localhost:3001"
             },
             {
               "key": "Vary",
@@ -7002,15 +6998,15 @@
             },
             {
               "key": "Content-Length",
-              "value": "465"
+              "value": "463"
             },
             {
               "key": "ETag",
-              "value": "W/\"1d1-ltz0hrlRrMt/XdLQ5RppGPjD5o8\""
+              "value": "W/\"1cf-De0GL0dFWpB/Z7wNl7x8jQOBv2A\""
             },
             {
               "key": "Date",
-              "value": "Mon, 15 Jun 2026 08:25:52 GMT"
+              "value": "Thu, 05 Nov 2026 23:54:43 GMT"
             },
             {
               "key": "Connection",
@@ -7086,8 +7082,7 @@
               100,
               34,
               58,
-              49,
-              52,
+              56,
               44,
               34,
               110,
@@ -7286,7 +7281,7 @@
               34,
               58,
               53,
-              54,
+              50,
               44,
               34,
               112,
@@ -7305,7 +7300,7 @@
               34,
               58,
               53,
-              55,
+              51,
               44,
               34,
               112,
@@ -7372,20 +7367,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
-              53,
+              51,
               58,
               53,
-              50,
+              52,
+              58,
+              52,
+              51,
               46,
               48,
               48,
@@ -7411,23 +7406,23 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
-              50,
-              53,
-              58,
-              53,
-              50,
-              46,
               50,
               51,
+              58,
+              53,
+              52,
+              58,
+              52,
+              51,
+              46,
+              56,
+              57,
               49,
               90,
               34,
@@ -7449,8 +7444,7 @@
               34,
               58,
               34,
-              49,
-              52,
+              56,
               34,
               44,
               34,
@@ -7464,7 +7458,7 @@
               58,
               34,
               53,
-              54,
+              50,
               34,
               44,
               34,
@@ -7485,17 +7479,17 @@
               58,
               34,
               53,
-              55,
+              51,
               34,
               125,
               125
             ]
           },
           "cookie": [],
-          "responseTime": 20,
-          "responseSize": 465
+          "responseTime": 6,
+          "responseSize": 463
         },
-        "id": "83037c86-ee67-4016-a67d-36def611216e",
+        "id": "c3026dd6-e524-49cb-aecb-12674495e7f1",
         "assertions": [
           {
             "assertion": "Envoi fiche — HTTP 200",
@@ -7509,15 +7503,15 @@
       },
       {
         "cursor": {
-          "ref": "65582d91-a5cb-443a-a15b-20bd358ce975",
+          "ref": "61e12cf5-e6eb-4eb9-ba8f-2c35b798aa44",
           "length": 17,
           "cycles": 1,
           "position": 12,
           "iteration": 0,
-          "httpRequestId": "d8fd9c72-1d3b-4df1-bc79-be916712fae3"
+          "httpRequestId": "0ec585a8-1f2c-437a-aa1d-e9b8f3688d38"
         },
         "item": {
-          "id": "675e217c-e2c6-45fd-a59d-4eeaca880dc2",
+          "id": "d3a2d8b8-68b5-4e0e-9ee2-b13207b5b5e8",
           "name": "Connexion prothésiste",
           "request": {
             "url": {
@@ -7549,7 +7543,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "0a581bb0-36c6-4956-bdec-a5ba35e9a97d",
+                "id": "b8eb87d6-34cc-4b1a-83f4-b623d4efe60b",
                 "type": "text/javascript",
                 "exec": [
                   "const response = pm.response.json();",
@@ -7559,7 +7553,7 @@
                   "    pm.expect(response.role).to.eql(\"PROTHESISTE\");",
                   "});"
                 ],
-                "_lastExecutionId": "5c2c6b4f-e0b2-4ab7-a0a8-a239e80a007e"
+                "_lastExecutionId": "ef60092d-c9cb-42f1-a608-396d502a2965"
               }
             }
           ]
@@ -7567,7 +7561,7 @@
         "request": {
           "url": {
             "protocol": "http",
-            "port": "3000",
+            "port": "3001",
             "path": [
               "api",
               "user",
@@ -7601,12 +7595,12 @@
             },
             {
               "key": "Postman-Token",
-              "value": "28a8aca0-7c6e-45f8-8afc-efc5aca653dc",
+              "value": "5ffaed4a-c510-4b74-92ef-490bbd61a6f8",
               "system": true
             },
             {
               "key": "Host",
-              "value": "localhost:3000",
+              "value": "localhost:3001",
               "system": true
             },
             {
@@ -7632,7 +7626,7 @@
           }
         },
         "response": {
-          "id": "a9f0d2b5-c8aa-429c-9ebd-a7ce99485772",
+          "id": "a4d7dc9f-c94b-45da-bb19-e6a09bef9fcf",
           "status": "OK",
           "code": 200,
           "header": [
@@ -7642,7 +7636,7 @@
             },
             {
               "key": "Access-Control-Allow-Origin",
-              "value": "http://localhost:3000"
+              "value": "http://localhost:3001"
             },
             {
               "key": "Vary",
@@ -7662,11 +7656,11 @@
             },
             {
               "key": "ETag",
-              "value": "W/\"f6-WoijljZG4NJ3g5Ld6d7EBdXi9Tc\""
+              "value": "W/\"f6-+I7Us/saD1EuDnGOTmUOkxP4+FE\""
             },
             {
               "key": "Date",
-              "value": "Mon, 15 Jun 2026 08:25:52 GMT"
+              "value": "Thu, 05 Nov 2026 23:54:43 GMT"
             },
             {
               "key": "Connection",
@@ -7783,7 +7777,7 @@
               54,
               78,
               84,
-              99,
+              77,
               115,
               73,
               110,
@@ -7824,17 +7818,17 @@
               77,
               84,
               99,
+              53,
+              77,
+              122,
+              107,
+              121,
+              77,
+              106,
+              103,
               52,
               77,
-              84,
-              85,
-              120,
-              77,
-              84,
-              107,
-              49,
-              77,
-              105,
+              121,
               119,
               105,
               90,
@@ -7847,62 +7841,62 @@
               120,
               78,
               122,
-              103,
-              120,
-              78,
+              107,
+              122,
+              79,
               84,
-              69,
-              53,
               77,
-              84,
-              85,
-              121,
+              119,
+              77,
+              68,
+              103,
+              122,
               102,
               81,
               46,
-              120,
-              109,
-              117,
-              101,
-              122,
-              118,
-              66,
-              55,
-              56,
-              116,
-              57,
-              81,
-              81,
-              69,
-              78,
-              50,
-              69,
-              88,
-              95,
-              53,
-              99,
-              73,
-              80,
-              76,
-              51,
-              86,
+              106,
               112,
-              100,
-              117,
-              107,
-              79,
-              114,
-              55,
-              90,
-              122,
-              70,
-              105,
-              50,
-              118,
-              76,
+              119,
+              77,
               99,
-              109,
+              75,
+              117,
+              105,
+              49,
+              55,
+              52,
+              77,
               103,
+              100,
+              84,
+              107,
+              99,
+              95,
+              54,
+              121,
+              81,
+              118,
+              49,
+              70,
+              89,
+              105,
+              83,
+              87,
+              104,
+              81,
+              57,
+              82,
+              80,
+              51,
+              115,
+              82,
+              120,
+              87,
+              77,
+              117,
+              74,
+              78,
+              77,
               34,
               44,
               34,
@@ -7929,10 +7923,10 @@
             ]
           },
           "cookie": [],
-          "responseTime": 100,
+          "responseTime": 71,
           "responseSize": 246
         },
-        "id": "675e217c-e2c6-45fd-a59d-4eeaca880dc2",
+        "id": "d3a2d8b8-68b5-4e0e-9ee2-b13207b5b5e8",
         "assertions": [
           {
             "assertion": "Connexion prothésiste réussie",
@@ -7942,15 +7936,15 @@
       },
       {
         "cursor": {
-          "ref": "806933eb-c400-4962-b8c7-73584a7c10af",
+          "ref": "0d70e7a0-cdb5-4365-9ce9-900de1c86755",
           "length": 17,
           "cycles": 1,
           "position": 13,
           "iteration": 0,
-          "httpRequestId": "4121e61f-7912-4736-a1f8-c2933cc8e556"
+          "httpRequestId": "93163ae0-b46a-4eb8-a63a-0d3b39ce3e80"
         },
         "item": {
-          "id": "a5c2e263-c961-4bd0-bae3-fab6d3564725",
+          "id": "3d9c61cf-e6ef-4cc0-aad9-b766f0c6318a",
           "name": "Liste fiches reçues",
           "request": {
             "url": {
@@ -7977,7 +7971,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "861f5b62-2630-45b7-9b21-0cda47081740",
+                "id": "ff85c872-e5f1-4f78-93d5-4d459766bfd2",
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Liste fiches prothésiste — HTTP 200\", () => {",
@@ -7989,7 +7983,7 @@
                   "    pm.expect(found).to.be.true;",
                   "});"
                 ],
-                "_lastExecutionId": "047dc6d2-8051-4ccb-b5a9-234de4b94403"
+                "_lastExecutionId": "cddc253f-7ba8-4f5c-938e-8d6b3543178e"
               }
             }
           ]
@@ -7997,7 +7991,7 @@
         "request": {
           "url": {
             "protocol": "http",
-            "port": "3000",
+            "port": "3001",
             "path": [
               "prothesiste",
               "worksheets"
@@ -8011,7 +8005,7 @@
           "header": [
             {
               "key": "Authorization",
-              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTcsInJvbGUiOiJQUk9USEVTSVNURSIsImlhdCI6MTc4MTUxMTk1MiwiZXhwIjoxNzgxNTE5MTUyfQ.xmuezvB78t9QQEN2EX_5cIPL3VpdukOr7ZzFi2vLcmg"
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTMsInJvbGUiOiJQUk9USEVTSVNURSIsImlhdCI6MTc5MzkyMjg4MywiZXhwIjoxNzkzOTMwMDgzfQ.jpwMcKui174MgdTkc_6yQv1FYiSWhQ9RP3sRxWMuJNM"
             },
             {
               "key": "User-Agent",
@@ -8030,12 +8024,12 @@
             },
             {
               "key": "Postman-Token",
-              "value": "02a2ccf5-95f8-462c-9130-d983c34a4fdb",
+              "value": "755d00fe-8875-4fdd-b115-019271cc6726",
               "system": true
             },
             {
               "key": "Host",
-              "value": "localhost:3000",
+              "value": "localhost:3001",
               "system": true
             },
             {
@@ -8052,7 +8046,7 @@
           "method": "GET"
         },
         "response": {
-          "id": "c21e84be-3137-4fa4-bbe7-be68a2a82e5f",
+          "id": "d4abc48d-77f1-4b53-9005-502253652d64",
           "status": "OK",
           "code": 200,
           "header": [
@@ -8062,7 +8056,7 @@
             },
             {
               "key": "Access-Control-Allow-Origin",
-              "value": "http://localhost:3000"
+              "value": "http://localhost:3001"
             },
             {
               "key": "Vary",
@@ -8078,15 +8072,15 @@
             },
             {
               "key": "Content-Length",
-              "value": "425"
+              "value": "423"
             },
             {
               "key": "ETag",
-              "value": "W/\"1a9-DS3Le4I0tJxzzuE0CDQ7W9lKw2c\""
+              "value": "W/\"1a7-LRjk4J45lpAS0QzQaHixiJH8aIc\""
             },
             {
               "key": "Date",
-              "value": "Mon, 15 Jun 2026 08:25:52 GMT"
+              "value": "Thu, 05 Nov 2026 23:54:43 GMT"
             },
             {
               "key": "Connection",
@@ -8121,8 +8115,7 @@
               100,
               34,
               58,
-              49,
-              52,
+              56,
               44,
               34,
               110,
@@ -8321,7 +8314,7 @@
               34,
               58,
               53,
-              54,
+              50,
               44,
               34,
               112,
@@ -8340,7 +8333,7 @@
               34,
               58,
               53,
-              55,
+              51,
               44,
               34,
               112,
@@ -8407,20 +8400,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
-              53,
+              51,
               58,
               53,
-              50,
+              52,
+              58,
+              52,
+              51,
               46,
               48,
               48,
@@ -8446,20 +8439,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
-              53,
+              51,
               58,
               53,
-              50,
+              52,
+              58,
+              52,
+              51,
               46,
               48,
               48,
@@ -8484,8 +8477,7 @@
               34,
               58,
               34,
-              49,
-              52,
+              56,
               34,
               44,
               34,
@@ -8499,7 +8491,7 @@
               58,
               34,
               53,
-              54,
+              50,
               34,
               44,
               34,
@@ -8520,7 +8512,7 @@
               58,
               34,
               53,
-              55,
+              51,
               34,
               125,
               93,
@@ -8528,10 +8520,10 @@
             ]
           },
           "cookie": [],
-          "responseTime": 18,
-          "responseSize": 425
+          "responseTime": 2,
+          "responseSize": 423
         },
-        "id": "a5c2e263-c961-4bd0-bae3-fab6d3564725",
+        "id": "3d9c61cf-e6ef-4cc0-aad9-b766f0c6318a",
         "assertions": [
           {
             "assertion": "Liste fiches prothésiste — HTTP 200",
@@ -8545,15 +8537,15 @@
       },
       {
         "cursor": {
-          "ref": "b576ded8-dd64-4456-8e7c-442a63c4acad",
+          "ref": "b47a316c-8c11-46ac-a050-61552ce99853",
           "length": 17,
           "cycles": 1,
           "position": 14,
           "iteration": 0,
-          "httpRequestId": "4c189474-f53e-465c-80d4-471a76b7b90e"
+          "httpRequestId": "3c2e75f0-0cee-44a0-a644-884e03262271"
         },
         "item": {
-          "id": "656ba134-3cc3-453d-a71e-02f69e8acc65",
+          "id": "d77a5490-08bf-424b-acb7-45b344184897",
           "name": "Détail fiche reçue",
           "request": {
             "url": {
@@ -8581,7 +8573,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "42d61f3d-1bfb-4e86-9e55-74ac6dc3b414",
+                "id": "63de8473-d48b-4cef-b392-088c35af93f1",
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Détail fiche — HTTP 200\", () => {",
@@ -8591,7 +8583,7 @@
                   "    pm.expect(pm.response.json().workSheet.status).to.eql(\"EN_ATTENTE\");",
                   "});"
                 ],
-                "_lastExecutionId": "9a9f96f8-ce9f-41c9-be89-b91f59ccfce9"
+                "_lastExecutionId": "56be81d9-49d7-416d-8bfc-85b1d6aa1235"
               }
             }
           ]
@@ -8599,11 +8591,11 @@
         "request": {
           "url": {
             "protocol": "http",
-            "port": "3000",
+            "port": "3001",
             "path": [
               "prothesiste",
               "worksheets",
-              "14"
+              "8"
             ],
             "host": [
               "localhost"
@@ -8614,7 +8606,7 @@
           "header": [
             {
               "key": "Authorization",
-              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTcsInJvbGUiOiJQUk9USEVTSVNURSIsImlhdCI6MTc4MTUxMTk1MiwiZXhwIjoxNzgxNTE5MTUyfQ.xmuezvB78t9QQEN2EX_5cIPL3VpdukOr7ZzFi2vLcmg"
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTMsInJvbGUiOiJQUk9USEVTSVNURSIsImlhdCI6MTc5MzkyMjg4MywiZXhwIjoxNzkzOTMwMDgzfQ.jpwMcKui174MgdTkc_6yQv1FYiSWhQ9RP3sRxWMuJNM"
             },
             {
               "key": "User-Agent",
@@ -8633,12 +8625,12 @@
             },
             {
               "key": "Postman-Token",
-              "value": "d02a835a-73c1-45d5-8779-db80cc13736a",
+              "value": "b453a393-15a4-4fb8-a672-4d9dd06992f0",
               "system": true
             },
             {
               "key": "Host",
-              "value": "localhost:3000",
+              "value": "localhost:3001",
               "system": true
             },
             {
@@ -8655,7 +8647,7 @@
           "method": "GET"
         },
         "response": {
-          "id": "f94db72e-d92b-41da-8888-e3227ed555df",
+          "id": "f16066e8-e804-428f-ad0e-60c8860d5bfb",
           "status": "OK",
           "code": 200,
           "header": [
@@ -8665,7 +8657,7 @@
             },
             {
               "key": "Access-Control-Allow-Origin",
-              "value": "http://localhost:3000"
+              "value": "http://localhost:3001"
             },
             {
               "key": "Vary",
@@ -8681,15 +8673,15 @@
             },
             {
               "key": "Content-Length",
-              "value": "422"
+              "value": "420"
             },
             {
               "key": "ETag",
-              "value": "W/\"1a6-oABvBcLeu9EtWE+2zZsixedIq50\""
+              "value": "W/\"1a4-njmtNBiI4VBpdbL3d+6UTiCpk/E\""
             },
             {
               "key": "Date",
-              "value": "Mon, 15 Jun 2026 08:25:52 GMT"
+              "value": "Thu, 05 Nov 2026 23:54:43 GMT"
             },
             {
               "key": "Connection",
@@ -8722,8 +8714,7 @@
               100,
               34,
               58,
-              49,
-              52,
+              56,
               44,
               34,
               110,
@@ -8922,7 +8913,7 @@
               34,
               58,
               53,
-              54,
+              50,
               44,
               34,
               112,
@@ -8941,7 +8932,7 @@
               34,
               58,
               53,
-              55,
+              51,
               44,
               34,
               112,
@@ -9008,20 +8999,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
-              53,
+              51,
               58,
               53,
-              50,
+              52,
+              58,
+              52,
+              51,
               46,
               48,
               48,
@@ -9047,20 +9038,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
-              53,
+              51,
               58,
               53,
-              50,
+              52,
+              58,
+              52,
+              51,
               46,
               48,
               48,
@@ -9085,8 +9076,7 @@
               34,
               58,
               34,
-              49,
-              52,
+              56,
               34,
               44,
               34,
@@ -9100,7 +9090,7 @@
               58,
               34,
               53,
-              54,
+              50,
               34,
               44,
               34,
@@ -9121,17 +9111,17 @@
               58,
               34,
               53,
-              55,
+              51,
               34,
               125,
               125
             ]
           },
           "cookie": [],
-          "responseTime": 11,
-          "responseSize": 422
+          "responseTime": 2,
+          "responseSize": 420
         },
-        "id": "656ba134-3cc3-453d-a71e-02f69e8acc65",
+        "id": "d77a5490-08bf-424b-acb7-45b344184897",
         "assertions": [
           {
             "assertion": "Détail fiche — HTTP 200",
@@ -9145,15 +9135,15 @@
       },
       {
         "cursor": {
-          "ref": "c874febf-276b-4d62-abdf-76b8003b1419",
+          "ref": "7084e3f3-2686-4502-b4e9-f77b2edd5a94",
           "length": 17,
           "cycles": 1,
           "position": 15,
           "iteration": 0,
-          "httpRequestId": "d74d92fa-e52a-42c7-927a-691eb9428079"
+          "httpRequestId": "e46ba743-2771-468c-87b7-b35c837cd3b8"
         },
         "item": {
-          "id": "00795053-5ec6-42ef-a196-4dc32edee405",
+          "id": "bd21d117-3a69-4748-9123-e14b4c5be803",
           "name": "Mise à jour statut fiche",
           "request": {
             "url": {
@@ -9190,7 +9180,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "1eae64af-2dac-4d02-ba09-7f2c230b4818",
+                "id": "bab82ede-0c1a-47c9-9670-1f23a20da70f",
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Mise à jour statut — HTTP 200\", () => {",
@@ -9200,7 +9190,7 @@
                   "    pm.expect(pm.response.json().worksheet.status).to.eql(\"EN_COURS\");",
                   "});"
                 ],
-                "_lastExecutionId": "4470da57-b3da-46fa-9aad-c4c43d647b01"
+                "_lastExecutionId": "d273f9d1-3eb6-4afa-942b-6afe8b5d3e33"
               }
             }
           ]
@@ -9208,12 +9198,12 @@
         "request": {
           "url": {
             "protocol": "http",
-            "port": "3000",
+            "port": "3001",
             "path": [
               "prothesiste",
               "worksheets",
               "update",
-              "14"
+              "8"
             ],
             "host": [
               "localhost"
@@ -9228,7 +9218,7 @@
             },
             {
               "key": "Authorization",
-              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTcsInJvbGUiOiJQUk9USEVTSVNURSIsImlhdCI6MTc4MTUxMTk1MiwiZXhwIjoxNzgxNTE5MTUyfQ.xmuezvB78t9QQEN2EX_5cIPL3VpdukOr7ZzFi2vLcmg"
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTMsInJvbGUiOiJQUk9USEVTSVNURSIsImlhdCI6MTc5MzkyMjg4MywiZXhwIjoxNzkzOTMwMDgzfQ.jpwMcKui174MgdTkc_6yQv1FYiSWhQ9RP3sRxWMuJNM"
             },
             {
               "key": "User-Agent",
@@ -9247,12 +9237,12 @@
             },
             {
               "key": "Postman-Token",
-              "value": "5b390c4f-a0d1-4377-902a-531b118e7519",
+              "value": "54b0be7e-90c2-4044-abf1-6c105f8a173d",
               "system": true
             },
             {
               "key": "Host",
-              "value": "localhost:3000",
+              "value": "localhost:3001",
               "system": true
             },
             {
@@ -9278,7 +9268,7 @@
           }
         },
         "response": {
-          "id": "d8cd609a-40f7-4eba-8fa5-79c5dad28a43",
+          "id": "cfea3074-eeca-41d4-a959-dd40f2ba47e4",
           "status": "OK",
           "code": 200,
           "header": [
@@ -9288,7 +9278,7 @@
             },
             {
               "key": "Access-Control-Allow-Origin",
-              "value": "http://localhost:3000"
+              "value": "http://localhost:3001"
             },
             {
               "key": "Vary",
@@ -9304,15 +9294,15 @@
             },
             {
               "key": "Content-Length",
-              "value": "476"
+              "value": "474"
             },
             {
               "key": "ETag",
-              "value": "W/\"1dc-73lJUj/Agn49aTkFSUVfl0z93CM\""
+              "value": "W/\"1da-EooXySP2ZxeB7Q28K6ZRqlViIME\""
             },
             {
               "key": "Date",
-              "value": "Mon, 15 Jun 2026 08:25:52 GMT"
+              "value": "Thu, 05 Nov 2026 23:54:44 GMT"
             },
             {
               "key": "Connection",
@@ -9402,8 +9392,7 @@
               100,
               34,
               58,
-              49,
-              52,
+              56,
               44,
               34,
               110,
@@ -9600,7 +9589,7 @@
               34,
               58,
               53,
-              54,
+              50,
               44,
               34,
               112,
@@ -9619,7 +9608,7 @@
               34,
               58,
               53,
-              55,
+              51,
               44,
               34,
               112,
@@ -9685,20 +9674,20 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
-              53,
+              51,
               58,
               53,
-              50,
+              52,
+              58,
+              52,
+              51,
               46,
               48,
               48,
@@ -9724,24 +9713,24 @@
               50,
               54,
               45,
-              48,
-              54,
-              45,
               49,
+              49,
+              45,
+              48,
               53,
               84,
-              48,
-              56,
-              58,
               50,
-              53,
+              51,
               58,
               53,
-              50,
+              52,
+              58,
+              52,
+              52,
               46,
-              55,
-              50,
-              50,
+              48,
+              49,
+              51,
               90,
               34,
               44,
@@ -9762,8 +9751,7 @@
               34,
               58,
               34,
-              49,
-              52,
+              56,
               34,
               44,
               34,
@@ -9777,7 +9765,7 @@
               58,
               34,
               53,
-              54,
+              50,
               34,
               44,
               34,
@@ -9798,17 +9786,17 @@
               58,
               34,
               53,
-              55,
+              51,
               34,
               125,
               125
             ]
           },
           "cookie": [],
-          "responseTime": 15,
-          "responseSize": 476
+          "responseTime": 5,
+          "responseSize": 474
         },
-        "id": "00795053-5ec6-42ef-a196-4dc32edee405",
+        "id": "bd21d117-3a69-4748-9123-e14b4c5be803",
         "assertions": [
           {
             "assertion": "Mise à jour statut — HTTP 200",
@@ -9822,15 +9810,15 @@
       },
       {
         "cursor": {
-          "ref": "83b476c6-b61a-448e-8452-956cf000e6b4",
+          "ref": "e31a291b-cb36-405c-b806-3dd6ffb68036",
           "length": 17,
           "cycles": 1,
           "position": 16,
           "iteration": 0,
-          "httpRequestId": "6504cbbd-bc4e-4451-893a-33d5b8d3b89d"
+          "httpRequestId": "ada68dfa-42cb-4c81-add0-2a2be9618a09"
         },
         "item": {
-          "id": "0ca849c8-5d3e-4391-9ca4-71292b2e421c",
+          "id": "eb02df8f-0e4f-4404-94ed-1a6ef58a9ca4",
           "name": "Suppression compte administrateur",
           "request": {
             "url": {
@@ -9858,7 +9846,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "06d0a748-f926-40a6-918d-6e38a5bd40f5",
+                "id": "262eb2ab-d013-4d92-a709-aaafd3613aee",
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Suppression compte admin réussie\", () => {",
@@ -9866,7 +9854,7 @@
                   "    pm.expect(pm.response.json().message).to.eql(\"Utilisateur supprimé avec succès\");",
                   "});"
                 ],
-                "_lastExecutionId": "b38d0c92-7f8b-47b6-8272-b7a23872c4ab"
+                "_lastExecutionId": "768c999e-6fb7-41e7-82a5-185520c16518"
               }
             }
           ]
@@ -9874,7 +9862,7 @@
         "request": {
           "url": {
             "protocol": "http",
-            "port": "3000",
+            "port": "3001",
             "path": [
               "api",
               "user",
@@ -9889,7 +9877,7 @@
           "header": [
             {
               "key": "Authorization",
-              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTUsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc4MTUxMTk0OCwiZXhwIjoxNzgxNTE5MTQ4fQ.Bbw0iegejJHi1BzIaMB8e-mg0XyssoJLOeDrOB08PFE"
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc5MzkyMjg4MywiZXhwIjoxNzkzOTMwMDgzfQ.NV-jxVdNoaJgYTPTVKMpGcuHPbXSIBgeFrX5u7LYDYc"
             },
             {
               "key": "User-Agent",
@@ -9908,12 +9896,12 @@
             },
             {
               "key": "Postman-Token",
-              "value": "0da36fd3-505b-4524-bca1-88a626358ebe",
+              "value": "d88fc620-8286-4040-b843-b62f6afb33b8",
               "system": true
             },
             {
               "key": "Host",
-              "value": "localhost:3000",
+              "value": "localhost:3001",
               "system": true
             },
             {
@@ -9930,7 +9918,7 @@
           "method": "DELETE"
         },
         "response": {
-          "id": "c93aa75b-0f23-4960-a0e1-afe9d1eb5ad4",
+          "id": "067d0439-1712-431c-9b1e-3dab8f2e4cf7",
           "status": "OK",
           "code": 200,
           "header": [
@@ -9940,7 +9928,7 @@
             },
             {
               "key": "Access-Control-Allow-Origin",
-              "value": "http://localhost:3000"
+              "value": "http://localhost:3001"
             },
             {
               "key": "Vary",
@@ -9964,7 +9952,7 @@
             },
             {
               "key": "Date",
-              "value": "Mon, 15 Jun 2026 08:25:52 GMT"
+              "value": "Thu, 05 Nov 2026 23:54:44 GMT"
             },
             {
               "key": "Connection",
@@ -10029,10 +10017,10 @@
             ]
           },
           "cookie": [],
-          "responseTime": 14,
+          "responseTime": 4,
           "responseSize": 48
         },
-        "id": "0ca849c8-5d3e-4391-9ca4-71292b2e421c",
+        "id": "eb02df8f-0e4f-4404-94ed-1a6ef58a9ca4",
         "assertions": [
           {
             "assertion": "Suppression compte admin réussie",
@@ -10042,7 +10030,7 @@
       }
     ],
     "transfers": {
-      "responseTotal": 5710
+      "responseTotal": 5698
     },
     "failures": [],
     "error": null

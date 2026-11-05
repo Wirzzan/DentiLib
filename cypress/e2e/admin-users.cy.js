@@ -29,8 +29,9 @@ describe("Admin Flow: Users & Acts", { testIsolation: false }, () => {
       cy.get("#addUserForm input[name='siret']").type(DENTISTE_A.siret);
       cy.get("#addUserForm select[name='role']").select(DENTISTE_A.role);
       cy.get("#addUserForm button[type='submit']").click();
-      cy.get("#addUserMessage").should("contain.text", "Utilisateur créé avec succès");
-      cy.closeAddUserModal();
+      cy.get("#userModal").should("not.be.visible");
+      cy.contains("#userTableBody tr", DENTISTE_A.email)
+        .should("be.visible");
     });
   });
 
@@ -49,8 +50,9 @@ describe("Admin Flow: Users & Acts", { testIsolation: false }, () => {
         .should("be.visible")
         .select(`${DENTISTE_A.firstName} ${DENTISTE_A.lastName}`);
       cy.get("#addUserForm button[type='submit']").click();
-      cy.get("#addUserMessage").should("contain.text", "Utilisateur créé avec succès");
-      cy.closeAddUserModal();
+      cy.get("#userModal").should("not.be.visible");
+      cy.contains("#userTableBody tr", PROTHESISTE_A.email)
+        .should("be.visible");
     });
   });
 
@@ -65,23 +67,45 @@ describe("Admin Flow: Users & Acts", { testIsolation: false }, () => {
         cy.get("#addUserForm input[name='siret']").type(DENTISTE_B.siret);
         cy.get("#addUserForm select[name='role']").select(DENTISTE_B.role);
         cy.get("#addUserForm button[type='submit']").click();
-        cy.get("#addUserMessage").should("contain.text", "Utilisateur créé avec succès");
-        cy.closeAddUserModal();
+        cy.get("#userModal").should("not.be.visible");
+        cy.contains("#userTableBody tr", DENTISTE_B.email)
+          .should("be.visible");
       }
 
       cy.contains(DENTISTE_B.email).parents("tr").find(".btn-edit").click();
       cy.get("#editUserForm input[name='firstName']").clear().type("AliceMod");
       cy.get("#editUserForm button[type='submit']").click();
-      cy.get("#editUserMessage").should("contain.text", "Utilisateur modifié avec succès");
       // La modale se ferme toute seule après succès (admin.js)
       cy.get("#editUserModal").should("not.be.visible");
+      cy.contains("#userTableBody tr", DENTISTE_B.email)
+        .should("contain.text", "AliceMod");
     });
+  });
+
+  it("conserve la modification du dentiste B après rechargement", () => {
+    cy.reload();
+    cy.contains("#userTableBody tr", DENTISTE_B.email)
+      .should("be.visible")
+      .and("contain.text", "AliceMod");
+  });
+
+  it("annule la suppression du dentiste B et conserve son compte", () => {
+    cy.contains("#userTableBody tr", DENTISTE_B.email)
+      .find(".btn-delete").click();
+    cy.get("#confirmModal").should("have.class", "is-open");
+    cy.get("#confirmModalCancel").click();
+    cy.get("#confirmModal").should("not.have.class", "is-open");
+    cy.reload();
+    cy.contains("#userTableBody tr", DENTISTE_B.email)
+      .should("be.visible")
+      .and("contain.text", "AliceMod");
   });
 
   it("Supprimer le dentiste B", () => {
     cy.contains("AliceMod").parents("tr").find(".btn-delete").click();
     cy.confirmModal();
-    cy.get("#userMessage").should("contain.text", "Utilisateur supprimé avec succès");
+    cy.get("#userTableBody")
+      .should("not.contain.text", DENTISTE_B.email);
   });
 
   it("Configurer les actes: créer 6 actes, modifier et supprimer le 6ème", () => {

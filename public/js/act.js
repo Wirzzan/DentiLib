@@ -100,7 +100,12 @@ addActForm.addEventListener("submit", async (e) => {
       body: JSON.stringify(newAct)
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.message || "Erreur création acte");
+    if (!res.ok) {
+      const message = res.status === 409
+        ? "Un acte portant ce nom existe déjà"
+        : "Impossible de créer l’acte";
+      throw new Error(message);
+    }
 
     createModal.style.display = "none";
     addActForm.reset();

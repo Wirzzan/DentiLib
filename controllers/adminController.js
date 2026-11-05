@@ -43,6 +43,9 @@ const createAccount = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const sender = process.env.EMAIL_FROM || "";
+    const adminContact = sender.match(/<([^>]+)>/)?.[1] || sender;
+
     if (role === "DENTISTE") {
       const user = await Utilisateur.create({
         firstName,
@@ -60,11 +63,11 @@ const createAccount = async (req, res) => {
         `
         <h2>Bonjour ${firstName} ${lastName}</h2>
         <p>Votre compte Dentilib a été créé avec succès.</p>
-        <p>Pour la protection de votre compte, pensez à sécuriser les identifiants</p>
-        <p><strong>Email :</strong> ${email}</p>
-        <p><strong>Mot de passe :</strong> ${password}</p>
+        <p><strong>Identifiant :</strong> ${email}</p>
         <p><strong>Rôle :</strong> ${role}</p>
-        <p>Vous pouvez maintenant vous connecter.</p>
+        <p>Pour obtenir votre mot de passe initial, veuillez
+        <a href="mailto:${encodeURIComponent(adminContact)}">contacter l’administrateur</a>.
+        Il vous sera communiqué par un canal distinct de cet e-mail.</p>
         <br>
         <p>L'équipe Dentilib 🦷</p>
         `
@@ -112,11 +115,11 @@ const createAccount = async (req, res) => {
         <p>Vous êtes associé au dentiste :</p>
         <p><strong>${dentiste.firstName} ${dentiste.lastName}</strong></p>
         <br>
-        <p>Pour la protection de votre compte, pensez à sécuriser les identifiants</p>
-        <p><strong>Email :</strong> ${email}</p>
-        <p><strong>Mot de passe :</strong> ${password}</p>
+        <p><strong>Identifiant :</strong> ${email}</p>
         <p><strong>Rôle :</strong> ${role}</p>
-        <p>Vous pouvez maintenant vous connecter.</p>
+        <p>Pour obtenir votre mot de passe initial, veuillez
+        <a href="mailto:${encodeURIComponent(adminContact)}">contacter l’administrateur</a>.
+        Il vous sera communiqué par un canal distinct de cet e-mail.</p>
         <p>L'équipe Dentilib 🦷</p>
         `
       );

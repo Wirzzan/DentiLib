@@ -7,7 +7,12 @@
     "test:auth": "jest test/userAuth.test.js",
     "test:admin": "jest test/userAdmin.test.js",
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "start:test": "NODE_ENV=test DB_NAME=dentilib_test DB_SYNC=false PORT=3001 CORS_ORIGIN=http://localhost:3001 node server.js",
+    "cypress:open": "NODE_ENV=test DB_NAME=dentilib_test npx cypress open",
+    "db:test:reset": "NODE_ENV=test DB_NAME=dentilib_test node test/resetDatabase.js",
+    "test:newman": "npm run db:test:reset && newman run DentiLib.postman_collection.json -e dentilibEnv.postman_environment.json --env-var BASE-URL=http://localhost:3001 -r cli,json,htmlextra --reporter-json-export newman/rapport-api.json --reporter-htmlextra-export newman/rapport-api.html --reporter-htmlextra-skipSensitiveData",
+    "test:api": "npm run db:test:reset && TEST_URL=http://localhost:3001 jest --runInBand"
   },
   "keywords": [],
   "author": "",

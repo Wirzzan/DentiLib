@@ -134,3 +134,26 @@ describe("Comptes utilisateurs — création par l'admin", () => {
     expect(res.body.message).toBe("Invalid role");
   });
 });
+
+describe("Sécurité — accès à la liste des utilisateurs", () => {
+  it("refuse un accès sans JWT", async () => {
+    const res = await request(serverURL)
+      .get("/admin/user/allUsers");
+
+    expect(res.statusCode).toBe(403);
+    expect(res.body.message).toBe("Token manquant ou invalide");
+    expect(res.body).not.toHaveProperty("users");
+    expect(Array.isArray(res.body)).toBe(false);
+  });
+
+  it("refuse un accès avec un JWT invalide", async () => {
+    const res = await request(serverURL)
+      .get("/admin/user/allUsers")
+      .set("Authorization", "Bearer faux-token");
+
+    expect(res.statusCode).toBe(401);
+    expect(res.body.message).toBe("Token invalide ou expiré");
+    expect(res.body).not.toHaveProperty("users");
+    expect(Array.isArray(res.body)).toBe(false);
+  });
+});

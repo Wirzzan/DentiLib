@@ -42,6 +42,6 @@ describe("Messages d'erreur — actes admin", () => {
     cy.get("#addActForm input[name='name']").type("Acte 1");
     cy.get("#addActForm input[name='description']").type("Doublon");
     cy.get("#addActForm button[type='submit']").click();
-    cy.expectToastError("Erreur création acte");
+    cy.expectToastError("Un acte portant ce nom existe déjà");
   });
 });
