@@ -1,9 +1,11 @@
 name: Tests DentiLib
 
-# Exécuter les tests à chaque push et pull request.
+# Vérifier les pull requests vers main et les commits intégrés à main.
 on:
   push:
+    branches: [main]
   pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
