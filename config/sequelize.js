@@ -1,10 +1,25 @@
 require("dotenv").config();
 
+const fs = require("node:fs");
 const { Sequelize } = require("sequelize");
 
 const dialectOptions = {};
+// Connexion MySQL locale par socket Unix, si configurée.
 if (process.env.DB_SOCKET) {
   dialectOptions.socketPath = process.env.DB_SOCKET;
+}
+
+if (process.env.NODE_ENV === "production" && !process.env.DB_SSL_CA_PATH) {
+  throw new Error("Le certificat CA MySQL est requis en production.");
+}
+
+// TLS : vérification du certificat et de l’identité du serveur distant.
+if (process.env.DB_SSL_CA_PATH) {
+  dialectOptions.ssl = {
+    ca: fs.readFileSync(process.env.DB_SSL_CA_PATH, "utf8"),
+    rejectUnauthorized: true,
+    verifyIdentity: true,
+  };
 }
 
 const sequelize = new Sequelize(
@@ -63,6 +78,8 @@ const connectSequelize = async () => {
     }
   } catch (error) {
     console.error("MySQL connection error:", formatConnectionError(error));
+    // Transmettre l’échec au démarrage du serveur.
+    throw error;
   }
 };
 
