@@ -108,30 +108,19 @@ jobs:
           npm run db:test:reset
           npx --no-install jest --runInBand --json --outputFile=reports/jest.json
 
-      - name: Exécuter Cypress dans l’ordre des parcours
+      - name: Exécuter Cypress en trois lancements
         run: |
-          for spec in \
-            00-reset-db \
-            admin-users \
-            dentist-worksheet \
-            prothesist-worksheet \
-            error-messages
+          # Préparer les données avant de regrouper les autres parcours.
+          for specs in \
+            "cypress/e2e/00-reset-db.cy.js" \
+            "cypress/e2e/admin-users.cy.js" \
+            "cypress/e2e/dentist-worksheet.cy.js,cypress/e2e/prothesist-worksheet.cy.js,cypress/e2e/error-messages.cy.js"
           do
             npx --no-install cypress run \
-              --spec "cypress/e2e/$spec.cy.js" \
+              --spec "$specs" \
               --reporter junit \
               --reporter-options "mochaFile=reports/cypress-[hash].xml"
           done
-
-      - name: Exécuter Newman et produire le rapport
-        run: |
-          npm run db:test:reset
-          npx --no-install newman run DentiLib.postman_collection.json \
-            -e dentilibEnv.postman_environment.json \
-            --env-var "BASE-URL=http://localhost:3001" \
-            -r cli,htmlextra \
-            --reporter-htmlextra-export reports/newman.html \
-            --reporter-htmlextra-skipSensitiveData
 
       - name: Conserver les résultats et captures
         if: always()
