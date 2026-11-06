@@ -124,7 +124,15 @@ describe("Parcours dentiste — absence de prothésiste", () => {
     cy.get("#noProthesisteMsg")
       .should("be.visible")
       .and("contain.text", "Aucun prothésiste n'est associé à votre compte.");
-    cy.intercept("GET", /\/dentiste\/worksheets\/\d+(?:\?.*)?$/).as("readDraft");
+    cy.intercept(
+      "GET",
+      /\/dentiste\/worksheets\/\d+(?:\?.*)?$/,
+      (req) => {
+        // Obtenir une réponse complète pour vérifier les données après rechargement.
+        delete req.headers["if-none-match"];
+        delete req.headers["if-modified-since"];
+      }
+    ).as("readDraft");
     cy.reload();
     cy.wait("@readDraft").then(({ response }) => {
       expect(response.statusCode).to.eq(200);
