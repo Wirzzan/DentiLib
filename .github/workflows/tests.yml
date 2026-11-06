@@ -1,0 +1,145 @@
+name: Tests DentiLib
+
+# Exécuter les tests à chaque push et pull request.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    # Valeurs fictives, utilisées uniquement dans cette machine temporaire.
+    env:
+      NODE_ENV: test
+      DB_HOST: 127.0.0.1
+      DB_PORT: "3306"
+      DB_NAME: dentilib_test
+      DB_USER: root
+      DB_PASSWORD: ci-only-password
+      DB_SYNC: "false"
+      JWT_SECRET: ci-only-jwt-secret-not-for-production
+      PORT: "3001"
+      TEST_URL: http://localhost:3001
+      CORS_ORIGIN: http://localhost:3001
+      EMAIL_FROM: admin@example.test
+
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: ci-only-password
+          MYSQL_ROOT_HOST: "%"
+          MYSQL_DATABASE: dentilib_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+
+      mailpit:
+        image: axllent/mailpit:v1.33.0
+        ports:
+          - 1025:1025
+          - 8025:8025
+
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v7
+
+      - name: Préparer Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Initialiser les tables de test
+        run: |
+          node <<'JS'
+          const fs = require("node:fs");
+          const mysql = require("mysql2/promise");
+
+          async function initialize() {
+            const connection = await mysql.createConnection({
+              host: process.env.DB_HOST,
+              port: Number(process.env.DB_PORT),
+              user: process.env.DB_USER,
+              password: process.env.DB_PASSWORD,
+              multipleStatements: true,
+            });
+            try {
+              const sql = fs.readFileSync("sql/create_tables.sql", "utf8");
+              await connection.query(sql.replace(/\bdentilib\b/g, "dentilib_test"));
+            } finally {
+              await connection.end();
+            }
+          }
+          initialize().catch(error => {
+            console.error(error.message);
+            process.exitCode = 1;
+          });
+          JS
+
+      - name: Démarrer DentiLib et attendre sa disponibilité
+        run: |
+          mkdir -p reports
+          npm run start:test > reports/server.log 2>&1 &
+          for attempt in {1..60}; do
+            if curl --fail --silent http://localhost:3001/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat reports/server.log
+          exit 1
+
+      - name: Exécuter Jest et Supertest
+        run: |
+          npm run db:test:reset
+          npx --no-install jest --runInBand --json --outputFile=reports/jest.json
+
+      - name: Exécuter Cypress dans l’ordre des parcours
+        run: |
+          for spec in \
+            00-reset-db \
+            admin-users \
+            dentist-worksheet \
+            prothesist-worksheet \
+            error-messages
+          do
+            npx --no-install cypress run \
+              --spec "cypress/e2e/$spec.cy.js" \
+              --reporter junit \
+              --reporter-options "mochaFile=reports/cypress-[hash].xml"
+          done
+
+      - name: Exécuter Newman et produire le rapport
+        run: |
+          npm run db:test:reset
+          npx --no-install newman run DentiLib.postman_collection.json \
+            -e dentilibEnv.postman_environment.json \
+            --env-var "BASE-URL=http://localhost:3001" \
+            -r cli,htmlextra \
+            --reporter-htmlextra-export reports/newman.html \
+            --reporter-htmlextra-skipSensitiveData
+
+      - name: Conserver les résultats et captures
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: resultats-tests
+          retention-days: 14
+          path: |
+            reports/
+            cypress/screenshots/
+            cypress/videos/
