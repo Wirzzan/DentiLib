@@ -21,7 +21,6 @@ app.use(
   })
 );
 
-connectSequelize();
 
 const path = require("path");
 app.use(express.static(path.join(__dirname, "public")));
@@ -40,9 +39,6 @@ app.get("/", (req, res) => {
 });
 
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-})
 
 app.use((req, res) => {
   res.status(404).json({
@@ -51,3 +47,20 @@ app.use((req, res) => {
     path: req.originalUrl
   });
 });
+
+async function startServer() {
+  try {
+    // Attendre MySQL avant d’accepter les requêtes HTTP.
+    await connectSequelize();
+
+    app.listen(port, () => {
+      console.log(`Server is running on http://localhost:${port}`);
+    });
+  } catch {
+    console.error("Démarrage annulé : MySQL est inaccessible ou son initialisation a échoué.");
+    // Signaler un échec de démarrage à Render ou au terminal.
+    process.exit(1);
+  }
+}
+
+startServer();
