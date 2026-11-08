@@ -1,404 +1,523 @@
-# Documentation du déploiement — jury CDA
+# DentiLib — Guide de déploiement
 
-## 1. Tests
+## 1. Objet et périmètre
 
-La stratégie, les cas de test, les prérequis, les commandes et les limites sont
-formalisés dans le [plan de tests DentiLib](plan-tests.md).
+Ce document décrit l’architecture, les prérequis, la configuration et les opérations
+nécessaires pour mettre en ligne DentiLib, vérifier son fonctionnement et préparer
+ses mises à jour. Il regroupe également les procédures de validation et de CI utiles
+au déploiement.
 
-### Évaluation de la couverture et des anomalies
+La version décrite est une démonstration utilisant des données fictives. La mise en
+ligne, la connexion administrateur et la réception d’un e-mail ont été vérifiées.
+Les limites de sécurité et les procédures d’exploitation restant à valider sont
+précisées en fin de document.
 
-**Fonctionnalités couvertes**
+Application : **https://dentilib-d50z.onrender.com**.
 
-| Fonctionnalité | Vérifications réalisées |
-| --- | --- |
-| Authentification | Connexion valide, mauvais mot de passe, champs vides, e-mail invalide ou inexistant, accès sans JWT ou avec JWT invalide |
-| Comptes utilisateurs | Création, association dentiste/prothésiste, modification, suppression, annulation de suppression et persistance d’une modification après rechargement |
-| Droits et confidentialité | Refus de la liste des utilisateurs aux dentistes et prothésistes ; refus d’accès à la fiche d’un autre utilisateur ; absence de modification après une tentative interdite |
-| Fiches de travaux | Création, champs obligatoires, envoi, réception et passage à EN_COURS ; envoi bloqué sans prothésiste associé |
-| Catalogue des actes | Parcours de création, modification et suppression ; refus d’un doublon avec un message français |
-| E-mails | Réception vérifiée manuellement dans Mailpit, sans distribution réelle des messages de test |
+## 2. Architecture et services
 
-**Limites**
-
-La couverture est évaluée par fonctionnalités et scénarios ; aucun pourcentage
-de couverture du code n’a été mesuré. Les résultats locaux ont été validés en
-plusieurs exécutions : le rapport final complet reste à conserver.
-Les tests ne couvrent pas toutes les transitions de statut, la persistance du tarif
-prothésiste, le PDF, les JWT expirés, la charge ou tous les navigateurs.
-La réception dans Mailpit ne prouve pas la délivrabilité par le SMTP de production.
-L’absence du mot de passe dans les nouveaux e-mails reste à vérifier spécifiquement.
-La CI, le déploiement et la restauration ne sont pas validés par ces tests locaux.
-
-**Échecs réellement rencontrés et corrections**
-
-| Anomalie observée | Analyse et correction | État |
-| --- | --- | --- |
-| Créations de comptes en HTTP 201, mais assertion sur `#addUserMessage` vide | Le test attendait un ancien affichage. L’application utilise une notification et ferme automatiquement le formulaire. Les tests vérifient désormais la ligne du compte | Retest confirmé réussi par l’utilisateur |
-| Échec sur `AliceMod` introuvable lors de la suppression | Conséquence de l’arrêt du test précédent avant la modification du prénom | Parcours confirmé réussi après correction des assertions |
-| Notification de succès signalée comme recouverte lors de la création du dentiste B | Échec du contrôle de visibilité du toast ; cause graphique exacte non démontrée. Remplacement par une vérification du résultat métier dans le tableau, sans prétendre avoir corrigé un défaut CSS | Retest confirmé réussi par l’utilisateur |
-| Doublon d’acte : test attendant « Erreur création acte », interface affichant « Acte already exists » | Refus HTTP 409 correct, mais message affiché et assertion incohérents. Message français choisi côté interface et assertion alignée ; API inchangée | Retest confirmé réussi par l’utilisateur |
-
-Aucun nouvel échec n’a été signalé dans les derniers résultats transmis. Cela
-ne signifie pas qu’aucune anomalie n’existe : l’inscription administrateur publique
-et les routes d’écriture des actes non protégées restent des points de sécurité
-identifiés à corriger et à tester. L’avertissement Newman `fs.F_OK` est une
-dépréciation technique, pas un échec d’assertion.
-
-### Ce qui fonctionne
-
-- L’application démarre sur le Mac avec MySQL.
-- Les cinq tables et les données de démonstration ont été importées.
-- La connexion administrateur a été vérifiée manuellement.
-
-### Séparation des données
-
-- Séparer les données de démonstration (`dentilib`) des données de test (`dentilib_test`).
-- Les cinq tables de la base de test ont été créées manuellement dans DBeaver.
-- L’application et Cypress utilisent la base de test lors du lancement des tests.
-- Tous les tests Cypress sont passés au vert, selon les résultats confirmés par l’utilisateur après la mise en place de Mailpit et les correctifs.
-
-### Résultats Cypress
-
-La suite contient désormais **23 tests dans 5 fichiers** :
-
-| Fichier | Nombre de tests |
-| --- | ---: |
-| Réinitialisation de la base | 1 |
-| Parcours administrateur et actes | 9 |
-| Parcours dentiste | 5 |
-| Parcours prothésiste | 4 |
-| Messages d’erreur | 4 |
-| **Total** | **23** |
-
-La campagne initiale de **20 tests** a été confirmée réussie par l’utilisateur.
-Les **3 compléments** ont ensuite été confirmés réussis : modification conservée
-après rechargement, annulation de suppression et envoi bloqué sans prothésiste.
-L’inventaire actuel comprend un test de préparation et 22 tests de parcours ou de validation.
-Le bilan unique de la campagne complète à 23 tests reste à conserver.
-
-Cette validation intervient après l’ajout de Mailpit, le remplacement des
-assertions sur les notifications par des vérifications des comptes dans le tableau,
-et l’alignement du message français de doublon d’acte avec son assertion Cypress.
-Une capture ou un rapport de cette exécution reste à conserver pour le jury.
-
-### Résultats API — Jest et Supertest
-
-Les tests appellent directement l’API sur `http://localhost:3001`, connectée
-à `dentilib_test`, avec Mailpit actif.
-
-```bash
-TEST_URL=http://localhost:3001 npm test -- --runInBand
+```mermaid
+flowchart LR
+    U[Navigateur] -->|HTTPS| R[Render : Node.js / Express et interface web]
+    R -->|Sequelize / MySQL avec TLS| A[Aiven : dentilib_prod]
+    R -->|SMTP 2525 avec STARTTLS| B[Brevo]
+    B --> D[Destinataire]
+    G[GitHub : branche main] --> C[GitHub Actions : validation]
+    C -->|Après réussite des contrôles| R
 ```
 
-Résultat du terminal transmis par l’utilisateur : **2 suites réussies sur 2,
-18 tests réussis sur 18**, en **1,348 seconde**, avant les compléments de sécurité.
+| Composant | Rôle |
+| --- | --- |
+| Node.js et Express | Serveur HTTP, API et distribution des fichiers de l’interface dans `public/` |
+| Sequelize et mysql2 | Accès à la base relationnelle MySQL |
+| Render | Hébergement de l’application, installation, démarrage et HTTPS public |
+| Aiven | Hébergement MySQL et certificat CA pour la connexion TLS |
+| Brevo | Relais SMTP pour les e-mails de l’application déployée |
+| GitHub | Gestion du code et intégration des modifications par pull request |
+| GitHub Actions | Exécution des tests dans un environnement temporaire avant déploiement |
+| DBeaver | Administration de MySQL et initialisation manuelle des tables |
+| Mailpit | Capture locale des e-mails de test ; ne distribue pas les messages réels |
 
-- `test/userAuth.test.js` : inscription, connexion et suppression de compte administrateur, avec des cas d’erreur.
-- `test/userAdmin.test.js` : création des comptes et validation des rôles et associations.
-- Deux contrôles JWT ajoutés à `test/userAdmin.test.js` : absence de JWT et JWT invalide,
-  validés par une exécution filtrée (2 réussis, 6 ignorés).
-- `test/securityAccess.test.js` : 7 nouveaux tests sur les rôles, la confidentialité
-  des fiches, les doublons d’e-mail et les champs obligatoires ; réussite confirmée par l’utilisateur.
+Render termine la connexion HTTPS du navigateur. Express utilise HTTP à l’intérieur
+de la plateforme et écoute sur le port fourni par Render. La connexion vers Aiven
+est protégée séparément par TLS ; le SMTP Brevo utilise STARTTLS obligatoire.
 
-L’inventaire actuel est donc de **27 tests dans 3 fichiers**, validés en plusieurs
-exécutions. Le bilan unique d’une campagne complète à 27 tests reste à conserver.
+### Séparation des environnements
 
-### Résultats API — collection Postman avec Newman
+| Environnement | Base | Application | E-mails |
+| --- | --- | --- | --- |
+| Développement local | `dentilib` | `http://localhost:3000` | SMTP défini dans le `.env` local |
+| Tests locaux | `dentilib_test` | `http://localhost:3001` | Mailpit : SMTP 1025, interface 8025 |
+| CI GitHub Actions | `dentilib_test`, dans un service temporaire | `http://localhost:3001` sur la machine CI | Mailpit temporaire |
+| Démonstration déployée | `dentilib_prod`, sur Aiven | URL publique HTTPS Render | Brevo |
 
-Newman exécute la collection Postman depuis le terminal, sur le même serveur de test :
+Les bases locale et distante sont indépendantes, sans synchronisation automatique.
+Les campagnes automatisées ne doivent pas cibler `dentilib_prod`.
 
-```bash
-npx --no-install newman run DentiLib.postman_collection.json \
-  -e dentilibEnv.postman_environment.json \
-  --env-var "BASE-URL=http://localhost:3001"
+## 3. Prérequis et fichiers de référence
+
+Préparer les accès au dépôt GitHub, au service Render, au service MySQL Aiven et
+au compte Brevo. Utiliser Node.js 24 pour reproduire l’environnement de la CI.
+Un client MySQL tel que DBeaver est nécessaire pour l’initialisation manuelle.
+
+| Fichier | Utilité |
+| --- | --- |
+| `package.json` et `package-lock.json` | Commandes et dépendances de l’application |
+| `server.js` | Démarrage après connexion MySQL, port et origine CORS |
+| `config/sequelize.js` | Connexion MySQL et vérification TLS |
+| `utils/mailer.js` | Transport SMTP selon l’environnement |
+| `sql/create_tables.sql` | Création des cinq tables ; script destructif à réserver à l’initialisation |
+| `sql/jeu_essai.sql` | Données fictives de démonstration |
+| `test/resetDatabase.js` | Réinitialisation protégée de la base de test locale |
+| `.github/workflows/tests.yml` | Workflow de validation automatisée |
+
+Les secrets sont renseignés dans Render. Le `.env` local est ignoré par Git ;
+il ne doit pas être copié dans le dépôt ou dans les rapports.
+
+## 4. Préparer MySQL sur Aiven
+
+### 4.1. Créer le service et la connexion d’administration
+
+1. Créer un service MySQL Aiven et attendre sa disponibilité.
+2. Relever l’hôte, le port et les identifiants de connexion fournis par Aiven.
+3. Télécharger le certificat CA du service.
+4. Dans DBeaver, créer une connexion distincte de la connexion MySQL locale.
+5. Renseigner les paramètres Aiven et le certificat CA dans la configuration SSL,
+   puis activer la vérification du certificat et de l’identité du serveur.
+6. Tester la connexion, puis créer la base `dentilib_prod` et la sélectionner.
+
+Le nom du champ SSL dans l’outil désigne la configuration de la connexion chiffrée.
+TLS assure le chiffrement et l’intégrité des échanges. Le certificat CA permet de
+vérifier le certificat présenté ; le nom d’hôte doit aussi correspondre au serveur attendu.
+La configuration DBeaver ne configure pas automatiquement Sequelize.
+
+### 4.2. Initialiser une base vide
+
+Dans l’éditeur SQL associé à la connexion Aiven, exécuter :
+
+```sql
+CREATE DATABASE IF NOT EXISTS dentilib_prod
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE dentilib_prod;
 ```
 
-Résultat du terminal transmis par l’utilisateur :
+Exécuter ensuite une copie de `sql/create_tables.sql` dont les instructions
+`CREATE DATABASE` et `USE` ciblent `dentilib_prod`, avec **Execute SQL Script**.
+Les fichiers d’origine peuvent garder leur cible locale `dentilib`.
 
-- **1 itération, 17 requêtes et 31 assertions : aucun échec.**
-- 17 scripts de test et 1 script de préparation exécutés sans échec.
-- Durée totale : **712 ms** ; temps de réponse moyen : **29 ms** (minimum 2 ms, maximum 93 ms).
-- Parcours couvert : comptes administrateur, dentiste et prothésiste ; catalogue des actes ; création, envoi et suivi d’une fiche ; suppression du compte administrateur.
+Vérifier la présence des cinq tables :
 
-L’avertissement de dépréciation `fs.F_OK` n’a pas empêché l’exécution.
-Les temps mesurés sont ceux de cette exécution locale, pas un test de charge.
+- `utilisateurs` ;
+- `actes` ;
+- `actes_prothesiste` ;
+- `fiches_travaux` ;
+- `actes_fiche`.
 
-### Bilan des exécutions locales
+Pour cette démonstration seulement, exécuter une copie de `sql/jeu_essai.sql`
+avec `USE dentilib_prod`, puis vérifier les comptes administrateur, Marie Martin
+et Paul Durand, ainsi que les associations et les données de démonstration.
+Les identifiants du jeu d’essai sont publics : ils ne conviennent pas à un usage réel.
 
-| Ensemble | Résultat |
+**Ne pas rejouer le script de création sur une base à conserver : il supprime les
+tables et leurs données.** L’initialisation et le jeu d’essai ne font pas partie
+du démarrage normal. Les évolutions futures du schéma nécessitent une procédure
+de migration et une sauvegarde préalable.
+
+## 5. Configurer Render et les services externes
+
+### 5.1. Service web
+
+Configurer le service Render avec le dépôt DentiLib, la branche `main` et les commandes
+existantes :
+
+| Paramètre | Valeur |
 | --- | --- |
-| Cypress | 20 tests initiaux + 3 compléments confirmés réussis ; inventaire de 23 tests |
-| Jest / Supertest | 18 tests initiaux + 2 contrôles JWT + 7 compléments validés ; inventaire de 27 tests |
-| Postman via Newman | 31 assertions réussies sur 31, pour 17 requêtes |
+| Build Command | `npm install` |
+| Start Command | `node server.js` |
+| Branche déployée | `main` |
+| Déploiement automatique retenu | `After CI Checks Pass` |
 
-Ces chiffres décrivent des mesures différentes et ne sont pas additionnés.
-Les sorties Jest et Newman ont été transmises dans la conversation ; les captures
-ou rapports restent à conserver dans les pièces de présentation.
-Ces résultats valident les scénarios exécutés, sans attester une couverture complète
-ni la correction des failles de sécurité encore identifiées.
+`npm install` installe les dépendances lors du build. `node server.js` démarre
+l’application. La CI utilise séparément `npm ci`, qui s’appuie sur le fichier de
+verrouillage pour reproduire l’installation.
 
-### Séparation des lancements
+L’ancienne configuration MongoDB (`DB_URL`) n’est pas utilisée par la connexion
+Sequelize actuelle. Configurer les paramètres MySQL ci-dessous.
 
-Les commandes `start:test` et `cypress:open` ont été ajoutées dans `package.json`
-pour utiliser `dentilib_test`, sans changer le `.env` de l’application principale.
-Le serveur de test utilise le port 3001, contre 3000 pour l’application habituelle.
-Un contrôle refuse la suppression des données si Cypress ne cible pas
-`dentilib_test` en environnement de test sur un serveur MySQL local.
+### 5.2. Certificat CA et variables d’environnement
 
-### Vérification des comptes
+Dans **Environment → Secret Files**, ajouter le certificat CA Aiven sous le nom
+`aiven-ca.pem`. Le chemin utilisé par l’application est `/etc/secrets/aiven-ca.pem`.
 
-Les tests vérifient les lignes du tableau : présence du compte créé, nom modifié
-et absence du compte supprimé. Ils ne dépendent plus des notifications temporaires.
-La base de test doit être réinitialisée avant le parcours pour vérifier les créations.
+Dans **Environment**, renseigner :
 
-### Mailpit — réception vérifiée
-
-Mailpit capture les e-mails des tests sans les envoyer aux véritables destinataires.
-Ils sont consultables à l’adresse `http://127.0.0.1:8025/`.
-Seul le lancement de test utilise Mailpit ; le SMTP habituel reste inchangé.
-L’utilisateur a confirmé la réception des e-mails de test dans Mailpit.
-
-### Ordre de lancement des tests
-
-`npm run db:test:reset` permet de vider uniquement la base de test `dentilib_test`.
-`npm run test:newman` lance Newman et génère ses rapports ; `npm run test:api` lance Jest/Supertest. Ces deux commandes réinitialisent automatiquement la base avant les tests, avec Mailpit et le serveur de test déjà actifs.
-La réinitialisation est centralisée dans la fonction `resetTestDatabase()`, dans le nouveau fichier `test/resetDatabase.js`.
-Cypress l’appelle via `00-reset-db.cy.js` ; les commandes Newman et Jest/Supertest l’exécutent avant leur campagne.
-Les trois ensembles réutilisent ainsi la même fonction protégée pour vider les données de `dentilib_test`, sans supprimer les tables ni toucher à `dentilib`.
-
-MySQL doit être démarré. Garder les trois terminaux suivants ouverts :
-
-1. Démarrer Mailpit :
-   ```bash
-   "$HOME/Documents/Projects_dev/Outils/mailpit/mailpit" --listen 127.0.0.1:8025 --smtp 127.0.0.1:1025
-   ```
-2. Dans le dossier DentiLib : `npm run start:test`.
-3. Dans un autre terminal, dans le même dossier : `npm run cypress:open`.
-
-Dans Cypress, lancer `00-reset-db.cy.js`, puis les scénarios métier.
-Inutile de redémarrer un service déjà actif.
-
-### Comment l’expliquer au jury
-
-« Mes tests peuvent supprimer et recréer des données. J’ai donc créé une base séparée pour les exécuter sans effacer les données de démonstration. »
-
-« En environnement de test, l’application utilise un serveur SMTP local de capture afin d’éviter l’envoi d’e-mails réels. »
-
-### Points d’amélioration
-
-**Création des comptes et remise du mot de passe**
-
-- Réalisé : le mot de passe a été retiré des deux e-mails de création de compte.
-  L’e-mail conserve l’identifiant et propose un lien pour contacter l’administrateur.
-- Fonctionnement actuel : l’administrateur définit le mot de passe initial et doit
-  le communiquer par un canal distinct de l’e-mail. Le lien de contact n’active pas le compte.
-- Amélioration prévue : envoyer un lien sécurisé, temporaire et à usage unique,
-  permettant à l’utilisateur de choisir son mot de passe et d’activer son compte.
-- Vérification à compléter : contrôler les nouveaux messages dans Mailpit et ajouter
-  un test confirmant qu’ils ne contiennent pas le mot de passe. Pour l’activation future,
-  tester aussi les liens expirés, invalides et déjà utilisés.
-
-Pour le jury : « L’envoi du mot de passe par e-mail a été supprimé. La remise des
-accès reste manuelle ; l’activation autonome par lien sécurisé est un point d’amélioration prévu. »
-
-### Suite prévue
-
-1. Conserver les captures ou rapports des trois ensembles de tests.
-2. Rejouer les campagnes complètes après les derniers changements et tester les futurs correctifs de sécurité.
-
-Ne présenter comme réussis que les tests réellement exécutés et vérifiés.
-
-## 2. Déploiement
-
-### Architecture retenue
-
-- Render héberge le serveur Node.js/Express et les pages de DentiLib.
-- Aiven héberge MySQL, la base relationnelle utilisée par Sequelize.
-- Le développement reste sur `dentilib` en local et les tests sur `dentilib_test`.
-- La base distante est nommée **`dentilib_prod`** pour distinguer clairement son usage.
-
-Trajet prévu : navigateur → HTTPS → DentiLib sur Render → TLS → MySQL sur Aiven.
-Cette architecture cible n’est pas encore entièrement raccordée ni vérifiée en ligne.
-
-### Render — état constaté
-
-Le service existant est accessible à l’adresse
-[dentilib-d50z.onrender.com](https://dentilib-d50z.onrender.com).
-L’utilisateur a confirmé dans Render le statut **Live**, le dépôt GitHub DentiLib
-et la branche de déploiement **`main`**.
-
-Au premier contrôle, la seule variable d’environnement signalée était `DB_URL`, qui référence
-l’ancienne base MongoDB utilisée au début du projet. Le code actuel repose sur
-MySQL et lit les variables `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER` et `DB_PASSWORD`.
-Le statut Live ne prouve donc pas le fonctionnement de la version MySQL actuelle.
-
-Une branche **`prep-deploiement`** a été créée pour préparer les changements avant
-leur intégration à la branche déployée. Le port du serveur lit déjà `process.env.PORT`.
-Les paramètres MySQL, JWT et SMTP ont ensuite été renseignés dans Render par l’utilisateur,
-comme détaillé ci-dessous. Leur utilisation par une nouvelle version déployée reste à vérifier.
-
-### Aiven — création et préparation de MySQL
-
-1. Création d’un service MySQL avec l’offre gratuite Aiven.
-2. Attente de sa construction, puis utilisation des paramètres de connexion fournis
-   par Aiven : hôte, port, utilisateur et mot de passe.
-3. Création d’une connexion MySQL distincte dans DBeaver, sans modifier la connexion locale.
-4. Ajout du certificat CA Aiven dans la configuration SSL de DBeaver et activation
-   des options de vérification présentées pendant la configuration.
-5. Test de connexion DBeaver réussi et confirmé par l’utilisateur.
-6. Création de `dentilib_prod` sur le même serveur Aiven, puis sélection comme base
-   par défaut dans DBeaver. La suppression de `defaultdb` a été envisagée, mais
-   son exécution n’a pas été confirmée.
-
-Les identifiants Aiven ne sont pas consignés dans ce document.
-
-### Initialisation de la base distante
-
-Dans un éditeur SQL utilisant la connexion Aiven :
-
-- Exécution d’une copie de `sql/create_tables.sql`, avec `CREATE DATABASE` et `USE`
-  ciblant `dentilib_prod`. Les cinq tables ont été confirmées créées.
-- Exécution d’une copie de `sql/jeu_essai.sql`, avec `USE dentilib_prod`, pour importer
-  les données fictives de démonstration.
-- Vérification confirmée des trois comptes : administrateur, Marie Martin et Paul Durand.
-
-Les fichiers SQL d’origine peuvent conserver leur cible locale `dentilib`.
-Les copies adaptées à Aiven sont exécutées avec **Execute SQL Script** pour respecter
-l’ordre des instructions. Le script de création contient des suppressions de tables :
-il a servi à l’initialisation d’une base vide et ne doit pas être rejoué comme mise à jour.
-Le jeu d’essai n’est pas à réimporter à chaque déploiement.
-
-La base distante et la base locale sont indépendantes : il n’existe pas de synchronisation
-automatique entre leurs données. Seules des données fictives sont destinées à cette démonstration.
-
-### TLS et certificat CA
-
-TLS chiffre les échanges et protège leur intégrité. Le certificat CA permet de vérifier
-le certificat du serveur ; la vérification du nom d’hôte permet de vérifier le serveur attendu.
-L’onglet DBeaver est nommé SSL, mais la connexion utilise le protocole moderne TLS.
-
-La connexion DBeaver à Aiven a été configurée avec le certificat et testée avec succès.
-La version TLS et les paramètres négociés n’ont pas été relevés séparément.
-La configuration DBeaver ne s’applique pas automatiquement à Sequelize : une
-configuration TLS a donc été ajoutée dans `config/sequelize.js`.
-Le HTTPS du navigateur et le TLS vers MySQL protègent deux connexions différentes.
-
-### Vérification de Sequelize vers Aiven depuis le Mac
-
-- Ajout de la lecture du certificat CA via `DB_SSL_CA_PATH`, avec
-  `rejectUnauthorized: true` et `verifyIdentity: true` pour vérifier le certificat et le nom du serveur.
-- En environnement `production`, le certificat est obligatoire. La configuration
-  locale reste inchangée en l’absence de cette variable hors production.
-- Test ponctuel de `sequelize.authenticate()` vers `dentilib_prod`, avec les paramètres
-  Aiven fournis pour cette commande uniquement, sans modifier le `.env` local.
-- Le mot de passe a été saisi de manière invisible dans une variable temporaire du
-  terminal. Il n’a pas été inscrit en clair dans la commande ; il peut être effacé avec
-  `unset AIVEN_PASSWORD` après le test.
-- Résultat transmis par l’utilisateur : **« Connexion MySQL avec vérification TLS réussie. »**
-
-Cette vérification confirme le trajet **Mac → Aiven** sans modifier les données.
-Elle ne confirme pas encore le trajet **Render → Aiven**, qui sera testé après configuration et déploiement.
-
-### Variables et certificat préparés dans Render
-
-Le certificat CA a été ajouté dans **Environment → Secret Files**, sous le nom
-`aiven-ca.pem`. Son emplacement attendu à l’exécution est `/etc/secrets/aiven-ca.pem`.
-L’utilisateur a confirmé avoir renseigné les variables suivantes ; leurs valeurs
-secrètes ne sont pas reproduites dans le dépôt.
-
-| Variable | Valeur ou rôle |
+| Variable | Valeur ou fonction |
 | --- | --- |
 | `NODE_ENV` | `production` |
 | `DB_HOST` | Hôte MySQL fourni par Aiven |
-| `DB_PORT` | Port fourni par Aiven |
+| `DB_PORT` | Port MySQL fourni par Aiven |
 | `DB_NAME` | `dentilib_prod` |
-| `DB_USER` / `DB_PASSWORD` | Identifiants Aiven |
-| `DB_SYNC` | `false` : tables initialisées explicitement, sans synchronisation automatique au démarrage |
+| `DB_USER` | Utilisateur MySQL Aiven |
+| `DB_PASSWORD` | Mot de passe MySQL Aiven |
+| `DB_SYNC` | `false` : pas de synchronisation automatique des tables |
 | `DB_SSL_CA_PATH` | `/etc/secrets/aiven-ca.pem` |
-| `CORS_ORIGIN` | `https://dentilib-d50z.onrender.com` |
-| `JWT_SECRET` | Secret aléatoire distinct du secret local |
+| `CORS_ORIGIN` | `https://dentilib-d50z.onrender.com` ; adapter si le domaine change |
+| `JWT_SECRET` | Secret de signature propre à la production |
 | `SMTP_HOST` | `smtp-relay.brevo.com` |
 | `SMTP_PORT` | `2525` |
-| `SMTP_USER` / `SMTP_PASS` | Identifiant SMTP et clé SMTP Brevo |
+| `SMTP_USER` | Identifiant SMTP fourni par Brevo |
+| `SMTP_PASS` | Clé SMTP Brevo |
 | `EMAIL_FROM` | Adresse d’expédition validée dans Brevo |
 
-Render fournit `PORT` ; `DB_SOCKET` n’est pas utilisé pour la connexion distante.
-Le `.env` local reste inchangé et n’est pas stocké dans Git. Le certificat CA est
-un certificat de confiance, pas une clé privée. Les mots de passe et clés restent privés.
+Render fournit `PORT`. Ne pas renseigner de `DB_SOCKET` local pour la connexion distante.
+Le certificat CA est un certificat de confiance, pas une clé privée.
 
-### Signature JWT en production
+À la configuration initiale, générer le secret JWT dans un terminal :
 
-Un secret de production a été généré avec `openssl rand -hex 32`, puis ajouté dans Render.
-Cette commande produit 32 octets aléatoires, représentés par 64 caractères hexadécimaux.
-Le secret permet de signer et vérifier les JWT : une modification du jeton est détectée.
-Il ne chiffre pas leur contenu et ne doit pas être publié.
+```bash
+openssl rand -hex 32
+```
 
-### E-mails de production — Brevo et STARTTLS
+La commande produit 32 octets aléatoires sous forme de 64 caractères hexadécimaux.
+Renseigner le résultat dans `JWT_SECRET` sans le publier. Ce secret signe les jetons,
+mais ne chiffre pas leur contenu. Son remplacement invalide les jetons existants.
 
-Render Free bloque les ports SMTP 25, 465 et 587 : le SMTP Gmail local sur 587 ne
-convient donc pas à ce déploiement. Un compte Brevo a été créé, l’expéditeur a été
-validé et une clé SMTP a été générée. Brevo accepte le port 2525 choisi pour Render.
+Dans `config/sequelize.js`, la production exige un certificat CA. La connexion utilise
+`rejectUnauthorized: true` et `verifyIdentity: true`. Un certificat absent, illisible
+ou non valide empêche le démarrage ; ne pas désactiver les vérifications pour contourner
+une erreur de connexion.
 
-- Local habituel : Gmail, configuration existante du `.env`.
-- Tests : Mailpit local, sans distribution réelle.
-- Démonstration déployée : relais SMTP Brevo, configuré dans Render.
+### 5.3. Configurer Brevo
 
-Dans `utils/mailer.js`, `requireTLS: true` a été ajouté uniquement au transport SMTP
-hors tests. Avec `secure: false`, la connexion passe au chiffrement par STARTTLS ;
-`requireTLS` rend ce passage obligatoire avant authentification et envoi.
-Le transport Mailpit reste inchangé.
+1. Valider l’adresse d’expédition dans Brevo.
+2. Générer une clé SMTP et relever l’identifiant SMTP.
+3. Renseigner les variables SMTP dans Render et utiliser le port `2525` retenu
+   pour ce déploiement, à la place du port Gmail `587` local.
+4. Renseigner `EMAIL_FROM` avec l’expéditeur validé, distinct de l’identifiant SMTP.
+5. Appliquer la configuration en redéployant le service.
 
-Un test `transporter.verify()` a été exécuté depuis le Mac avec les paramètres
-Brevo et la clé saisie dans une variable temporaire. Résultat confirmé :
-**« Connexion Brevo, STARTTLS et authentification réussis. »**
-Ce test n’envoie aucun e-mail : l’autorisation effective de l’expéditeur et la
-réception d’un message depuis Render restent à vérifier.
+Le transport hors tests dans `utils/mailer.js` utilise `secure: false` et
+`requireTLS: true` : la connexion doit passer au chiffrement par STARTTLS.
+En environnement `test`, le transport cible exclusivement Mailpit local.
 
-Le bouton Brevo de blocage des IP non autorisées est une protection supplémentaire,
-distincte de la clé SMTP. Son activation n’a pas été confirmée ; elle nécessite de
-préparer les autorisations des adresses IP sortantes de Render.
+Les e-mails de création de compte contiennent l’identifiant et un lien de contact
+administrateur, sans mot de passe. La remise du mot de passe initial reste manuelle,
+par un canal distinct ; le lien de contact n’est pas un lien d’activation.
 
-### Démarrage conditionné à MySQL
+## 6. Valider avant la mise en ligne
 
-Deux modifications ont été réalisées :
+### 6.1. Stratégie et couverture
 
-- `config/sequelize.js` transmet l’échec de connexion avec `throw error`, après journalisation.
-- `server.js` attend `connectSequelize()` avant d’exécuter `app.listen()`.
+Les validations combinent des scénarios nominaux, alternatifs et négatifs.
+Les tests API appellent le vrai serveur et MySQL ; ils ne constituent pas une suite
+unitaire isolée. Les tests navigateur vérifient les effets métier visibles.
 
-En cas d’échec, le message est :
+| Ensemble | Périmètre et inventaire |
+| --- | --- |
+| Jest / Supertest | 27 tests : 12 d’authentification, 8 d’administration, 7 de sécurité et validation |
+| Cypress | 23 tests dans 5 fichiers, dont 1 réinitialisation et 22 tests de parcours ou de validation |
+| Postman / Newman | 17 requêtes et 31 assertions sur un parcours API des trois rôles |
+| Mailpit | Vérification manuelle des e-mails capturés sans distribution réelle |
+
+Les fonctionnalités vérifiées comprennent la gestion et l’association des comptes,
+les erreurs de saisie, les JWT absents ou invalides, les restrictions de rôle,
+le refus de lecture ou modification d’une fiche étrangère et la conservation de ses
+données après un refus. Les parcours incluent création et envoi des fiches, réception,
+passage à `EN_COURS`, annulation de suppression et persistance après rechargement.
+
+Les fichiers de référence sont `test/userAuth.test.js`, `test/userAdmin.test.js`,
+`test/securityAccess.test.js` et les cinq fichiers de `cypress/e2e/` listés ci-dessous.
+La collection API est `DentiLib.postman_collection.json`, avec
+`dentilibEnv.postman_environment.json`.
+
+### 6.2. Exécuter les campagnes locales
+
+Prérequis : dépendances installées, MySQL local démarré, configuration locale renseignée
+et cinq tables présentes dans `dentilib_test`. Toutes les commandes npm partent de
+la racine du projet.
+
+**Terminal 1 — démarrer Mailpit :**
+
+```bash
+mailpit
+```
+
+Cette commande suppose la fonction locale déjà configurée dans `~/.zshrc`.
+À défaut, sur le poste utilisé pour le projet :
+
+```bash
+"$HOME/Documents/Projects_dev/Outils/mailpit/mailpit" --listen 127.0.0.1:8025 --smtp 127.0.0.1:1025
+```
+
+L’interface est accessible sur **http://127.0.0.1:8025/**.
+
+**Terminal 2 — démarrer et laisser ouvert le serveur de test :**
+
+```bash
+npm run start:test
+```
+
+Cette commande sélectionne `dentilib_test` et le port 3001 sans remplacer la base
+principale du `.env`.
+
+**Terminal 3 — exécuter les campagnes successivement :**
+
+```bash
+npm run test:api
+```
+
+La commande réinitialise la base de test, puis lance Jest/Supertest sur le port 3001.
+
+```bash
+npm run cypress:open
+```
+
+Dans Cypress, exécuter les fichiers dans cet ordre :
+
+1. `00-reset-db.cy.js` ;
+2. `admin-users.cy.js` ;
+3. `dentist-worksheet.cy.js` ;
+4. `prothesist-worksheet.cy.js` ;
+5. `error-messages.cy.js`.
+
+Ne pas réinitialiser entre ces fichiers : les parcours partagent les comptes et
+le catalogue préparés par l’administration. Terminer la campagne avant d’exécuter :
+
+```bash
+npm run test:newman
+```
+
+Cette commande réinitialise la base, lance la collection et génère
+`newman/rapport-api.html` et `newman/rapport-api.json`. Pour ouvrir le rapport sur macOS :
+
+```bash
+open newman/rapport-api.html
+```
+
+La réinitialisation indépendante reste disponible :
+
+```bash
+npm run db:test:reset
+```
+
+La fonction `resetTestDatabase()` de `test/resetDatabase.js` supprime les données,
+pas les tables. Elle refuse un environnement autre que `test`, une base autre que
+`dentilib_test` ou un hôte MySQL non local. Ces contrôles ne remplacent pas les droits
+SQL limités à la base de test. Ne pas lancer plusieurs campagnes simultanément.
+
+### 6.3. Résultats et décision de validation
+
+Les exécutions locales ont été confirmées réussies au cours de la validation :
+18 tests API initiaux, puis 2 contrôles JWT et 7 compléments ; 20 tests Cypress
+initiaux, puis 3 compléments. La CI Jest/Cypress a ensuite été confirmée réussie.
+Le résultat Newman transmis contient 17 requêtes et 31 assertions sans échec.
+Ces nombres mesurent des éléments différents et ne doivent pas être additionnés.
+
+Les anomalies rencontrées ont porté notamment sur des assertions visant un ancien
+message, une notification temporaire, un libellé anglais de doublon d’acte et une
+réponse conditionnelle HTTP 304. Les contrôles ont été alignés sur le résultat métier,
+le message français a été corrigé et le test de rechargement a été adapté avant retest.
+
+Pour autoriser une nouvelle mise en ligne, vérifier la réussite des campagnes prévues
+et conserver les résultats avec le commit, la date et l’environnement. Une campagne
+verte valide le périmètre testé ; elle ne supprime pas les limites connues.
+
+**Limites de validation :** le cycle des fiches n’est pas testé jusqu’à la finalisation
+et au paiement ; les tests de charge et de performance ne sont pas réalisés.
+La persistance des tarifs, le PDF, les JWT expirés et la compatibilité entre tous
+les navigateurs ne sont pas couverts de manière complète. Aucun pourcentage de
+couverture du code n’a été mesuré.
+
+## 7. Mise en ligne et intégration continue
+
+### 7.1. Proposer une évolution
+
+Partir d’un état local vérifié et conserver les modifications en cours avant de changer
+de branche. Pour une nouvelle évolution :
+
+```bash
+git checkout main
+git pull --ff-only origin main
+git checkout -b nouvelle-evolution
+```
+
+Réaliser les changements et les vérifier localement. Ajouter uniquement les fichiers
+concernés, puis enregistrer et publier la branche. Exemple pour le workflow :
+
+```bash
+git add .github/workflows/tests.yml
+git commit -m "Actualise le workflow de tests"
+git push -u origin nouvelle-evolution
+```
+
+Ouvrir ensuite une pull request vers `main` et consulter les contrôles avant de fusionner.
+
+### 7.2. Exécution du workflow
+
+Le workflow `.github/workflows/tests.yml` se déclenche sur :
+
+- les pull requests vers `main` ;
+- les push sur `main`, y compris après une fusion ;
+- une demande manuelle avec `workflow_dispatch`.
+
+Un push sur une autre branche sans pull request ouverte ne lance pas la CI.
+La vérification de la pull request et celle du commit intégré répondent à deux étapes
+distinctes de la validation.
+
+Le job utilise Ubuntu 24.04 et Node.js 24, avec MySQL 8.4 et Mailpit temporaires.
+Il exécute successivement :
+
+1. Récupération du code et préparation de Node.js.
+2. Installation des dépendances avec `npm ci`.
+3. Initialisation de `dentilib_test` à partir du script SQL, avec remplacement de la cible locale.
+4. Démarrage de DentiLib et attente de sa disponibilité sur le port 3001.
+5. Réinitialisation de la base, puis Jest/Supertest.
+6. Cypress en trois lancements : reset, administration, puis regroupement dentiste,
+   prothésiste et messages d’erreur. Les 23 tests sont conservés.
+7. Conservation des résultats et logs produits, y compris en cas d’échec.
+
+Les artefacts `resultats-tests` regroupent le JSON Jest, les XML Cypress, le journal
+serveur et les éventuelles captures ou vidéos, pendant 14 jours. Les consulter dans
+**GitHub → Actions → Tests DentiLib**. Les durées des étapes sont aussi affichées.
+Newman reste une campagne locale et n’est pas exécuté par ce workflow.
+Aucun secret Aiven ou Brevo n’est nécessaire à la CI.
+
+### 7.3. Déployer la version intégrée
+
+1. Attendre la réussite des contrôles de la pull request et fusionner dans `main`.
+2. Attendre les tests du nouveau commit sur `main`.
+3. Avec le réglage Render **After CI Checks Pass**, laisser Render déployer après
+   réussite des contrôles ; en cas d’échec, corriger avant une nouvelle mise en ligne.
+4. Dans Render, consulter les événements de déploiement, le commit et les logs.
+5. Attendre le statut **Live**, puis effectuer les vérifications de la section suivante.
+
+Pour la première mise en ligne ou une reprise manuelle, sélectionner dans Render
+**Manual Deploy → Deploy latest commit**, après validation du commit visé et des
+variables. Ce lancement manuel ne remplace pas les tests préalables.
+
+La chaîne CI/déploiement a été confirmée fonctionnelle et des captures GitHub Actions
+et Render ont été prises. Aucune règle de protection de branche imposant les tests
+avant fusion n’a été configurée : le contrôle du résultat avant merge reste manuel.
+Un essai volontaire d’échec bloquant le déploiement et le lancement manuel du workflow
+n’ont pas été validés séparément.
+
+## 8. Vérifications après déploiement
+
+| Vérification | Résultat attendu | Validation disponible |
+| --- | --- | --- |
+| Déploiement Render | Statut Live et commit correspondant à la version choisie | Mise en ligne confirmée ; captures prises |
+| Accès public | Page de connexion accessible en HTTPS | Accès confirmé |
+| Authentification | Connexion administrateur et affichage des données Aiven | Connexion confirmée |
+| Création de compte et mail | Compte créé et e-mail reçu sur une adresse contrôlée | Réception réelle via Brevo confirmée |
+| Parcours dentiste/prothésiste complet en ligne | Création, envoi et suivi d’une fiche | Recette complète en ligne à compléter |
+| Sauvegarde et restauration MySQL | Récupération des données après incident | Non mises en place ; amélioration à prévoir |
+| Retour arrière applicatif | Rétablissement d’une version fonctionnelle | Procédure proposée ci-dessous, non exécutée ni testée |
+
+Utiliser une adresse de destination contrôlée pour vérifier Brevo. Un statut SMTP
+« envoyé » ne prouve pas à lui seul la réception ; consulter les logs Brevo et la boîte
+du destinataire. Les adresses fictives peuvent produire un blocage ou un hard bounce.
+
+Le serveur attend la connexion MySQL avant d’ouvrir son port. En cas d’échec, il affiche :
 
 ```text
 Démarrage annulé : MySQL est inaccessible ou son initialisation a échoué.
 ```
 
-Le processus s’arrête avec le code **1**, qui signale un échec de démarrage ; ce n’est
-pas un statut HTTP, puisque le serveur n’écoute pas encore. La syntaxe des fichiers
-a été vérifiée. Les essais de démarrage réel avec et sans MySQL restent à exécuter.
-Ce mécanisme contrôle la disponibilité au démarrage, sans assurer une surveillance continue.
+Il quitte avec le code 1. Le démarrage normal et le refus de démarrer ont été vérifiés
+localement. Pour reproduire ce contrôle local, arrêter d’abord tout serveur sur 3001 :
 
-### HTTPS de l’application
+```bash
+npm run start:test
+```
 
-Render assure la terminaison TLS et la gestion du certificat de l’adresse publique.
-Express conserve son serveur HTTP interne ; aucun certificat HTTPS n’a été ajouté
-au code Node.js. Après déploiement, vérifier l’accès HTTPS, la validité du certificat
-et la redirection HTTP vers HTTPS. Ces contrôles restent à réaliser sur la nouvelle version.
+Après arrêt avec Ctrl+C :
 
-### Prochaines étapes et preuves à conserver
+```bash
+DB_PORT=1 npm run start:test
+echo $?
+```
 
-1. Tester le démarrage avec MySQL disponible et indisponible, puis terminer les
-   correctifs d’accès identifiés dans la partie Tests.
-2. Envoyer la version préparée sur GitHub et vérifier la branche et le commit sélectionnés dans Render.
-3. Déployer puis contrôler les journaux, Render → Aiven, Render → Brevo avec réception
-   réelle d’un e-mail de démonstration, HTTPS et les parcours des trois rôles.
-4. Documenter la sauvegarde et la restauration MySQL, ainsi que le retour à une version
-   applicative précédente en tenant compte de la compatibilité du schéma.
+Le second essai attend un échec et le code 1, à condition qu’aucun `DB_SOCKET` ne
+contourne le port TCP. La variable de port ne s’applique qu’à cette commande.
+Ce contrôle au démarrage ne constitue pas une surveillance continue de MySQL.
 
-Conserver des captures sans secrets : service Aiven, connexion DBeaver, cinq tables,
-journaux de démarrage Render, commit déployé et résultats des vérifications en ligne.
-L’intégration Render → Aiven, la nouvelle mise en ligne, la sauvegarde et le retour
-arrière ne sont pas présentés comme exécutés à ce stade.
+## 9. Diagnostic des incidents
 
-## 3. DevOps
+| Symptôme | Vérification et action |
+| --- | --- |
+| Connexion MySQL refusée | Contrôler hôte, port, disponibilité Aiven et éventuel `DB_SOCKET` local |
+| Accès MySQL refusé | Vérifier `DB_USER` et `DB_PASSWORD` dans Render |
+| Certificat absent ou erreur TLS | Vérifier le secret file, `DB_SSL_CA_PATH`, le certificat CA et l’hôte |
+| Tables ou données absentes | Vérifier `DB_NAME` et l’initialisation de la bonne base ; ne pas relancer le script destructif sur des données à conserver |
+| `451 4.0.0 Invalid from` | Vérifier `EMAIL_FROM` et sa validation dans Brevo, puis appliquer la configuration par un redéploiement |
+| E-mail non reçu | Consulter les logs transactionnels Brevo, le destinataire et les courriers indésirables |
+| Cypress ne trouve pas `localhost:3001` | Démarrer `npm run start:test` et attendre sa disponibilité |
+| Doublons ou scénarios dépendant d’anciens essais | Réinitialiser uniquement `dentilib_test` avant une nouvelle campagne indépendante |
 
-À préparer : une pipeline qui exécute les tests avant le déploiement et conserve
-leurs résultats. Sa mise en place et son exécution restent à vérifier.
+L’erreur `Invalid from` a été rencontrée et résolue par l’ajout de `EMAIL_FROM`, puis
+un redéploiement et un essai reçu. Pour les logs, comparer l’heure et le commit de
+l’essai à ceux du déploiement afin de ne pas interpréter une ancienne erreur comme actuelle.
+
+L’échec CI `expected 304 to equal 200` a été diagnostiqué dans le XML Cypress.
+Le test concerné retire les en-têtes conditionnels de sa requête de rechargement pour
+recevoir le corps JSON, tout en conservant les assertions métier. Le retest a été
+confirmé réussi. Le code applicatif n’a pas été modifié pour contourner cet échec.
+
+## 10. Sauvegarde et retour arrière
+
+La récupération des données et le rétablissement du code correspondent à deux besoins
+distincts. Les éléments ci-dessous distinguent les améliorations à mettre en place
+de la procédure de retour arrière proposée pour l’application.
+
+### Sauvegarde et restauration MySQL — amélioration à prévoir
+
+Aucune procédure de sauvegarde ou de restauration MySQL n’a été mise en place ni
+testée dans le cadre du projet. Il n’existe donc pas de validation de récupération
+des données après incident dans ce périmètre.
+
+Une amélioration future devra définir la fréquence des sauvegardes, leur stockage
+protégé, leur durée de conservation et un test de restauration dans une base séparée.
+Cette démarche permettra de vérifier que les données peuvent réellement être récupérées.
+Les fichiers SQL de création et le jeu d’essai ne remplacent pas une sauvegarde.
+
+### Retour arrière applicatif — procédure proposée, non testée
+
+En cas de régression après une mise à jour, la procédure suivante vise à rétablir
+une version connue comme fonctionnelle. Elle est documentée à titre de préparation ;
+aucun retour arrière applicatif n’a été exécuté ni validé dans le cadre du projet.
+
+1. Relever le commit de la dernière version fonctionnelle avant une mise à jour.
+2. Vérifier sa compatibilité avec le schéma MySQL et les variables en cours.
+3. Redéployer cette version sur Render.
+4. Refaire les contrôles de connexion, d’accès aux données et d’un parcours métier.
+5. Consigner l’incident et la version rétablie.
+
+Un retour au code précédent ne restaure pas les données et n’annule pas une migration.
+
+## 11. Limites connues et améliorations
+
+| Point | État et suite attendue |
+| --- | --- |
+| Inscription administrateur | Route publique dans `routes/authRoutes.js` ; remplacer par une initialisation contrôlée |
+| Écriture du catalogue des actes | Routes de création, modification et suppression sans contrôle JWT/rôle dans `routes/actRoutes.js` ; protéger les routes et adapter l’interface et les tests |
+| Remise des accès | Mot de passe retiré des e-mails ; prévoir un lien temporaire à usage unique pour définir son mot de passe et activer son compte |
+| Validation des messages | Ajouter une assertion vérifiant explicitement l’absence du mot de passe dans les e-mails |
+| Couverture métier | Compléter notamment les étapes de finalisation/paiement et les transitions interdites des fiches |
+| Charge et performance | Aucun test de charge réalisé ; les temps Newman ne constituent pas une mesure de tenue en charge |
+| Exploitation | Mettre en place la sauvegarde et la restauration MySQL, puis les tester ; valider le retour arrière applicatif proposé et préparer les migrations de schéma |
+| Gouvernance CI | Ajouter une protection de branche si le résultat des contrôles doit devenir obligatoire avant fusion |
+
+Les défauts d’accès identifiés restent présents : leur documentation ne les corrige
+pas. La validation obtenue porte sur le périmètre testé et la démonstration déployée,
+sans constituer une autorisation d’exploiter de vraies données patient.
+
+## 12. Traçabilité de chaque mise en ligne
+
+Conserver la date, le commit, les commandes de validation et leurs résultats,
+le déploiement Render correspondant et les contrôles fonctionnels réalisés.
+Les captures GitHub Actions et Render doivent permettre d’identifier la même version.
+Conserver aussi les rapports d’échec utiles au diagnostic et les retests associés.
+Ne pas inclure de secrets, de jetons réutilisables ou de données personnelles réelles
+dans les pièces partagées.
