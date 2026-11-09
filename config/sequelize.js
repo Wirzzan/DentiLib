@@ -13,7 +13,6 @@ if (process.env.NODE_ENV === "production" && !process.env.DB_SSL_CA_PATH) {
   throw new Error("Le certificat CA MySQL est requis en production.");
 }
 
-// TLS : vérification du certificat et de l’identité du serveur distant.
 if (process.env.DB_SSL_CA_PATH) {
   dialectOptions.ssl = {
     ca: fs.readFileSync(process.env.DB_SSL_CA_PATH, "utf8"),
